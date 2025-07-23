@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manage Products</title>
+    <link rel="stylesheet" href="./assets/css/manage-products.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Manage Your Products</h1>
+
+      <!-- 🔍 Filter Panel -->
+      <div class="filter-panel">
+        <input type="text" id="filterName" placeholder="Filter by name" />
+        <input
+          type="text"
+          id="filterCategory"
+          placeholder="Filter by category"
+        />
+        <select id="filterStatus">
+          <option value="">All Statuses</option>
+          <option value="Available">Available</option>
+          <option value="Hidden">Hidden</option>
+          <option value="Archived">Archived</option>
+        </select>
+        <button id="applyFilter">Submit Filter</button>
+      </div>
+
+      <!-- 📦 Products Table -->
+      <table id="productTable">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- 📝 Edit Modal -->
+    <div id="editModal" class="modal">
+      <div class="modal-content">
+        <span class="closeBtn">&times;</span>
+        <h2>Edit Product</h2>
+        <form id="editForm">
+          <input type="text" id="editName" required />
+          <textarea id="editDescription" required></textarea>
+          <input type="number" id="editPrice" required />
+          <input type="text" id="editCategory" required />
+          <input type="number" id="editQuantity" required />
+          <input
+            type="text"
+            id="editSizes"
+            placeholder="Sizes (comma-separated)"
+          />
+          <input
+            type="text"
+            id="editColors"
+            placeholder="Colors (comma-separated)"
+          />
+          <select id="editStatus">
+            <option value="Available">Available</option>
+            <option value="Hidden">Hidden</option>
+            <option value="Archived">Archived</option>
+          </select>
+          <button type="submit">Save Changes</button>
+          <button type="button" id="deleteProduct">Delete Product</button>
+          <button type="button" id="cancelEdit">Cancel</button>
+        </form>
+      </div>
+    </div>
+
+    <script src="./assets/js/manage-products.js"></script>
+  </body>
+</html>
