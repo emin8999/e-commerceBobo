@@ -1,0 +1,55 @@
+.sidebar {
+  width: 280px;
+  background-color: #003366;
+  color: white;
+  height: 100vh;
+  overflow-y: auto;
+  padding-top: 20px;
+}
+
+.accordion-item {
+  border-bottom: 1px solid #004080;
+}
+
+.accordion-header {
+  background: none;
+  border: none;
+  outline: none;
+  width: 100%;
+  text-align: left;
+  padding: 15px 20px;
+  font-size: 16px;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.accordion-header:hover {
+  background-color: #004080;
+}
+
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  background-color: #002244;
+  transition: max-height 0.4s ease;
+}
+
+.accordion-content a {
+  display: block;
+  padding: 12px 30px;
+  color: #cce0ff;
+  text-decoration: none;
+  font-size: 15px;
+}
+
+.accordion-content a:hover {
+  background-color: #003366;
+}
+
+.icon {
+  font-weight: bold;
+  font-size: 16px;
+}

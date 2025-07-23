@@ -1,0 +1,39 @@
+.filter-box {
+  background-color: #232f3e;
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 300px;
+  margin: 65px 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.filter-box h2 {
+  margin-top: 0;
+  font-size: 22px;
+}
+
+.filter-box input {
+  padding: 8px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.filter-box button {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #ff9900;
+  color: black;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.filter-box button:hover {
+  background-color: #f0c14b;
+}

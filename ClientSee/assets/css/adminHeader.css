@@ -1,0 +1,59 @@
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(90deg, #002b5c, #0053a6);
+  color: white;
+  padding: 15px 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 25px;
+}
+
+.nav-links a {
+  color: #e6f0ff;
+  text-decoration: none;
+  font-size: 15px;
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: #ffffff;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+}
+
+.admin-user {
+  font-size: 15px;
+  color: #d0e2ff;
+}
+
+/* Button */
+.logout-btn {
+  background-color: transparent;
+  border: 1px solid #d0e2ff;
+  color: #d0e2ff;
+  padding: 6px 12px;
+  margin-left: 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+  background-color: #ffffff22;
+  color: #fff;
+  border-color: #fff;
+}

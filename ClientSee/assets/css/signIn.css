@@ -1,0 +1,122 @@
+/* body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #0d1b2a;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+} */
+
+.container {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 30px;
+  background: #ffffff;
+  color: #000;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+h1 {
+  text-align: center;
+  color: #003366;
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin: 15px 0 5px;
+  font-weight: bold;
+}
+
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.password-wrapper {
+  position: relative;
+}
+
+.eye {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: #003366;
+}
+
+.forgot {
+  text-align: right;
+  margin-top: 5px;
+}
+
+.forgot a {
+  font-size: 0.9rem;
+  color: #003366;
+  text-decoration: underline;
+}
+
+.login-btn {
+  width: 100%;
+  background-color: #f77f00;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.login-btn:hover {
+  background-color: #ff9900;
+}
+
+.social-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.signup,
+.google {
+  padding: 10px;
+  font-size: 0.95rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #f1f1f1;
+  color: #000;
+  transition: background 0.3s;
+}
+
+.google {
+  background-color: #db4437;
+  color: #fff;
+}
+
+.signup:hover {
+  background-color: #e0e0e0;
+}
+
+.google:hover {
+  background-color: #c23321;
+}
+
+.info {
+  margin-top: 20px;
+  font-size: 0.9rem;
+  color: #555;
+  text-align: center;
+}

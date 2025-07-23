@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register Your Store</title>
+    <link rel="stylesheet" href="./store-register/store-register.css" />
+  </head>
+  <body>
+    <div class="register-container">
+      <h2>Register Your Store</h2>
+      <form id="storeRegisterForm">
+        <label for="storeName">Store Name</label>
+        <input type="text" id="storeName" required />
+
+        <label for="ownerName">Owner Name</label>
+        <input type="text" id="ownerName" required />
+
+        <label for="email">Email Address</label>
+        <input type="email" id="email" required />
+
+        <label for="password">Password</label>
+        <input type="password" id="password" required />
+
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmPassword" required />
+
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" required />
+
+        <label for="logo">Store Logo</label>
+        <input type="file" id="logo" accept="image/*" required />
+
+        <label for="banner">Store Banner (optional)</label>
+        <input type="file" id="banner" accept="image/*" />
+
+        <label for="description">Store Description</label>
+        <textarea id="description" required></textarea>
+
+        <label for="category">Store Category</label>
+        <input
+          type="text"
+          id="category"
+          placeholder="e.g., Fashion, Electronics, Food"
+          required
+        />
+
+        <label for="location">Location</label>
+        <input type="text" id="location" required />
+
+        <div class="checkbox-wrapper">
+          <input type="checkbox" id="terms" required />
+          <label for="terms">I agree to the terms and conditions</label>
+        </div>
+
+        <button type="submit">Register Store</button>
+        <p class="error-message" id="errorMsg"></p>
+
+        <p class="login-redirect">
+          Already have a store account?
+          <a href="./store-login.html">Sign in here</a>
+        </p>
+      </form>
+    </div>
+
+    <script src="./store-register/store-register.js"></script>
+  </body>
+</html>

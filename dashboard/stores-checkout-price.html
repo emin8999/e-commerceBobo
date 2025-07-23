@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dashboard</title>
+    <!-- styles -->
+
+    <link rel="stylesheet" href="./assets/css/adminHeader.css" />
+    <link rel="stylesheet" href="./assets/css/stores-checkout-price.css" />
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="admin-header">
+      <div class="logo">AdminPanel</div>
+      <nav class="nav-links">
+        <a href="summary.html">Dashboard</a>
+        <!-- <a href="users.html">Users</a>
+    <a href="products.html">Products</a>
+    <a href="orders.html">Orders</a> -->
+      </nav>
+      <div class="admin-user">
+        <span>👤 Admin</span>
+        <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+      </div>
+    </header>
+    <main class="main-content">
+      <!-- Nav bar Left Side -->
+      <div class="sidebar">
+        <div class="accordion-item">
+          <button class="accordion-header">
+            Dashboard <span class="icon">➕</span>
+          </button>
+          <div class="accordion-content">
+            <a href="summary.html">All summary</a>
+            <a href="stores-checkout-price.html">Stores Checkout price</a>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-header">
+            Products <span class="icon">➕</span>
+          </button>
+          <div class="accordion-content">
+            <a href="category.html">Category</a>
+            <a href="base-product.html">Base of Product</a>
+            <a href="gifts.html">Gifts</a>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-header">
+            Customers <span class="icon">➕</span>
+          </button>
+          <div class="accordion-content">
+            <a href="store-owner.html">Store’s Owner</a>
+            <a href="all-customers.html">All Customers</a>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-header">
+            Admin <span class="icon">➕</span>
+          </button>
+          <div class="accordion-content">
+            <a href="permission-stores.html">Permission for stores</a>
+            <a href="permission-sales.html">Permission for sales</a>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-header">
+            Order <span class="icon">➕</span>
+          </button>
+          <div class="accordion-content">
+            <a href="checkout.html">Check out</a>
+            <a href="orders-shipping.html">Order and Shipping</a>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-header">
+            Stores <span class="icon">➕</span>
+          </button>
+          <div class="accordion-content">
+            <a href="store-page.html">Page of Store</a>
+            <a href="store-dashboard.html">Dashboard for stores</a>
+            <a href="store-products.html">Stores Products</a>
+            <a href="base-product.html">Base of Product</a>
+            <a href="manage-page.html">Manage (Edit Page)</a>
+            <a href="store-sales.html">Stores Sales</a>
+            <a href="add-product.html">Add to Product</a>
+          </div>
+        </div>
+        <!-- Message -->
+        <div class="accordion-item">
+          <button class="accordion-header">
+            Message <span class="icon">➕</span>
+          </button>
+          <div class="accordion-content">
+            <a href="message.html">Message</a>
+            <!-- <a href="message-admin.html">Message Admin</a> -->
+          </div>
+        </div>
+      </div>
+
+      <!-- checkout price -->
+      <div class="checkout-price-container">
+        <h1>Stores Checkout Performance</h1>
+
+        <div class="filters">
+          <input type="date" id="startDate" />
+          <input type="date" id="endDate" />
+          <input
+            type="text"
+            id="storeSearch"
+            placeholder="Search store name..."
+          />
+        </div>
+
+        <table id="storesTable">
+          <thead>
+            <tr>
+              <th>Store Name</th>
+              <th>Number of Orders</th>
+              <th>Total Revenue ($)</th>
+              <th>Average Order Value</th>
+              <th>Last Order</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Rows will be injected here -->
+          </tbody>
+        </table>
+
+        <div class="chart-area">
+          <canvas id="topStoresChart"></canvas>
+        </div>
+      </div>
+    </main>
+
+    <!-- scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="./assets/js/DashNavBar.js"></script>
+    <script src="stores-checkout-price.js"></script>
+  </body>
+</html>
