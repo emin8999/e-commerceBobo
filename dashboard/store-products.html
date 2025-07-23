@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Store Products</title>
+    <link rel="stylesheet" href="./assets/css/store-products.css" />
+  </head>
+  <body>
+    <div class="products-container">
+      <h1>Store Products</h1>
+
+      <div class="filter-bar">
+        <input type="text" id="searchInput" placeholder="Search products..." />
+        <select id="statusFilter">
+          <option value="all">All Statuses</option>
+          <option value="Available">Available</option>
+          <option value="Hidden">Hidden</option>
+          <option value="Archived">Archived</option>
+        </select>
+      </div>
+
+      <table class="products-table">
+        <thead>
+          <tr>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Size</th>
+            <th>Quantity</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="productsList">
+          <!-- Products will load here -->
+        </tbody>
+      </table>
+    </div>
+
+    <script src="./assets/js/store-products.js"></script>
+  </body>
+</html>
