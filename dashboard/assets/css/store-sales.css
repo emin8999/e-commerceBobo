@@ -1,0 +1,56 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f6f9;
+}
+
+.sales-container {
+  max-width: 1000px;
+  margin: auto;
+  padding: 40px 20px;
+  background-color: #fff;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+}
+
+h1 {
+  text-align: center;
+  color: #003366;
+  margin-bottom: 30px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+thead {
+  background-color: #007acc;
+  color: #fff;
+}
+
+thead th,
+tbody td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+tr:hover {
+  background-color: #f1f1f1;
+}
+
+button#exportCSV {
+  display: block;
+  margin: 0 auto;
+  padding: 12px 20px;
+  font-size: 1rem;
+  background-color: #007acc;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
