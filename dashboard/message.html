@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Customer Messages</title>
+    <link rel="stylesheet" href="./assets/css/message.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>📩 Customer Messages</h1>
+
+      <!-- Filters -->
+      <div class="filters">
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Search by email or subject..."
+        />
+        <select id="statusFilter">
+          <option value="">All Statuses</option>
+          <option value="New">New</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Replied">Replied</option>
+        </select>
+        <button id="applyFilter">Filter</button>
+      </div>
+
+      <!-- Message Table -->
+      <div class="table-wrapper">
+        <table id="messageTable">
+          <thead>
+            <tr>
+              <th>Message ID</th>
+              <th>Customer</th>
+              <th>Email</th>
+              <th>Subject</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="messageBody">
+            <!-- JavaScript populates here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="messageModal" class="modal">
+      <div class="modal-content">
+        <span class="closeModal">&times;</span>
+        <h2 id="modalSubject">Subject</h2>
+        <p><strong>From:</strong> <span id="modalEmail"></span></p>
+        <p><strong>Date:</strong> <span id="modalDate"></span></p>
+        <p><strong>Message:</strong></p>
+        <p id="modalText" class="message-text"></p>
+      </div>
+    </div>
+
+    <script src="./assets/js/message.js"></script>
+  </body>
+</html>
