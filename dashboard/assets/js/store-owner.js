@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const searchInput = document.getElementById("searchInput");
   const statusFilter = document.getElementById("statusFilter");
   const applyFilter = document.getElementById("applyFilter");
+  const exportBtn = document.getElementById("exportCSV");
 
   const modal = document.getElementById("ownerModal");
   const closeModal = document.querySelector(".closeModal");
@@ -25,6 +26,10 @@ document.addEventListener("DOMContentLoaded", () => {
     renderTable(data);
   }
 
+  function saveOwners() {
+    localStorage.setItem("storeOwners", JSON.stringify(allOwners));
+  }
+
   function renderTable(data) {
     ownersBody.innerHTML = "";
 
@@ -42,8 +47,10 @@ document.addEventListener("DOMContentLoaded", () => {
         <td class="actions">
           <button class="view" data-index="${index}">View</button>
           <button class="permissions">Permissions</button>
-          <button class="deactivate">Deactivate</button>
-          <button class="delete">Delete</button>
+          <button class="deactivate" data-index="${index}">${
+        owner.status === "blocked" ? "Unblock" : "Block"
+      }</button>
+          <button class="delete" data-index="${index}">Delete</button>
         </td>
       `;
 
@@ -68,8 +75,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Modal open
   ownersBody.addEventListener("click", (e) => {
-    if (e.target.classList.contains("view")) {
-      const index = e.target.dataset.index;
+    const target = e.target;
+
+    // View Profile
+    if (target.classList.contains("view")) {
+      const index = target.dataset.index;
       const owner = allOwners[index];
 
       modalFields.name.textContent = owner.name;
@@ -84,6 +94,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
       modal.style.display = "flex";
     }
+
+    // Deactivate/Block
+    if (target.classList.contains("deactivate")) {
+      const index = target.dataset.index;
+      allOwners[index].status =
+        allOwners[index].status === "active" ? "blocked" : "active";
+      saveOwners();
+      renderTable(allOwners);
+    }
+
+    // Delete
+    if (target.classList.contains("delete")) {
+      const index = target.dataset.index;
+      if (confirm("Are you sure you want to delete this store owner?")) {
+        allOwners.splice(index, 1);
+        saveOwners();
+        renderTable(allOwners);
+      }
+    }
   });
 
   closeModal.addEventListener("click", () => {
@@ -94,6 +123,26 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.target === modal) {
       modal.style.display = "none";
     }
+  });
+
+  // Export CSV
+  exportBtn?.addEventListener("click", () => {
+    let csv = "Name,Email,Store,Phone,Status,Registered At,Last Login\n";
+    allOwners.forEach((owner) => {
+      csv += `${owner.name},${owner.email},${owner.storeName},${owner.phone},${
+        owner.status
+      },${owner.registeredAt},${new Date(owner.lastLogin).toLocaleString()}\n`;
+    });
+
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "store-owners.csv";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   });
 
   fetchOwners();
