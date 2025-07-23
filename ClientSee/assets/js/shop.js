@@ -102,3 +102,28 @@ window.addEventListener("storage", (event) => {
     renderProducts(updatedProducts);
   }
 });
+// Получаем все товары из localStorage по котегориям
+
+const allProducts = JSON.parse(localStorage.getItem("products") || "[]");
+const urlParams = new URLSearchParams(window.location.search);
+const category = urlParams.get("category");
+const store = urlParams.get("store");
+
+let filteredProducts = [...allProducts];
+
+// Фильтр по категории
+if (category) {
+  filteredProducts = filteredProducts.filter(
+    (p) => p.category.toLowerCase() === category.toLowerCase()
+  );
+}
+
+// Фильтр по магазину
+if (store) {
+  filteredProducts = filteredProducts.filter(
+    (p) => p.store.toLowerCase() === store.toLowerCase()
+  );
+}
+
+// Отрисовать
+renderProducts(filteredProducts);

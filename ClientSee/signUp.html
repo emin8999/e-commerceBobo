@@ -50,7 +50,19 @@
 
       <nav class="nav-bar">
         <div class="MenuItem">
-          <a class="MenuItem" href="./index.html">☰</a>
+          <a class="MenuItem" href="#" id="menuBtn">☰</a>
+
+          <!-- Modal -->
+          <div id="menuModal" class="modal">
+            <div class="modal-content">
+              <span class="closeModal">&times;</span>
+              <h2>Categories</h2>
+              <ul id="categoryList"></ul>
+
+              <h2>Stores</h2>
+              <ul id="storeList"></ul>
+            </div>
+          </div>
         </div>
         <div class="nav-item">
           <a class="nav-item" href="./shop/shop.html">Products</a>
@@ -184,5 +196,6 @@
     </footer>
     <script src="./assets/js/signUp.js"></script>
     <script src="./assets/js/header.js"></script>
+    <script src="./assets/js/modal.js"></script>
   </body>
 </html>
