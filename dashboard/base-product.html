@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Base of Product Templates</title>
+    <link rel="stylesheet" href="./assets/css/base-product.css" />
+  </head>
+  <body>
+    <div class="template-container">
+      <h1>Product Templates</h1>
+
+      <form id="templateForm">
+        <input
+          type="text"
+          id="templateName"
+          placeholder="Template Name"
+          required
+        />
+        <textarea
+          id="templateDescription"
+          placeholder="Product Description"
+        ></textarea>
+        <input
+          type="text"
+          id="templateSizes"
+          placeholder="Sizes (comma separated)"
+        />
+        <input
+          type="text"
+          id="templateColors"
+          placeholder="Colors (comma separated)"
+        />
+        <input type="file" id="templateImage" accept="image/*" />
+        <input type="text" id="templateCategory" placeholder="Category" />
+        <button type="submit">Save Template</button>
+      </form>
+
+      <div class="template-list" id="templateList">
+        <!-- Rendered templates will appear here -->
+      </div>
+    </div>
+
+    <script src="./assets/js/base-product.js"></script>
+  </body>
+</html>
