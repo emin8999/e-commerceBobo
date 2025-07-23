@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkout Orders</title>
+    <link rel="stylesheet" href="./assets/css/checkout.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>All Orders</h1>
+
+      <!-- Filters -->
+      <div class="filters">
+        <input
+          type="text"
+          id="filterStore"
+          placeholder="Filter by Store Name"
+        />
+        <input type="text" id="filterStatus" placeholder="Filter by Status" />
+        <button id="applyFilters">Apply Filters</button>
+      </div>
+
+      <!-- Orders Table -->
+      <div class="table-wrapper">
+        <table id="ordersTable">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Product Name(s)</th>
+              <th>Customer (Name++Email++Phone)</th>
+              <th>Store Name</th>
+              <th>Store Contact Name</th>
+              <th>Store Email</th>
+              <th>Store Phone</th>
+              <th>Total Amount</th>
+              <th>Status</th>
+              <th>Order Date</th>
+              <th>Payment</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="ordersBody">
+            <!-- Filled by JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <script src="./assets/js/checkout.js"></script>
+  </body>
+</html>
