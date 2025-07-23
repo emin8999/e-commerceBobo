@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Store Permissions</title>
+    <link rel="stylesheet" href="./assets/css/permission-stores.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>🔐 Store Permissions Panel</h1>
+
+      <form id="store-permission-form">
+        <div class="form-group">
+          <label for="storeSelector">Store Name</label>
+          <select id="storeSelector" required></select>
+        </div>
+
+        <div class="form-subgroup readonly-info">
+          <p><strong>Owner:</strong> <span id="ownerName">N/A</span></p>
+          <p><strong>Email:</strong> <span id="ownerEmail">N/A</span></p>
+        </div>
+
+        <div class="form-group checkbox-list">
+          <label
+            ><input type="checkbox" id="canAdd" /> Allow Product Adding</label
+          >
+          <label
+            ><input type="checkbox" id="canEdit" /> Allow Product Editing</label
+          >
+          <label
+            ><input type="checkbox" id="canDelete" /> Allow Product
+            Deletion</label
+          >
+          <label
+            ><input type="checkbox" id="canDesign" /> Allow Store Design
+            Edit</label
+          >
+          <label
+            ><input type="checkbox" id="canEditInventory" /> Allow Inventory
+            Edit</label
+          >
+          <label
+            ><input type="checkbox" id="canManageOrders" /> Allow Order
+            Management</label
+          >
+          <label
+            ><input type="checkbox" id="canViewCustomerData" /> View Customer
+            Data</label
+          >
+          <label
+            ><input type="checkbox" id="canAccessCampaigns" /> Access Campaign
+            Tools</label
+          >
+          <label
+            ><input type="checkbox" id="canExportOrders" /> Export Orders</label
+          >
+          <label
+            ><input type="checkbox" id="canStoreMessage" /> Use Messaging
+            System</label
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="dashboardAccess">Dashboard Access Level</label>
+          <select id="dashboardAccess">
+            <option value="none">❌ No Access</option>
+            <option value="store">🔹 Store Only</option>
+            <option value="shared">🔗 Shared</option>
+            <option value="full">🔷 Full Access</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label
+            ><input type="checkbox" id="isBlocked" /> Temporarily Block
+            Store</label
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="adminNote">Admin Notes</label>
+          <textarea
+            id="adminNote"
+            rows="3"
+            placeholder="Internal comment (optional)"
+          ></textarea>
+        </div>
+
+        <button type="submit" class="submit-btn">💾 Save Permissions</button>
+      </form>
+
+      <hr />
+
+      <section class="permissions-table">
+        <h2>📊 Current Permissions Overview</h2>
+        <div id="permissionsTableContainer"></div>
+      </section>
+    </div>
+
+    <script src="./assets/js/permission-stores.js"></script>
+  </body>
+</html>
