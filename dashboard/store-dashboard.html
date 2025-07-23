@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Store Dashboard</title>
+    <link rel="stylesheet" href="./assets/css/store-dashboard.css" />
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <h1 id="storeDashboardTitle">Store Dashboard</h1>
+
+      <div class="kpi-cards">
+        <div class="kpi-card">
+          <h3>Total Revenue</h3>
+          <p id="totalRevenue">$0</p>
+        </div>
+        <div class="kpi-card">
+          <h3>Total Orders</h3>
+          <p id="totalOrders">0</p>
+        </div>
+        <div class="kpi-card">
+          <h3>Average Order Value</h3>
+          <p id="avgOrderValue">$0</p>
+        </div>
+      </div>
+
+      <div class="charts-section">
+        <canvas id="salesChart"></canvas>
+      </div>
+
+      <div class="product-summary">
+        <h2>Most Popular Product</h2>
+        <p id="popularProduct">—</p>
+
+        <h2>Unsold Products</h2>
+        <ul id="unsoldProducts"></ul>
+      </div>
+    </div>
+
+    <script src="./assets/js/store-dashboard.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </body>
+</html>
