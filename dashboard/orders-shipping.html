@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Order and Shipping</title>
+    <link rel="stylesheet" href="./assets/css/orders-shipping.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Order and Shipping</h1>
+
+      <!-- Filters -->
+      <div class="filters">
+        <input
+          type="text"
+          id="filterCity"
+          placeholder="Filter by City/Country"
+        />
+        <input
+          type="text"
+          id="filterMethod"
+          placeholder="Filter by Shipping Method"
+        />
+        <input
+          type="text"
+          id="filterStatus"
+          placeholder="Filter by Shipping Status"
+        />
+        <button id="applyFilters">Apply Filters</button>
+      </div>
+
+      <!-- Shipping Table -->
+      <div class="table-wrapper">
+        <table id="shippingTable">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Address</th>
+              <th>City / Country</th>
+              <th>Shipping Method</th>
+              <th>Tracking Number</th>
+              <th>Shipping Status</th>
+              <th>Shipping Date</th>
+              <th>Notes</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="shippingBody">
+            <!-- Populated by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <script src="./assets/js/orders-shipping.js"></script>
+  </body>
+</html>
