@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Store Page</title>
+    <link rel="stylesheet" href="./assets/css/manage-page.css" />
+  </head>
+  <body>
+    <div class="manage-container">
+      <h1>Edit Your Store</h1>
+      <form id="editStoreForm">
+        <input type="text" id="storeName" placeholder="Store Name" required />
+        <textarea
+          id="storeDescription"
+          placeholder="Store Description"
+        ></textarea>
+        <input type="file" id="storeLogo" accept="image/*" />
+        <input type="file" id="storeBanner" accept="image/*" />
+        <input
+          type="text"
+          id="storeContact"
+          placeholder="Contact Details (optional)"
+        />
+        <button type="submit">Save Changes</button>
+      </form>
+      <div id="previewContainer"></div>
+    </div>
+
+    <script src="./assets/js/manage-page.js"></script>
+  </body>
+</html>
