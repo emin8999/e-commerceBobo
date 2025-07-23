@@ -17,6 +17,8 @@ body {
 .logo {
   width: 100px;
   margin-right: 10px;
+  text-decoration: none;
+  color: rgb(255, 255, 255);
 }
 
 .left-section {
