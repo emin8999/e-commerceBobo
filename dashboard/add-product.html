@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add New Product</title>
+    <link rel="stylesheet" href="./assets/css/add-product.css" />
+  </head>
+  <body>
+    <div class="product-form-container">
+      <h1>Add a New Product</h1>
+      <form id="addProductForm">
+        <input
+          type="text"
+          id="productName"
+          placeholder="Product Name"
+          required
+        />
+        <textarea
+          id="productDescription"
+          placeholder="Description"
+          required
+        ></textarea>
+        <input
+          type="number"
+          id="productPrice"
+          placeholder="Price ($)"
+          required
+        />
+        <input
+          type="text"
+          id="productCategory"
+          placeholder="Category"
+          required
+        />
+        <input
+          type="text"
+          id="productSizes"
+          placeholder="Sizes (comma-separated)"
+        />
+        <input
+          type="text"
+          id="productColors"
+          placeholder="Colors (comma-separated)"
+        />
+        <input
+          type="number"
+          id="productQuantity"
+          placeholder="Quantity"
+          required
+        />
+        <select id="productAvailability" required>
+          <option value="">-- Availability --</option>
+          <option value="In Stock">In Stock</option>
+          <option value="Out of Stock">Out of Stock</option>
+        </select>
+        <input
+          type="file"
+          id="productImages"
+          accept="image/*"
+          multiple
+          required
+        />
+        <select id="productStore" required></select>
+        <button type="submit">Add Product</button>
+      </form>
+      <div id="addProductMessage"></div>
+    </div>
+    <script src="./assets/js/add-product.js"></script>
+  </body>
+</html>
