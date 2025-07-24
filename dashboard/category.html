@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Category Management</title>
+    <link rel="stylesheet" href="./assets/css/category.css" />
+  </head>
+  <body>
+    <header>
+      <h1>📂 Product Categories</h1>
+      <button id="addCategoryBtn">➕ Add Category</button>
+      <input type="text" id="searchInput" placeholder="Search categories..." />
+      <select id="filterVisibility">
+        <option value="all">All Visibility</option>
+        <option value="public">Public</option>
+        <option value="private">Private</option>
+      </select>
+      <select id="filterStore">
+        <option value="all">All Stores</option>
+      </select>
+    </header>
+
+    <main>
+      <table>
+        <thead>
+          <tr>
+            <th>Icon</th>
+            <th>Name</th>
+            <th>Store</th>
+            <th>Status</th>
+            <th>Visibility</th>
+            <th>Products</th>
+            <th>Priority</th>
+            <th>Views</th>
+            <th>Orders</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="categoryTableBody">
+          <!-- Categories will be injected here -->
+        </tbody>
+      </table>
+    </main>
+
+    <!-- Modal Form -->
+    <div class="modal" id="categoryModal">
+      <div class="modal-content">
+        <span class="close" id="closeModal">&times;</span>
+        <h2 id="modalTitle">Add New Category</h2>
+        <form id="categoryForm">
+          <input type="hidden" id="categoryId" />
+          <label>Category Name</label>
+          <input type="text" id="categoryName" required />
+
+          <label>Icon (emoji)</label>
+          <input type="text" id="categoryIcon" placeholder="📦" maxlength="2" />
+
+          <label>Store</label>
+          <select id="categoryStore">
+            <option value="">All Stores</option>
+          </select>
+
+          <label>Color</label>
+          <input type="color" id="categoryColor" />
+
+          <label>Status</label>
+          <select id="categoryStatus">
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+
+          <label>Visibility</label>
+          <select id="categoryVisibility">
+            <option value="public">Public</option>
+            <option value="private">Private</option>
+          </select>
+
+          <label>Priority</label>
+          <input type="number" id="categoryPriority" min="1" value="1" />
+
+          <button type="submit">💾 Save Category</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Confirmation Delete Modal -->
+    <div class="modal" id="deleteModal">
+      <div class="modal-content">
+        <span class="close" id="closeDeleteModal">&times;</span>
+        <h3>Are you sure you want to delete this category?</h3>
+        <p>
+          This action cannot be undone. All items will be moved to
+          <strong>Uncategorized</strong>.
+        </p>
+        <button id="confirmDeleteBtn">🗑️ Confirm Delete</button>
+      </div>
+    </div>
+
+    <script src="./assets/js/category.js"></script>
+  </body>
+</html>
