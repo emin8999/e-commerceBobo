@@ -1,35 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Public Storefront</title>
+    <link rel="stylesheet" href="./assets/css/store-page.css" />
+    <link rel="stylesheet" href="./assets/css/adminHeader.css" />
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Public Storefront</title>
-  <link rel="stylesheet" href="./assets/css/store-page.css" />
-</head>
+  <body>
+    <div class="store-container">
+      <div class="store-banner" id="storeBanner"></div>
 
-<body>
-  <div class="store-container">
-    <div class="store-banner" id="storeBanner"></div>
+      <div class="store-header">
+        <img id="storeLogo" class="store-logo" alt="Store Logo" />
+        <div>
+          <h1 id="storeName"></h1>
+          <p id="storeCategory" class="store-category"></p>
+        </div>
+      </div>
 
-    <div class="store-header">
-      <img id="storeLogo" class="store-logo" alt="Store Logo" />
-      <div>
-        <h1 id="storeName"></h1>
-        <p id="storeCategory" class="store-category"></p>
+      <p id="storeDescription" class="store-description"></p>
+      <div id="storeContact" class="store-contact"></div>
+
+      <h2 class="products-title">Products</h2>
+      <div class="products-grid" id="storeProducts">
+        <!-- Products will be loaded dynamically -->
       </div>
     </div>
 
-    <p id="storeDescription" class="store-description"></p>
-    <div id="storeContact" class="store-contact"></div>
-
-    <h2 class="products-title">Products</h2>
-    <div class="products-grid" id="storeProducts">
-      <!-- Products will be loaded dynamically -->
-    </div>
-  </div>
-
-  <script src="./assets/js/store-page.js"></script>
-</body>
-
+    <script src="./assets/js/store-page.js"></script>
+  </body>
 </html>
