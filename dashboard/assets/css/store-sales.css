@@ -1,17 +1,23 @@
 body {
-  font-family: Arial, sans-serif;
+  font-family: "Segoe UI", sans-serif;
   margin: 0;
   padding: 0;
   background-color: #f4f6f9;
 }
 
+.sidebar {
+  height: 100vh;
+}
+
 .sales-container {
-  max-width: 1000px;
-  margin: auto;
-  padding: 40px 20px;
-  background-color: #fff;
+   width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 40px 30px;
+  border-radius: 10px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
-  border-radius: 12px;
+  height: 100vh;
 }
 
 h1 {

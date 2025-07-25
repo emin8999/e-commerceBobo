@@ -1,13 +1,22 @@
-body {
+*{
   margin: 0;
-  font-family: Arial, sans-serif;
+  padding: 0; 
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", sans-serif;
   background-color: #f9fbfd;
   color: #333;
 }
 
+.sidebar{
+  height: 100vh;
+}
 .template-container {
-  max-width: 800px;
-  margin: auto;
+  width: 700px;
+  max-width: 100%;
+  margin: 0 auto;
   padding: 30px 20px;
 }
 

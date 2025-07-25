@@ -1,14 +1,28 @@
-body {
+*{
   margin: 0;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", sans-serif;
   background-color: #f5f7fa;
   color: #333;
 }
 
+.sidebar{
+  height: 100vh;
+}
+
 .products-container {
-  max-width: 1200px;
+  max-width: 100%;
+  width: 800px;
   margin: 0 auto;
-  padding: 30px 20px;
+  background: #ffffff;
+  padding: 40px 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
+  height: auto;
 }
 
 h1 {
@@ -39,17 +53,22 @@ h1 {
   background: white;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   border-radius: 8px;
-  overflow: hidden;
+  overflow: auto;
+  display: flex;
+    flex-wrap: wrap;
 }
 
 .products-table th,
 .products-table td {
-  padding: 12px 16px;
+  width: 100%;
+  padding: 12px 30px;
   text-align: left;
   border-bottom: 1px solid #f0f0f0;
 }
 
 .products-table th {
+  width: 100%;
+
   background-color: #e6f2ff;
   color: #003366;
 }

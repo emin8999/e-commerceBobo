@@ -1,14 +1,24 @@
-body {
+*{
   margin: 0;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", sans-serif;
   background-color: #f4f6f8;
   color: #333;
 }
 
 .dashboard-container {
-  max-width: 1200px;
-  margin: auto;
-  padding: 30px 20px;
+  max-width: 100%;
+  width: 800px;
+  margin: 0 auto;
+  background: #ffffff;
+  padding: 40px 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
+  height: auto;
 }
 
 h1 {

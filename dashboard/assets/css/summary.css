@@ -1,12 +1,18 @@
 body {
   margin: 0;
   padding: 0;
+  font-family: "Segoe UI", sans-serif;
 }
 
 .summary-container {
-  max-width: 70%;
+   width: 100%;
+  max-width: 800px;
   margin: 0 auto;
-  flex-wrap: wrap;
+  background: #fff;
+  padding: 40px 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+  height: auto;
 }
 
 h1 {

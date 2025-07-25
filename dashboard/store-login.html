@@ -1,17 +1,17 @@
+<!-- store-login.html -->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="UTF-8" />
-  <title>Dashboard</title>
-  <!-- styles -->
-
-  <link rel="stylesheet" href="./assets/css/adminHeader.css" />
-  <link rel="stylesheet" href="./assets/css/summary.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Store Sign In</title>
+  <link rel="stylesheet" href="./store-login/store-login.css" />
+  <link rel="stylesheet" href="./assets/css/adminHeader.css">
 </head>
 
 <body>
-  <!-- Header -->
+
   <header class="admin-header">
     <div class="logo">
       <span>AdminPanel</span>
@@ -136,47 +136,41 @@
       </div>
     </div>
 
-    <!-- summary -->
+    <div class="login-container">
+      <h2>Store Sign In</h2>
+      <form id="storeLoginForm">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" required />
 
-    <div class="summary-container">
-      <h1>Platform Summary</h1>
-      <div class="kpi-cards">
-        <div class="kpi" id="totalOrders">
-          <h3>Total Orders</h3>
-          <p class="kpi-value">0</p>
+        <label for="password">Password</label>
+        <div class="password-wrapper">
+          <input type="password" id="password" required />
+          <span id="togglePassword">👁️</span>
         </div>
-        <div class="kpi" id="totalRevenue">
-          <h3>Total Revenue ($)</h3>
-          <p class="kpi-value">$0.00</p>
-        </div>
-        <div class="kpi" id="totalCustomers">
-          <h3>Registered Customers</h3>
-          <p class="kpi-value">0</p>
-        </div>
-        <div class="kpi" id="totalStores">
-          <h3>Active Stores</h3>
-          <p class="kpi-value">0</p>
-        </div>
-        <div class="kpi" id="totalProducts">
-          <h3>Products Available</h3>
-          <p class="kpi-value">0</p>
-        </div>
-        <div class="kpi" id="todayRevenue">
-          <h3>Today's Revenue</h3>
-          <p class="kpi-value">$0.00</p>
-        </div>
-      </div>
 
-      <div class="charts">
-        <canvas id="ordersByCategory"></canvas>
-        <canvas id="revenueOverTime"></canvas>
-      </div>
+        <div class="checkbox-wrapper">
+          <input type="checkbox" id="rememberMe" />
+          <label for="rememberMe">Remember Me</label>
+        </div>
+
+        <button class="button-login" type="submit">Login</button>
+
+        <p class="error-message" id="errorMsg"></p>
+        <a href="#" class="forgot-password">Forgot Password?</a>
+
+        <p class="register-redirect">
+          Don't have a store yet?
+          <a href="./store-register.html">Register your store</a>
+        </p>
+        <a href="#" class="forgot-password">Forgot Password?</a>
+      </form>
     </div>
+
   </main>
 
-  <!-- scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="./assets/js/summary.js"></script>
+
+
+  <script src="./store-login/store-login.js"></script>
   <script src="./assets/js/DashNavBar.js"></script>
 </body>
 

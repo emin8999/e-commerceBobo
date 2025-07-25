@@ -1,6 +1,11 @@
-body {
+*{
   margin: 0;
-  padding: 0;
+  padding: 0; 
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", sans-serif;
 }
 
 .admin-header {
@@ -9,64 +14,120 @@ body {
   align-items: center;
   background: linear-gradient(90deg, #002b5c, #0053a6);
   color: white;
-  padding: 15px 30px;
+  padding: 10px 40px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   position: sticky;
   top: 0;
-  z-index: 1000;
+  z-index: 1001;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-.logo {
-  font-size: 22px;
+.logo span {
+  font-size: 1.6rem;
   font-weight: bold;
-  letter-spacing: 1px;
 }
 
-.nav-links {
+.nav-links ul {
+  list-style: none;
   display: flex;
   gap: 25px;
 }
 
 .nav-links a {
-  color: #e6f0ff;
   text-decoration: none;
-  font-size: 15px;
+  color: #f1f5f9;
+  font-weight: 500;
   transition: color 0.3s ease;
+  font-size: 20px;
 }
 
 .nav-links a:hover {
-  color: #ffffff;
-  text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+  color: silver;
 }
 
 .admin-user {
-  font-size: 15px;
-  color: #d0e2ff;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  font-size: 16px;
 }
 
-/* Button */
+.admin-user span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+}
+
+.admin-user svg {
+  stroke: #f1f5f9;
+}
+
 .logout-btn {
   background-color: transparent;
-  border: 1px solid #d0e2ff;
-  color: #d0e2ff;
+  border: 2px solid #f1f5f9;
+  color: #f1f5f9;
   padding: 6px 12px;
-  margin-left: 15px;
-  border-radius: 6px;
+  font-weight: 500;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 14px;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  gap: 6px;
   transition: all 0.3s ease;
 }
 
 .logout-btn:hover {
-  background-color: #ffffff22;
-  color: #fff;
-  border-color: #fff;
+  background-color: silver;
+  border-color: silver;
+  color: #0f172a;
 }
 
-/* navBar */
+.logout-btn svg {
+  stroke: currentColor;
+}
+
+@media (max-width: 880px) {
+  .admin-header {
+    flex-direction: column;
+    text-align: center;
+    padding: 12px 20px;
+  }
+
+  .logo span {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+  }
+
+  .nav-links ul {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    padding: 0;
+  }
+
+  .nav-links a {
+    font-size: 16px;
+  }
+
+  .admin-user {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+    margin-top: 15px;
+    width: 100%;
+  }
+
+  .logout-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 .main-content {
   display: flex;
-
+  height: auto;
   background-color: #f0f4f8;
 }
 .sidebar {

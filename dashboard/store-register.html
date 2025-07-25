@@ -3,15 +3,14 @@
 
 <head>
   <meta charset="UTF-8" />
-  <title>Dashboard</title>
-  <!-- styles -->
-
-  <link rel="stylesheet" href="./assets/css/adminHeader.css" />
-  <link rel="stylesheet" href="./assets/css/summary.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register Your Store</title>
+  <link rel="stylesheet" href="./store-register/store-register.css" />
+  <link rel="stylesheet" href="./assets/css/adminHeader.css">
 </head>
 
 <body>
-  <!-- Header -->
+
   <header class="admin-header">
     <div class="logo">
       <span>AdminPanel</span>
@@ -52,8 +51,6 @@
         </svg>Logout</button>
     </div>
   </header>
-
-
 
   <main class="main-content">
     <!-- Nav bar Left Side -->
@@ -136,48 +133,61 @@
       </div>
     </div>
 
-    <!-- summary -->
+    <div class="register-container">
+      <h2>Register Your Store</h2>
+      <form id="storeRegisterForm">
+        <label for="storeName">Store Name</label>
+        <input type="text" id="storeName" required />
 
-    <div class="summary-container">
-      <h1>Platform Summary</h1>
-      <div class="kpi-cards">
-        <div class="kpi" id="totalOrders">
-          <h3>Total Orders</h3>
-          <p class="kpi-value">0</p>
-        </div>
-        <div class="kpi" id="totalRevenue">
-          <h3>Total Revenue ($)</h3>
-          <p class="kpi-value">$0.00</p>
-        </div>
-        <div class="kpi" id="totalCustomers">
-          <h3>Registered Customers</h3>
-          <p class="kpi-value">0</p>
-        </div>
-        <div class="kpi" id="totalStores">
-          <h3>Active Stores</h3>
-          <p class="kpi-value">0</p>
-        </div>
-        <div class="kpi" id="totalProducts">
-          <h3>Products Available</h3>
-          <p class="kpi-value">0</p>
-        </div>
-        <div class="kpi" id="todayRevenue">
-          <h3>Today's Revenue</h3>
-          <p class="kpi-value">$0.00</p>
-        </div>
-      </div>
+        <label for="ownerName">Owner Name</label>
+        <input type="text" id="ownerName" required />
 
-      <div class="charts">
-        <canvas id="ordersByCategory"></canvas>
-        <canvas id="revenueOverTime"></canvas>
-      </div>
+        <label for="email">Email Address</label>
+        <input type="email" id="email" required />
+
+        <label for="password">Password</label>
+        <input type="password" id="password" required />
+
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmPassword" required />
+
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" required />
+
+        <label for="logo">Store Logo</label>
+        <input type="file" id="logo" accept="image/*" required />
+
+        <label for="banner">Store Banner (optional)</label>
+        <input type="file" id="banner" accept="image/*" />
+
+        <label for="description">Store Description</label>
+        <textarea id="description" required></textarea>
+
+        <label for="category">Store Category</label>
+        <input type="text" id="category" placeholder="e.g., Fashion, Electronics, Food" required />
+
+        <label for="location">Location</label>
+        <input type="text" id="location" required />
+
+        <div class="checkbox-wrapper">
+          <input type="checkbox" id="terms" required />
+          <label for="terms">I agree to the terms and conditions</label>
+        </div>
+
+        <button class="button-register" type="submit">Register Store</button>
+        <p class="error-message" id="errorMsg"></p>
+
+        <p class="login-redirect">
+          Already have a store account?
+          <a href="./store-login.html">Sign in here</a>
+        </p>
+      </form>
     </div>
   </main>
 
-  <!-- scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="./assets/js/summary.js"></script>
+  <script src="./store-register/store-register.js"></script>
   <script src="./assets/js/DashNavBar.js"></script>
+
 </body>
 
 </html>
