@@ -10,8 +10,9 @@ localStorage.setItem(
   "product",
   JSON.stringify({
     desribe:
-      "lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
     price: 199.99,
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjb2PWBap8ebZtngZvUNxkL1FI2UfMQWVv3Q&s",
     quantity: 3,
     shipping: 20.25,
     tax: 5,
@@ -34,7 +35,7 @@ if (address) {
 const productDiv = document.querySelector(".order-item");
 if (product) {
   productDiv.innerHTML = `
-        <img src="#" />
+        <img src="${product.img}" />
                 <div class="order-item-details">
                  ${product.desribe}<br />
                 </div>
