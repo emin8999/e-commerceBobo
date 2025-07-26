@@ -2,9 +2,9 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Shopping Cart</title>
+    <title>Processed to checkout</title>
     <link rel="stylesheet" href="./assets/css/style.css" />
-    <link rel="stylesheet" href="./assets/css/cart.css" />
+    <link rel="stylesheet" href="./assets/css/checkout.css" />
   </head>
   <body>
     <header>
@@ -78,19 +78,62 @@
       </nav>
     </header>
     <main>
-      <div class="cart-page">
-        <div class="cart-items">
-          <h2>Shopping Cart</h2>
-          <div id="cartContainer"></div>
+      <div class="checkout-section">
+        <div class="checkout-left-column">
+          <div class="adress-section">
+            <h2>Select a delivery adress</h2>
+            <div class="checkout-line"></div>
+            <h3>Delivery addresses (1)</h3>
+            <div class="address-card selected">
+              <input type="radio" class="input-radio" name="address" checked />
+
+              <div class="address-details">
+                <!-- <strong>emin</strong><br />
+                adress<br />
+                Phone number -->
+                <a href="#">Edit address</a>
+              </div>
+            </div>
+            <a href="#" class="add-address">Add a new delivery address</a>
+            <button class="yellow-btn">Deliver to this address</button>
+          </div>
+
+          <div class="payment-section">
+            <h3>Paying with Mastercard 2238</h3>
+            <a href="#">Select a payment plan</a><br />
+            <a href="#">Use a gift card, voucher, or promo code</a>
+          </div>
+
+          <div class="order-summary">
+            <div>
+              <h3>Arriving Aug 18, 2025</h3>
+              <div class="order-item">
+                <!-- <img src="#" />
+                <div class="order-item-details">
+                  SAMPEEL 2 Piece Sets for Women Summer Lounge Beach Vacation
+                  Clothes Matching Sets Women Clothing Travel Outfits Fashion
+                  Beige M
+                </div> -->
+              </div>
+            </div>
+
+            <a href="#">Review order</a>
+          </div>
         </div>
 
-        <div class="cart-summary">
-          <h3 id="summarySubtotal">Subtotal (0 items): $0.00</h3>
-          <label>
-            <input type="checkbox" />
-            This order contains a gift
-          </label>
-          <button class="checkout-button">Processed to checkout</button>
+        <div class="checkout-right-column">
+          <div class="summary-box">
+            <button class="yellow-btn right-column-btn">
+              Deliver to this address
+            </button>
+            <div class="checkout-line"></div>
+            <div class="summary-details">
+              <p>Items: <span>USD 34.99</span></p>
+              <p>Shipping & handling: <span>USD 21.41</span></p>
+              <p>Estimated tax to be collected: <span>USD 0.00</span></p>
+              <h3>Order total: <span>USD 56.40</span></h3>
+            </div>
+          </div>
         </div>
       </div>
     </main>
@@ -148,8 +191,6 @@
         </div>
       </div>
     </footer>
-    <script src="./assets/js/header.js"></script>
-    <script src="./assets/js/cart.js"></script>
-    <script src="./assets/js/modal.js"></script>
+    <script src="./assets/js/checkOut.js"></script>
   </body>
 </html>
