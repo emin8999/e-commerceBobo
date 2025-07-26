@@ -2,9 +2,9 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Shopping Cart</title>
+    <title>Processed to checkout</title>
     <link rel="stylesheet" href="./assets/css/style.css" />
-    <link rel="stylesheet" href="./assets/css/cart.css" />
+    <link rel="stylesheet" href="./assets/css/checkout.css" />
   </head>
   <body>
     <header>
@@ -78,20 +78,13 @@
       </nav>
     </header>
     <main>
-      <div class="cart-page">
-        <div class="cart-items">
-          <h2>Shopping Cart</h2>
-          <div id="cartContainer"></div>
+      <div class="checkout-container">
+        <div class="checkout-left-column">
+          <h2>Select a delivery adress</h2>
+          <div class="checkout-line"></div>
+          <h2>Delivery adresses (1)</h2>
         </div>
-
-        <div class="cart-summary">
-          <h3 id="summarySubtotal">Subtotal (0 items): $0.00</h3>
-          <label>
-            <input type="checkbox" />
-            This order contains a gift
-          </label>
-          <button class="checkout-button">Processed to checkout</button>
-        </div>
+        <div class="checkout-right-column">delivery to this address</div>
       </div>
     </main>
     <footer class="footer">
@@ -148,8 +141,5 @@
         </div>
       </div>
     </footer>
-    <script src="./assets/js/header.js"></script>
-    <script src="./assets/js/cart.js"></script>
-    <script src="./assets/js/modal.js"></script>
   </body>
 </html>

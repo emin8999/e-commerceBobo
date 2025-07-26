@@ -1,0 +1,25 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+}
+.checkout-container {
+  display: flex;
+  justify-content: space-between;
+  max-width: 1300px;
+  margin: auto;
+  padding: 20px;
+}
+.checkout-line {
+  border: 1px solid #f4f4f4;
+}
+.checkout-left-column {
+  flex: 3;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+}
+.checkout-right-column {
+  flex: 1;
+}
