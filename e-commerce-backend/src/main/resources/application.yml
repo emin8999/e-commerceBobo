@@ -1,0 +1,14 @@
+spring:
+  profiles:
+    active: db
+
+server:
+  servlet:
+    context-path: /home
+
+jwt:
+  secret: MzJieXRlc2xvbmdzZWNyZXRrZXltb3JldGhhbmMzMmJ5dGVz
+  duration: 3600000000
+
+file:
+  upload-dir: images
