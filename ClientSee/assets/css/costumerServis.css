@@ -1,7 +1,8 @@
 .service-container {
   max-width: 700px;
   margin: 0 auto;
-  padding: 60px 20px;
+  padding: 0 20px;
+  padding-top: 160px;
   text-align: center;
 }
 
@@ -31,11 +32,12 @@
 .contact-form {
   background-color: #fdf6f0;
   color: #003366;
-  padding: 30px;
+  padding: 45px 45px 45px 25px;
   border-radius: 16px;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
   margin-top: 30px;
   text-align: left;
+  margin-bottom: 25px;
 }
 
 .contact-form h3 {
@@ -76,4 +78,9 @@
 
 .contact-form button:hover {
   background-color: #ff9900;
+}
+@media (max-width: 600px) {
+  .service-container {
+    padding-top: 80px;
+  }
 }

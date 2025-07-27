@@ -167,7 +167,7 @@ a {
 /* Main Index */
 
 #shopContainer {
-  padding: 20px;
+  padding-left: 20px;
   padding-top: 180px;
 }
 .mobile-nav-items {
@@ -435,6 +435,9 @@ a {
 @media (max-width: 600px) {
   .burger-btn {
     display: block;
+  }
+  #shopContainer {
+    padding-top: 80px;
   }
   .search-bar {
     display: none;

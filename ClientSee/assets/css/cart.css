@@ -11,9 +11,10 @@ body {
   display: flex;
   justify-content: space-between;
   flex-direction: row;
-  padding: 20px;
   max-width: 1300px;
-  margin: auto;
+  padding-top: 190px;
+  margin: 0 auto;
+  margin-bottom: 20px;
 }
 
 .cart-items {
@@ -171,12 +172,19 @@ body {
   background-color: #f08804;
 }
 
-@media (min-width: 768px) and (max-width: 1024px) {
+@media (max-width: 600px) {
+  .cart-page {
+    padding-top: 100px;
+  }
+}
+
+@media (max-width: 900px) {
   .cart-page {
     flex-direction: column;
+    margin: 15px;
   }
 
-  .cart-items,
+  /* .cart-items,
   .cart-summary {
     margin-bottom: 20px;
     margin-left: 0;
@@ -189,5 +197,5 @@ body {
 
   .cart-item img {
     margin-bottom: 10px;
-  }
+  } */
 }
