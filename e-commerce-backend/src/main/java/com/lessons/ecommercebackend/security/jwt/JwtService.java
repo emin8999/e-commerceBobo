@@ -1,12 +1,10 @@
 package com.lessons.ecommercebackend.security.jwt;
 
-import com.lessons.ecommercebackend.security.UserPrincipal;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -25,7 +23,7 @@ public class JwtService {
     @Value("${jwt.duration}")
     private long duration;
 
-    public String generateToken(UserDetails userDetails){
+    public String generateToken(UserDetails userDetails) {
 
         Map<String, Object> claims = new HashMap<>();
 
@@ -45,10 +43,12 @@ public class JwtService {
                 .signWith(getSecretKey())
                 .compact();
     }
-    private SecretKey getSecretKey(){
+
+    private SecretKey getSecretKey() {
         byte[] encodedKey = Decoders.BASE64.decode(secret);
         return Keys.hmacShaKeyFor(encodedKey);
     }
+
     public String extractUserName(String token) {
         return extractClaim(token, Claims::getSubject);
     }

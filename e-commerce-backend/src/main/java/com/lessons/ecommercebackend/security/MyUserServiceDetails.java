@@ -2,6 +2,8 @@ package com.lessons.ecommercebackend.security;
 
 import com.lessons.ecommercebackend.repository.StoreRepository;
 import com.lessons.ecommercebackend.repository.UserRepository;
+import com.lessons.ecommercebackend.security.store.StorePrincipal;
+import com.lessons.ecommercebackend.security.user.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;

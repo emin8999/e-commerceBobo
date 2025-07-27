@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -35,10 +36,9 @@ public class StoreEntity {
     @Column(nullable = false,unique = true)
     private String phone;
 
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false)
     private String logo;
 
-    @Column(unique = true)
     private String banner;
 
     @Column(nullable = false)
@@ -55,4 +55,8 @@ public class StoreEntity {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ProductEntity> productEntities;
 }
