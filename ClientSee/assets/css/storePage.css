@@ -1,8 +1,10 @@
 header {
   background-color: #232f3e;
   color: white;
-  padding: 20px;
   text-align: center;
+}
+.store-page-main {
+  padding-top: 180px; /* Adjusted for consistent top padding */
 }
 
 .store-title {
