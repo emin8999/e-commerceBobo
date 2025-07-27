@@ -21,10 +21,11 @@ button {
 
 .shopContainer {
   display: flex;
+  padding-top: 170px;
   width: 100%;
 }
 .ShopFilter {
-  width: 25%;
+  width: 250px;
   display: flex;
   justify-content: center;
   margin-top: 40px;
@@ -53,8 +54,6 @@ button {
   display: flex;
   justify-content: center;
   width: 100%;
-  gap: 10px;
-  flex-wrap: wrap;
 }
 .product-card {
   justify-content: center;
@@ -86,4 +85,15 @@ button {
   border-radius: 4px;
   font-weight: bold;
   cursor: pointer;
+}
+@media (max-width: 600px) {
+  .shopContainer {
+    padding-top: 100px;
+  }
+  .h1-box {
+    font-size: 11px;
+  }
+  .product-card-box p {
+    font-size: 12px;
+  }
 }
