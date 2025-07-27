@@ -1,0 +1,34 @@
+package com.ecommerce.ecommercebackend.controller;
+
+import com.ecommerce.ecommercebackend.dto.request.product.ProductRequestDto;
+import com.ecommerce.ecommercebackend.dto.response.product.ProductResponseDto;
+import com.ecommerce.ecommercebackend.service.ProductService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/product")
+@RequiredArgsConstructor
+public class ProductController {
+
+    private final ProductService productService;
+
+    @PostMapping(consumes = "multipart/form-data")
+    public ResponseEntity<ProductResponseDto> addProduct(@ModelAttribute @Valid ProductRequestDto productRequestDto)
+            throws AccessDeniedException, java.nio.file.AccessDeniedException {
+        ProductResponseDto savedProduct = productService.addProduct(productRequestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
+    }
+
+    @GetMapping("/my-store")
+    public ResponseEntity<List<ProductResponseDto>> getProductsOfCurrentStore() throws AccessDeniedException, java.nio.file.AccessDeniedException {
+        List<ProductResponseDto> products = productService.getAllProductsOfCurrentStore();
+        return ResponseEntity.ok(products);
+    }
+}
