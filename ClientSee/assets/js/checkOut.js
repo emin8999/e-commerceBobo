@@ -92,8 +92,7 @@ if (products && Array.isArray(products)) {
       <div class="single-product">
         <img src="${product.img}" width="100" />
         <div class="order-item-details">
-          <p>Price: USD ${product.price}</p>
-          <p>Quantity: ${product.quantity}</p>      
+          <p> ${product.price} $</p>
         </div>
       </div>
     `

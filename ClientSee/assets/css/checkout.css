@@ -144,17 +144,22 @@ h2 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: 1px solid grey;
-  width: 153px;
+  border: 0.5px solid grey;
+  width: 110px;
+  border-radius: 5px;
   padding: 5px;
 }
 .single-product img {
-  width: 80px;
+  width: 60px;
+  height: 60px;
 }
 .order-item-details {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+.order-item-details p {
+  margin: 4px 0;
 }
 @media (max-width: 1000px) {
   .checkout-section {
@@ -164,6 +169,8 @@ h2 {
 }
 @media (max-width: 600px) {
   .order-summary {
+    display: flex;
+    align-items: center;
     flex-direction: column;
   }
   .order-summary .order-item {
