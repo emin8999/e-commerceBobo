@@ -1,0 +1,94 @@
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  background: #f9f9f9;
+  color: #333;
+}
+ul,
+ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.open-shop-page {
+  width: 100%;
+  max-width: 1300px;
+  margin: auto;
+  height: 100%;
+  padding-top: 160px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.open-shop-sections {
+  display: flex;
+  width: 100%;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.open-shop-section {
+  padding: 40px 20px;
+  max-width: 400px;
+}
+
+h1,
+h2 {
+  color: #ff6600;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+.button {
+  display: inline-block;
+  background: #ff6600;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  text-decoration: none;
+  border-radius: 6px;
+  margin-top: 20px;
+  cursor: pointer;
+}
+.contact-info {
+  font-size: 14px;
+}
+.contact-info-link {
+  font-size: 14px;
+  text-decoration: none;
+  color: #ff6600;
+}
+.contact-info-link:hover {
+  text-decoration: underline;
+}
+.faq-item {
+  margin-bottom: 10px;
+}
+
+.job-title {
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.job-desc {
+  margin-bottom: 10px;
+  color: #555;
+}
+@media (max-width: 600px) {
+  .open-shop-page {
+    padding-top: 60px;
+  }
+  .open-shop-sections {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .open-shop-section {
+    max-width: 400px;
+  }
+}

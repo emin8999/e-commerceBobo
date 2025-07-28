@@ -1,0 +1,99 @@
+@import url("./global.css");
+.start-selling-page {
+  width: 100%;
+  height: 100%;
+  padding-top: 190px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 20px;
+}
+ul,
+ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.section-wrapper {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.start-selling-title {
+  font-size: 3rem;
+  color: #ff6600;
+  margin-bottom: 20px;
+}
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+}
+
+.start-selling-section {
+  max-width: 500px;
+  padding: 0 20px;
+}
+
+.start-selling-section h2 {
+  font-size: 1.8rem;
+  color: #ff6600;
+  margin-bottom: 20px;
+}
+
+ul,
+ol {
+  padding-left: 20px;
+}
+
+ul li,
+ol li {
+  margin-bottom: 15px;
+}
+
+li strong {
+  color: #222;
+}
+
+.cta-button {
+  max-width: 250px;
+  background-color: #ff6600;
+  color: white;
+  padding: 15px 30px;
+  font-size: 1.1rem;
+  border: none;
+  text-align: center;
+  margin-top: 60px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.cta-button:hover {
+  background-color: #e65500;
+}
+
+@media (max-width: 600px) {
+  header h1 {
+    font-size: 1.8rem;
+  }
+  .start-selling-page {
+    padding-top: 80px;
+  }
+  header p {
+    font-size: 1rem;
+  }
+
+  section {
+    padding: 0 15px;
+  }
+
+  .cta-button {
+    padding: 12px 24px;
+    font-size: 1rem;
+  }
+}

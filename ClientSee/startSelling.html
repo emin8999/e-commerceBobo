@@ -2,11 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Product View</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./assets/css/style.css" />
-    <link rel="stylesheet" href="./assets/css/productVision.css" />
+    <link rel="stylesheet" href="./assets/css/startSelling.css" />
+
+    <title>Document</title>
   </head>
   <body>
     <header>
@@ -52,7 +52,7 @@
             <a class="sidebar-header-link" href="#">
               <img src="./assets/Img/User.png" alt="" />
             </a>
-            <a class="cart" href="./cart.html">
+            <a class="sidebar-header-link" href="./cart.html">
               <img src="./assets/Img/CartSVG.svg" alt="" />
             </a>
             <div class="sidebar-line"></div>
@@ -110,34 +110,94 @@
         </div>
       </nav>
     </header>
+
     <main>
-      <div class="product-page">
-        <div class="gallery">
-          <div class="thumbnails" id="thumbnails"></div>
-          <img id="main-image" class="main-image" src="" alt="Product Image" />
+      <div class="start-selling-page">
+        <h1 class="start-selling-title">Start Selling on BOBO Today!</h1>
+
+        <div class="section-wrapper">
+          <section class="start-selling-section">
+            <h2>Why BOBO?</h2>
+            <ul>
+              <li>
+                <strong>Easy registration</strong><br />Register in just a
+                couple of minutes — no complicated forms.
+              </li>
+              <li>
+                <strong>Fast store moderation</strong><br />After submitting
+                your application, your store will be reviewed within 24 hours.
+              </li>
+              <li>
+                <strong>Sell nationwide and beyond</strong><br />Receive orders
+                from different cities and countries — BOBO operates globally.
+              </li>
+              <li>
+                <strong>24/7 support</strong><br />Our support team is always
+                ready to help you with any questions.
+              </li>
+            </ul>
+          </section>
+
+          <section class="start-selling-section">
+            <h2>How does it work? (4 simple steps)</h2>
+            <ol>
+              <li>
+                <strong>Register on the platform</strong><br />Enter your email
+                and create a secure password.
+              </li>
+              <li>
+                <strong>Create your store</strong><br />Add a name, upload a
+                logo, and write a description — this is your brand.
+              </li>
+              <li>
+                <strong>Add products</strong><br />Upload photos, set prices,
+                write descriptions, and choose categories.
+              </li>
+              <li>
+                <strong>Start receiving orders and income</strong><br />Once
+                published, your products will be visible to buyers. You’ll
+                receive order notifications and payments to your provided
+                account.
+              </li>
+            </ol>
+          </section>
+
+          <section class="start-selling-section">
+            <h2>What do you need?</h2>
+            <ul>
+              <li>
+                <strong>Active email address</strong><br />Notifications and
+                confirmations will be sent there.
+              </li>
+              <li>
+                <strong>Store name</strong><br />Unique, memorable, and
+                reflective of your business essence.
+              </li>
+              <li>
+                <strong>Contact number</strong><br />Used for communication and
+                identity verification if needed.
+              </li>
+              <li>
+                <strong>Documents (on request)</strong><br />Some product
+                categories may require seller verification.
+              </li>
+            </ul>
+          </section>
+
+          <section class="start-selling-section">
+            <h2>What benefits do you get?</h2>
+            <ul>
+              <li>✔ Free registration — no hidden fees</li>
+              <li>✔ Easy store management through your personal dashboard</li>
+              <li>✔ Detailed statistics on views, orders, and income</li>
+              <li>✔ Ability to communicate directly with customers</li>
+              <li>✔ Participation in seasonal promotions and campaigns</li>
+              <li>✔ Visibility of your store on the homepage and in search</li>
+            </ul>
+          </section>
         </div>
 
-        <div class="product-info">
-          <h1 id="title">Product Name</h1>
-          <p class="store" id="store">Store: Example</p>
-
-          <div class="price-box">
-            <!-- <span class="discount">-20%</span> -->
-            <span class="price" id="price">$23.99</span>
-            <!-- <span class="old-price" id="old-price">$29.99</span> -->
-          </div>
-
-          <p class="description" id="description">Description goes here.</p>
-
-          <p class="color" id="color">Color: White Yellow</p>
-          <p class="size" id="size">Size: Large</p>
-          <p class="category" id="category">Category: Dresses</p>
-
-          <div class="buttons">
-            <button onclick="addToCart()">Add to Cart</button>
-            <!-- <button>Buy Now</button> -->
-          </div>
-        </div>
+        <a href="openShop.html" class="cta-button">Become a Seller on BOBO</a>
       </div>
     </main>
     <footer class="footer">
@@ -157,18 +217,9 @@
           <ul>
             <li><a href="#">Sell products on BOBO</a></li>
             <li><a href="#">Open your shop on BOBO</a></li>
-            <!-- <li><a href="#">Sell apps on BOBO</a></li> -->
           </ul>
         </div>
-        <!-- <div class="column">
-          <h3>BOBO Payment Products</h3>
-          <ul>
-            <li><a href="#">BOBO Business Card</a></li>
-            <li><a href="#">Shop with Points</a></li>
-            <li><a href="#">Reload Your Balance</a></li>
-            <li><a href="#">BOBO Currency Converter</a></li>
-          </ul>
-        </div> -->
+
         <div class="column">
           <h3>Let Us Help You</h3>
           <ul>
@@ -193,9 +244,6 @@
         </div>
       </div>
     </footer>
-    <script src="./assets/js/productVision.js"></script>
-    <script src="./assets/js/header.js"></script>
     <script src="./assets/js/navBar.js"></script>
-    <script src="./assets/js/modal.js"></script>
   </body>
 </html>

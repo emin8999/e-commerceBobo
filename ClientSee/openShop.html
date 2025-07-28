@@ -2,11 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Product View</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./assets/css/style.css" />
-    <link rel="stylesheet" href="./assets/css/productVision.css" />
+    <link rel="stylesheet" href="./assets/css/openShop.css" />
+    <title>Document</title>
   </head>
   <body>
     <header>
@@ -52,7 +51,7 @@
             <a class="sidebar-header-link" href="#">
               <img src="./assets/Img/User.png" alt="" />
             </a>
-            <a class="cart" href="./cart.html">
+            <a class="sidebar-header-link" href="./cart.html">
               <img src="./assets/Img/CartSVG.svg" alt="" />
             </a>
             <div class="sidebar-line"></div>
@@ -110,36 +109,91 @@
         </div>
       </nav>
     </header>
+
     <main>
-      <div class="product-page">
-        <div class="gallery">
-          <div class="thumbnails" id="thumbnails"></div>
-          <img id="main-image" class="main-image" src="" alt="Product Image" />
+      <div class="open-shop-page">
+        <section class="open-shop-section">
+          <h2>About the Company</h2>
+          <p>
+            BOBO is more than just a marketplace. We're building a digital
+            ecosystem where small and medium-sized businesses can grow, and
+            customers can discover the best.
+          </p>
+        </section>
+        <div class="open-shop-sections">
+          <section class="open-shop-section">
+            <h2>Why Work at BOBO?</h2>
+
+            <ul>
+              <li>🚀 Fast-growing tech company</li>
+              <li>💡 Innovative projects and real challenges</li>
+              <li>🤝 Friendly and professional team</li>
+              <li>📚 Continuous learning and growth</li>
+              <li>💻 Remote work options</li>
+            </ul>
+          </section>
+
+          <section class="open-shop-section">
+            <h2>Open Positions</h2>
+            <div class="job-title">📌 Frontend Developer</div>
+            <div class="job-desc">
+              React, Tailwind, REST API — Remote / Hybrid
+            </div>
+
+            <div class="job-title">📌 Backend Developer</div>
+            <div class="job-desc">
+              Node.js, PostgreSQL, Supabase — Remote / Hybrid
+            </div>
+
+            <div class="job-title">📌 UI/UX Designer</div>
+            <div class="job-desc">
+              Figma, Web Interfaces, Branding — Remote / Hybrid
+            </div>
+
+            <div class="job-title">📌 Digital Marketing Intern</div>
+            <div class="job-desc">SMM, Content, SEO — Internship / Remote</div>
+
+            <div class="job-title">📌 Project Manager</div>
+            <div class="job-desc">Task Management, Agile — Remote / Office</div>
+
+            <a href="#" class="button">View All Openings</a>
+          </section>
+
+          <section class="open-shop-section">
+            <h2>What We Offer</h2>
+            <ul>
+              <li>✔️ Competitive salary</li>
+              <li>✔️ Flexible schedule and remote work</li>
+              <li>✔️ Internal trainings and hackathons</li>
+              <li>✔️ Mentorship and career growth</li>
+              <li>✔️ Modern tools and technologies</li>
+              <li>✔️ Work in a multicultural environment</li>
+            </ul>
+          </section>
+
+          <section class="open-shop-section">
+            <h2>How to Apply?</h2>
+            <ul>
+              <li>🔹 Send your resume</li>
+              <li>🔹 Click [Apply Now]</li>
+            </ul>
+            <a href="#" class="button">Apply Now</a>
+          </section>
         </div>
-
-        <div class="product-info">
-          <h1 id="title">Product Name</h1>
-          <p class="store" id="store">Store: Example</p>
-
-          <div class="price-box">
-            <!-- <span class="discount">-20%</span> -->
-            <span class="price" id="price">$23.99</span>
-            <!-- <span class="old-price" id="old-price">$29.99</span> -->
+        <section class="open-shop-section">
+          <h2>Frequently Asked Questions (FAQ)</h2>
+          <div class="faq-item">❓ Where is your office located?</div>
+          <div class="faq-item">
+            ❓ Can I apply for an internship without experience?
           </div>
-
-          <p class="description" id="description">Description goes here.</p>
-
-          <p class="color" id="color">Color: White Yellow</p>
-          <p class="size" id="size">Size: Large</p>
-          <p class="category" id="category">Category: Dresses</p>
-
-          <div class="buttons">
-            <button onclick="addToCart()">Add to Cart</button>
-            <!-- <button>Buy Now</button> -->
+          <div class="faq-item">❓ What technologies do you use?</div>
+          <div class="faq-item">
+            ❓ How quickly do you respond to applicants?
           </div>
-        </div>
+        </section>
       </div>
     </main>
+
     <footer class="footer">
       <div class="footer-columns">
         <div class="column">
@@ -157,18 +211,9 @@
           <ul>
             <li><a href="#">Sell products on BOBO</a></li>
             <li><a href="#">Open your shop on BOBO</a></li>
-            <!-- <li><a href="#">Sell apps on BOBO</a></li> -->
           </ul>
         </div>
-        <!-- <div class="column">
-          <h3>BOBO Payment Products</h3>
-          <ul>
-            <li><a href="#">BOBO Business Card</a></li>
-            <li><a href="#">Shop with Points</a></li>
-            <li><a href="#">Reload Your Balance</a></li>
-            <li><a href="#">BOBO Currency Converter</a></li>
-          </ul>
-        </div> -->
+
         <div class="column">
           <h3>Let Us Help You</h3>
           <ul>
@@ -176,6 +221,22 @@
             <li><a href="#">Your Orders</a></li>
             <li><a href="#">Login For Sellers</a></li>
           </ul>
+        </div>
+        <div class="column">
+          <h3>Contact Us</h3>
+          <p class="contact-info">
+            📧 Contact Email:
+            <a class="contact-info-link" href="mailto:careers@bobo.com"
+              >careers@bobo.com</a
+            >
+          </p>
+          <p class="contact-info">
+            🔒 <a class="contact-info-link" href="#">Privacy Policy</a>
+          </p>
+          <p class="contact-info">
+            🔗 Follow us on:
+            <a class="contact-info-link" href="#">Instagram</a>,
+          </p>
         </div>
       </div>
 
@@ -193,9 +254,6 @@
         </div>
       </div>
     </footer>
-    <script src="./assets/js/productVision.js"></script>
-    <script src="./assets/js/header.js"></script>
     <script src="./assets/js/navBar.js"></script>
-    <script src="./assets/js/modal.js"></script>
   </body>
 </html>
