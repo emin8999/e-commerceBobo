@@ -14,6 +14,7 @@ import com.ecommerce.ecommercebackend.service.StoreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -59,20 +60,25 @@ public class StoreServiceImpl implements StoreService {
         }
     }
 
+    @Override
     public LoginResponseDto login(LoginRequestDto loginRequestDto) {
-        var authentication = authenticationManager.authenticate(
+        Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail(), loginRequestDto.getPassword())
         );
 
-        if (authentication.isAuthenticated()) {
+        if(authentication.isAuthenticated()){
             StoreEntity store = storeRepository.findStoreEntitiesByEmail(loginRequestDto.getEmail())
                     .orElseThrow(() -> new RuntimeException("Store not found"));
+
+
             StorePrincipal storePrincipal = new StorePrincipal(store);
             String token = jwtService.generateToken(storePrincipal);
-            return new LoginResponseDto(token, "Bearer");
-        } else {
-            throw new RuntimeException("Authentication failed");
+
+            return new LoginResponseDto(token,"Bearer");
+
         }
+
+        throw new RuntimeException("Authentication failed");
     }
 
     public StoreResponseDto getCurrentStoreInfo() throws AccessDeniedException {

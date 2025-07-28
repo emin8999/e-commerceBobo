@@ -16,7 +16,10 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
 
-
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "store", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "sizes", expression = "java(mapCommaSeparatedStringToList(dto.getSizes()))")
     @Mapping(target = "colors", expression = "java(mapCommaSeparatedStringToList(dto.getColors()))")
     @Mapping(target = "images", ignore = true)

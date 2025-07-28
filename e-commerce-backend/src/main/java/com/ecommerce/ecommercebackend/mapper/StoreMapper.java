@@ -9,7 +9,10 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface StoreMapper {
 
-
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "productEntities", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "logo", ignore = true)
     @Mapping(target = "banner", ignore = true)
     StoreEntity mapToStoreEntity(StoreRegisterRequest storeRegisterRequest);

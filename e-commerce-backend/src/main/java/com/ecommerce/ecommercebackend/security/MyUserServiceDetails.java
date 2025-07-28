@@ -11,9 +11,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-@Service
-@Slf4j
 @RequiredArgsConstructor
+@Slf4j
+@Service
 public class MyUserServiceDetails implements UserDetailsService {
 
     private final UserRepository userRepository;
@@ -22,9 +22,12 @@ public class MyUserServiceDetails implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByEmail(username)
-                .map(UserPrincipal::new)
-                .orElseGet(() -> storeRepository.findStoreEntitiesByEmail(username)
-                        .map(StorePrincipal::new)
-                        .orElseThrow(() -> new UsernameNotFoundException("User or Store not found: " + username)));
+                .<UserDetails>map(UserPrincipal::new)
+                .orElseGet(() ->
+                        storeRepository.findStoreEntitiesByEmail(username)
+                                .<UserDetails>map(StorePrincipal::new)
+                                .orElseThrow(() ->
+                                        new UsernameNotFoundException("User or Store not found: " + username))
+                );
     }
 }
