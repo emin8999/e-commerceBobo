@@ -1,225 +1,139 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const storeSelect = document.getElementById("productStore");
-  const form = document.getElementById("addProductForm");
-  const message = document.getElementById("addProductMessage");
+    const form = document.getElementById("addProductForm");
+    const addBtn = document.querySelector(".add-size-btn");
+    const wrapper = document.getElementById("sizeQuantitiesWrapper");
+    const message = document.getElementById("addProductMessage");
+    const storeNameInput = document.getElementById("productStore");
 
-  // Load store names from localStorage
-  const stores = JSON.parse(localStorage.getItem("stores")) || [];
-  stores.forEach((store) => {
-    const option = document.createElement("option");
-    option.value = store.id;
-    option.textContent = store.name;
-    storeSelect.appendChild(option);
-  });
-  const addBtn = document.querySelector(".add-size-btn");
-  const sizeWrapper = document.querySelector(".size-wrapper");
-
-  addBtn.addEventListener("click", () => {
-    const newSizeBlock = document.createElement("div");
-    newSizeBlock.classList.add("size-items");
-
-    newSizeBlock.innerHTML = `
-      <select id="productSizes" class="size-input">
-                <option value="">Size</option>
-                <option value="2XS">2XS</option>
-                <option value="XS">XS</option>
-                <option value="S">S</option>
-                <option value="M">M</option>
-                <option value="L">L</option>
-                <option value="XL">XL</option>
-                <option value="2XL">2XL</option>
-              </select>
-              <input
-                type="number"
-                id="productQuantity"
-                placeholder="Quantity"
-                class="quantity-input"
-                required
-              />
-    `;
-
-    sizeWrapper.insertBefore(newSizeBlock, addBtn);
-  });
-  const storeData = {
-    name: "BOBO Store",
-    id: "store123",
-    address: "Baku, Azerbaijan",
-    owner: "Rustam Kerimli",
-  };
-
-  localStorage.setItem("storeInfo", JSON.stringify(storeData));
-
-  const storeInput = document.getElementById("productStore");
-  const stored = localStorage.getItem("storeInfo");
-
-  if (stored && storeInput) {
-    const storeObj = JSON.parse(stored);
-    storeInput.value = storeObj.name;
-  }
-
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-
-    const product = {
-      id: `prod-${Date.now()}`,
-      name: document.getElementById("productName").value,
-      description: document.getElementById("productDescription").value,
-      price: parseFloat(document.getElementById("productPrice").value),
-      category: document.getElementById("productCategory").value,
-      sizes: document
-        .getElementById("productSizes")
-        .value.split(",")
-        .map((s) => s.trim()),
-      colors: document
-        .getElementById("productColors")
-        .value.split(",")
-        .map((c) => c.trim()),
-      quantity: parseInt(document.getElementById("productQuantity").value),
-      availability: document.getElementById("productAvailability").value,
-      storeId: document.getElementById("productStore").value,
-      images: [],
-    };
-
-    const imageFiles = document.getElementById("productImages").files;
-    const readers = [];
-
-    for (let i = 0; i < imageFiles.length; i++) {
-      const reader = new FileReader();
-      readers.push(
-        new Promise((resolve) => {
-          reader.onload = () => resolve(reader.result);
-          reader.readAsDataURL(imageFiles[i]);
-        })
-      );
+    const jwtToken = localStorage.getItem("jwtToken");
+    if (jwtToken) {
+        try {
+            const decodedToken = JSON.parse(atob(jwtToken.split('.')[1]));
+            const storeName = decodedToken.storeName || decodedToken.sub || "Unknown Store";
+            storeNameInput.value = storeName;
+        } catch (err) {
+            console.error("Invalid token:", err);
+            storeNameInput.value = "Invalid token";
+        }
+    } else {
+        storeNameInput.value = "No token found";
     }
 
-    // 2. Update size quantities inputs dynamically based on selected sizes
-    sizeSelection.addEventListener("change", () => {
-        const selectedSizes = [...document.querySelectorAll('input[name="size"]:checked')];
-        sizeQuantities.innerHTML = "";
+    const sizeOptions = `
+    <option value="">Size</option>
+    <option value="TWO_XS">2XS</option>
+    <option value="XS">XS</option>
+    <option value="S">S</option>
+    <option value="M">M</option>
+    <option value="L">L</option>
+    <option value="XL">XL</option>
+    <option value="TWO_XL">2XL</option>
+  `;
 
-        selectedSizes.forEach(size => {
-            const label = document.createElement("label");
-            label.textContent = `Quantity for ${size.value}: `;
+    addBtn.addEventListener("click", () => {
+        const sizeBlock = document.createElement("div");
+        sizeBlock.classList.add("size-quantity-wrapper");
 
-            const input = document.createElement("input");
-            input.type = "number";
-            input.name = `quantity-${size.value}`;
-            input.min = 0;
-            input.required = true;
-            input.value = "0"; // default to zero
+        sizeBlock.innerHTML = `
+      <select name="productSizes" class="size-input" required>
+        ${sizeOptions}
+      </select>
+      <input type="number" name="quantities" class="quantity-input" placeholder="Quantity" required />
+      <button type="button" class="remove-button">X</button>
+    `;
 
-            sizeQuantities.appendChild(label);
-            sizeQuantities.appendChild(input);
-            sizeQuantities.appendChild(document.createElement("br"));
+        wrapper.insertBefore(sizeBlock, addBtn);
+
+        sizeBlock.querySelector(".remove-button").addEventListener("click", () => {
+            sizeBlock.remove();
+            updateRemoveButtons();
         });
+
+        updateRemoveButtons();
     });
 
-    // 3. Handle form submission
+    function updateRemoveButtons() {
+        const allRemoveBtns = wrapper.querySelectorAll(".remove-button");
+        if (allRemoveBtns.length > 1) {
+            allRemoveBtns.forEach(btn => btn.style.display = "inline-block");
+        } else {
+            allRemoveBtns.forEach(btn => btn.style.display = "none");
+        }
+    }
+
+    updateRemoveButtons();
+
     form.addEventListener("submit", async(e) => {
         e.preventDefault();
-        message.textContent = ""; // clear previous messages
+        const formData = new FormData(form);
+        const sizeElements = formData.getAll("productSizes");
+        const quantityElements = formData.getAll("quantities");
 
-        // Validate selected sizes
-        const selectedSizes = [...document.querySelectorAll('input[name="size"]:checked')].map(cb => cb.value);
-        if (selectedSizes.length === 0) {
-            message.textContent = "⚠️ Please select at least one size.";
-            return;
-        }
+        const sizeQuantities = sizeElements.map((size, index) => ({
+            size: size,
+            quantity: parseInt(quantityElements[index])
+        }));
 
-        // Validate quantities for each selected size
-        const sizeQuantityData = [];
-        for (let i = 0; i < selectedSizes.length; i++) {
-            const size = selectedSizes[i];
-            const qtyInput = document.querySelector(`input[name="quantity-${size}"]`);
-            if (!qtyInput || qtyInput.value === "" || isNaN(qtyInput.value) || qtyInput.value < 0) {
-                message.textContent = `⚠️ Please enter a valid quantity for size ${size}.`;
-                return;
-            }
-            sizeQuantityData.push({
-                size: size,
-                quantity: parseInt(qtyInput.value, 10)
-            });
-        }
+        const colorsRaw = formData.get("productColors");
+        const body = {
+            name: formData.get("productName"),
+            description: formData.get("productDescription"),
+            price: parseFloat(formData.get("productPrice")),
+            category: formData.get("productCategory"),
+            sizeQuantities: sizeQuantities,
+            colors: colorsRaw ? colorsRaw.split(",").map(c => c.trim()) : []
+        };
 
-        // Validate colors
-        const colorsInput = document.getElementById("productColors").value.trim();
-        if (!colorsInput) {
-            message.textContent = "⚠️ Please enter colors.";
-            return;
-        }
-        const colors = colorsInput.split(",").map(c => c.trim()).filter(c => c);
-
-        // Validate enums
-        const availability = document.getElementById("productAvailability").value;
-        if (!availability) {
-            message.textContent = "⚠️ Please select availability.";
-            return;
-        }
-
-        const status = document.getElementById("productStatus").value;
-        if (!status) {
-            message.textContent = "⚠️ Please select status.";
-            return;
-        }
-
-        // Validate images
-        const images = document.getElementById("productImages").files;
-        if (images.length === 0) {
-            message.textContent = "⚠️ Please upload at least one image.";
-            return;
-        }
-
-        // Prepare form data for submission
-        const formData = new FormData();
-        formData.append("name", document.getElementById("productName").value.trim());
-        formData.append("description", document.getElementById("productDescription").value.trim());
-        formData.append("price", document.getElementById("productPrice").value);
-        formData.append("category", document.getElementById("productCategory").value.trim());
-        formData.append("availability", availability);
-        formData.append("status", status);
-        formData.append("colors", colors.join(","));
-        formData.append("storeName", storeNameInput.value);
-
-        // Append images
-        for (let i = 0; i < images.length; i++) {
-            formData.append("imageUrls", images[i]);
-        }
-
-        // Append sizeQuantities with correct keys for backend
-        sizeQuantityData.forEach((sq, idx) => {
-            formData.append(`sizeQuantities[${idx}].size`, sq.size);
-            formData.append(`sizeQuantities[${idx}].quantity`, sq.quantity);
-        });
 
         try {
             const response = await fetch("http://localhost:8080/home/product", {
                 method: "POST",
                 headers: {
-                    Authorization: `Bearer ${token}`
-                        // Important: Don't set 'Content-Type' header for FormData
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + jwtToken
                 },
-                body: formData
+                body: JSON.stringify(body)
             });
 
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.message || "Failed to add product");
-            }
+            if (!response.ok) throw new Error("Something went wrong");
 
-            message.style.color = "green";
-            message.textContent = "✅ Product successfully added!";
+            message.innerText = "Product added successfully!";
             form.reset();
-            sizeQuantities.innerHTML = "";
 
-            // Redirect to store-products after short delay
-            setTimeout(() => {
-                window.location.href = "store-products.html";
-            }, 1500);
-        } catch (err) {
-            message.style.color = "red";
-            console.error(err);
-            message.textContent = `❌ Failed to add product. ${err.message}`;
+            wrapper.innerHTML = `
+        <div class="size-quantity-wrapper">
+          <select name="productSizes" class="size-input" required>
+            ${sizeOptions}
+          </select>
+          <input type="number" name="quantities" class="quantity-input" placeholder="Quantity" required />
+          <button type="button" class="remove-button" style="display:none;">X</button>
+        </div>
+        <input type="button" value="+" class="add-size-btn" />
+      `;
+
+            const newAddBtn = document.querySelector(".add-size-btn");
+            newAddBtn.addEventListener("click", () => {
+                const sizeBlock = document.createElement("div");
+                sizeBlock.classList.add("size-quantity-wrapper");
+                sizeBlock.innerHTML = `
+          <select name="productSizes" class="size-input" required>
+            ${sizeOptions}
+          </select>
+          <input type="number" name="quantities" class="quantity-input" placeholder="Quantity" required />
+          <button type="button" class="remove-button">X</button>
+        `;
+                wrapper.insertBefore(sizeBlock, newAddBtn);
+                sizeBlock.querySelector(".remove-button").addEventListener("click", () => {
+                    sizeBlock.remove();
+                    updateRemoveButtons();
+                });
+                updateRemoveButtons();
+            });
+
+            updateRemoveButtons();
+        } catch (error) {
+            console.error(error);
+            message.innerText = "Error adding product.";
         }
     });
 });

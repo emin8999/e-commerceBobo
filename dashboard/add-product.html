@@ -158,76 +158,47 @@
         </div>
         </div>
 
-      <div class="product-form-container">
-        <h1>Add a New Product</h1>
-        <form id="addProductForm">
-          <input
-            type="text"
-            id="productName"
-            placeholder="Product Name"
-            required
-          />
-          <textarea
-            id="productDescription"
-            placeholder="Description"
-            required
-          ></textarea>
-          <input
-            type="number"
-            id="productPrice"
-            placeholder="Price ($)"
-            required
-          />
-          <input
-            type="text"
-            id="productCategory"
-            placeholder="Category"
-            required
-          />
-          <div class="size-wrapper">
-            <div class="size-items">
-              <select id="productSizes" class="size-input">
-                <option value="">Size</option>
-                <option value="2XS">2XS</option>
-                <option value="XS">XS</option>
-                <option value="S">S</option>
-                <option value="M">M</option>
-                <option value="L">L</option>
-                <option value="XL">XL</option>
-                <option value="2XL">2XL</option>
-              </select>
-              <input
-                type="number"
-                id="productQuantity"
-                placeholder="Quantity"
-                class="quantity-input"
-                required
-              />
-            </div>
+        <div class="product-form-container">
+            <h1>Add a New Product</h1>
+            <form id="addProductForm">
+                <input type="text" id="productName" placeholder="Product Name" required />
+                <textarea id="productDescription" placeholder="Description" required></textarea>
+                <input type="number" id="productPrice" placeholder="Price ($)" required />
+                <input type="text" id="productCategory" placeholder="Category" required />
 
-            <input type="button" value="+" class="add-size-btn" />
-          </div>
+                <!-- SIZE + QUANTITY SECTION -->
+                <!-- SIZE + QUANTITY SECTION -->
+                <div class="size-wrapper" id="sizeQuantitiesWrapper">
+                    <div class="size-quantity-wrapper">
+                        <select name="productSizes" class="size-input" required>
+      <option value="">Size</option>
+      <option value="TWO_XS">2XS</option>
+      <option value="XS">XS</option>
+      <option value="S">S</option>
+      <option value="M">M</option>
+      <option value="L">L</option>
+      <option value="XL">XL</option>
+      <option value="TWO_XL">2XL</option>
+    </select>
+                        <input type="number" name="quantities" class="quantity-input" placeholder="Quantity" required />
+                        <button type="button" class="remove-button" style="display:none;">X</button>
+                    </div>
+                    <input type="button" value="+" class="add-size-btn" />
+                </div>
 
-          <input
-            type="text"
-            id="productColors"
-            placeholder="Colors (comma-separated)"
-          />
 
-          <input
-            type="file"
-            id="productImages"
-            accept="image/*"
-            multiple
-            required
-          />
-          <input type="text" id="productStore" name="productStore" readonly />
-          <button type="submit">Add Product</button>
-        </form>
-        <div id="addProductMessage"></div>
-      </div>
-    </main>
-    <script src="./assets/js/DashNavBar.js"></script>
-    <script src="./assets/js/add-product.js"></script>
-  </body>
+                <input type="text" id="productColors" placeholder="Colors (comma-separated)" />
+                <input type="file" id="productImages" accept="image/*" multiple required />
+                <input type="text" id="productStore" name="productStore" readonly />
+
+
+                <button type="submit">Add Product</button>
+            </form>
+            <div id="addProductMessage"></div>
+        </div>
+        </main>
+        <script src="./assets/js/DashNavBar.js"></script>
+        <script src="./assets/js/add-product.js"></script>
+</body>
+
 </html>

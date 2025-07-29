@@ -31,12 +31,24 @@ function renderProducts(products, filterText = "", filterStatus = "all") {
         (filterStatus === "all" || p.status === filterStatus)
     );
 
+    const sizeDisplayMap = {
+        TWO_XS: "2XS",
+        XS: "XS",
+        S: "S",
+        M: "M",
+        L: "L",
+        XL: "XL",
+        TWO_XL: "2XL"
+    };
+
     filtered.forEach((product) => {
         const imageUrl = product.imageUrls && product.imageUrls.length > 0 ?
             `${product.imageUrls[0]}` :
             "";
 
-        const sizes = product.sizeQuantities.map(sq => sq.size).join(", ");
+        const sizes = product.sizeQuantities
+            .map(sq => sizeDisplayMap[sq.size] || sq.size)
+            .join(", ");
         const quantities = product.sizeQuantities.map(sq => sq.quantity).join(", ");
 
         const tr = document.createElement("tr");
@@ -49,7 +61,7 @@ function renderProducts(products, filterText = "", filterStatus = "all") {
             <td>${sizes}</td>
             <td>${quantities}</td>
             <td>${product.status}</td>
-            <td>-</td> <!-- You can add buttons here -->
+            <td>-</td>
         `;
         productsList.appendChild(tr);
     });
