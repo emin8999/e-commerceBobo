@@ -1,62 +1,74 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const storeId = new URLSearchParams(window.location.search).get("storeId");
-  const products = JSON.parse(localStorage.getItem("products")) || [];
-  const productsList = document.getElementById("productsList");
+const BACKEND_BASE_URL = "http://localhost:8080"; // Change if needed
 
-  function renderProducts(filterText = "", filterStatus = "all") {
+// Fetch products from backend using JWT
+async function fetchProducts() {
+    try {
+        const token = localStorage.getItem("jwtToken");
+
+        const response = await fetch(`${BACKEND_BASE_URL}/home/product/my-store`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) throw new Error("Failed to fetch products");
+
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching products:", error);
+        return [];
+    }
+}
+
+// Render products to the table
+function renderProducts(products, filterText = "", filterStatus = "all") {
+    const productsList = document.getElementById("productsList");
     productsList.innerHTML = "";
-    const filtered = products.filter(
-      (p) =>
-        p.storeId === storeId &&
+
+    const filtered = products.filter((p) =>
         p.name.toLowerCase().includes(filterText.toLowerCase()) &&
         (filterStatus === "all" || p.status === filterStatus)
     );
 
     filtered.forEach((product) => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td><img src="${product.images?.[0] || ""}" alt="product" /></td>
-        <td>${product.name}</td>
-        <td>${product.category}</td>
-        <td>$${product.price}</td>
-        <td>${product.quantity}</td>
-        <td>${product.status}</td>
-        <td class="actions-btns">
-          <button class="edit" onclick="editProduct('${
-            product.id
-          }')">Edit</button>
-          <button class="delete" onclick="deleteProduct('${
-            product.id
-          }')">Delete</button>
-        </td>
-      `;
-      productsList.appendChild(tr);
+        const imageUrl = product.imageUrls && product.imageUrls.length > 0 ?
+            `${product.imageUrls[0]}` :
+            "";
+
+        const sizes = product.sizeQuantities.map(sq => sq.size).join(", ");
+        const quantities = product.sizeQuantities.map(sq => sq.quantity).join(", ");
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td><img src="${imageUrl}" alt="product" style="width: 70px; height: auto;" /></td>
+            <td>${product.name}</td>
+            <td>${product.description}</td>
+            <td>${product.category || "-"}</td>
+            <td>$${product.price.toFixed(2)}</td>
+            <td>${sizes}</td>
+            <td>${quantities}</td>
+            <td>${product.status}</td>
+            <td>-</td> <!-- You can add buttons here -->
+        `;
+        productsList.appendChild(tr);
     });
-  }
+}
 
-  document.getElementById("searchInput").addEventListener("input", (e) => {
-    renderProducts(
-      e.target.value,
-      document.getElementById("statusFilter").value
-    );
-  });
+// When DOM is ready
+document.addEventListener("DOMContentLoaded", async() => {
+    const products = await fetchProducts();
 
-  document.getElementById("statusFilter").addEventListener("change", (e) => {
-    renderProducts(
-      document.getElementById("searchInput").value,
-      e.target.value
-    );
-  });
+    // Initial render
+    renderProducts(products);
 
-  window.editProduct = (id) => {
-    alert("Edit function for product ID: " + id);
-  };
+    // Search filter
+    document.getElementById("searchInput").addEventListener("input", (e) => {
+        renderProducts(products, e.target.value, document.getElementById("statusFilter").value);
+    });
 
-  window.deleteProduct = (id) => {
-    const updated = products.filter((p) => p.id !== id);
-    localStorage.setItem("products", JSON.stringify(updated));
-    renderProducts();
-  };
-
-  renderProducts();
+    // Status filter
+    document.getElementById("statusFilter").addEventListener("change", (e) => {
+        renderProducts(products, document.getElementById("searchInput").value, e.target.value);
+    });
 });

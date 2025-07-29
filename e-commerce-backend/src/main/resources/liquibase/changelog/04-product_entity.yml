@@ -37,8 +37,8 @@ databaseChangeLog:
                   type: VARCHAR(30)
 
               - column:
-                  name: quantity
-                  type: INTEGER
+                  name: availability
+                  type: VARCHAR(50)
                   constraints:
                     nullable: false
 

@@ -11,9 +11,9 @@ public class ProductResponseDto {
     private String name;
     private String description;
     private Double price;
-    private List<String> sizes;
     private List<String> colors;
-    private Integer quantity;
     private ProductStatus status;
+    private String storeName;
     private List<String> imageUrls;
+    private List<SizeQuantityDto> sizeQuantities;
 }
