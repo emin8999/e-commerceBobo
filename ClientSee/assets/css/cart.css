@@ -1,3 +1,5 @@
+@import url("./global.css");
+
 body {
   font-family: Arial, sans-serif;
   background-color: #f7f7f7;
@@ -8,9 +10,11 @@ body {
 .cart-page {
   display: flex;
   justify-content: space-between;
-  padding: 20px;
+  flex-direction: row;
   max-width: 1300px;
-  margin: auto;
+  padding-top: 190px;
+  margin: 0 auto;
+  margin-bottom: 20px;
 }
 
 .cart-items {
@@ -166,4 +170,32 @@ body {
 
 .empty-cart-buttons .btn:hover {
   background-color: #f08804;
+}
+
+@media (max-width: 600px) {
+  .cart-page {
+    padding-top: 100px;
+  }
+}
+
+@media (max-width: 900px) {
+  .cart-page {
+    flex-direction: column;
+    margin: 15px;
+  }
+
+  /* .cart-items,
+  .cart-summary {
+    margin-bottom: 20px;
+    margin-left: 0;
+  }
+
+  .cart-item {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cart-item img {
+    margin-bottom: 10px;
+  } */
 }

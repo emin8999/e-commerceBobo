@@ -158,57 +158,76 @@
         </div>
         </div>
 
-        <div class="product-form-container">
-            <h1>Add a New Product</h1>
-            <form id="addProductForm" enctype="multipart/form-data" autocomplete="off">
-                <input type="text" id="productName" placeholder="Product Name" required />
+      <div class="product-form-container">
+        <h1>Add a New Product</h1>
+        <form id="addProductForm">
+          <input
+            type="text"
+            id="productName"
+            placeholder="Product Name"
+            required
+          />
+          <textarea
+            id="productDescription"
+            placeholder="Description"
+            required
+          ></textarea>
+          <input
+            type="number"
+            id="productPrice"
+            placeholder="Price ($)"
+            required
+          />
+          <input
+            type="text"
+            id="productCategory"
+            placeholder="Category"
+            required
+          />
+          <div class="size-wrapper">
+            <div class="size-items">
+              <select id="productSizes" class="size-input">
+                <option value="">Size</option>
+                <option value="2XS">2XS</option>
+                <option value="XS">XS</option>
+                <option value="S">S</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+                <option value="XL">XL</option>
+                <option value="2XL">2XL</option>
+              </select>
+              <input
+                type="number"
+                id="productQuantity"
+                placeholder="Quantity"
+                class="quantity-input"
+                required
+              />
+            </div>
 
-                <textarea id="productDescription" placeholder="Description" required></textarea>
+            <input type="button" value="+" class="add-size-btn" />
+          </div>
 
-                <input type="number" id="productPrice" placeholder="Price ($)" step="0.01" min="0" required />
+          <input
+            type="text"
+            id="productColors"
+            placeholder="Colors (comma-separated)"
+          />
 
-                <input type="text" id="productCategory" placeholder="Category" required />
-
-                <!-- Size selection -->
-                <div id="sizeSelection">
-                    <label>Select Sizes:</label><br />
-                    <label><input type="checkbox" name="size" value="XS" /> XS</label>
-                    <label><input type="checkbox" name="size" value="S" /> S</label>
-                    <label><input type="checkbox" name="size" value="M" /> M</label>
-                    <label><input type="checkbox" name="size" value="L" /> L</label>
-                    <label><input type="checkbox" name="size" value="XL" /> XL</label>
-                </div>
-
-                <!-- Quantities for selected sizes -->
-                <div id="sizeQuantities" style="margin-top: 10px;"></div>
-
-                <input type="text" id="productColors" placeholder="Colors (comma-separated)" required />
-
-                <select id="productAvailability" required>
-          <option value="">-- Select Availability --</option>
-          <option value="IN_STOCK">IN_STOCK</option>
-          <option value="OUT_OF_STOCK">OUT_OF_STOCK</option>
-        </select>
-
-                <select id="productStatus" required>
-          <option value="">-- Select Status --</option>
-          <option value="ACTIVE">ACTIVE</option>
-          <option value="IN_ACTIVE">IN_ACTIVE</option>
-        </select>
-
-                <input type="file" id="productImages" accept="image/*" multiple required />
-
-                <!-- Auto-filled store name -->
-                <input type="text" id="productStoreName" placeholder="Store Name" readonly required />
-
-                <button type="submit">Add Product</button>
-            </form>
-
-            <div id="addProductMessage" style="margin-top: 15px; font-weight: bold;"></div>
-        </div>
-        </main>
-        <script src="./assets/js/DashNavBar.js"></script>
-        <script src="./assets/js/add-product.js"></script>
-</body>
-
+          <input
+            type="file"
+            id="productImages"
+            accept="image/*"
+            multiple
+            required
+          />
+          <input type="text" id="productStore" name="productStore" readonly />
+          <button type="submit">Add Product</button>
+        </form>
+        <div id="addProductMessage"></div>
+      </div>
+    </main>
+    <script src="./assets/js/DashNavBar.js"></script>
+    <script src="./assets/js/add-product.js"></script>
+  </body>
 </html>

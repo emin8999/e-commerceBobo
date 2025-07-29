@@ -3,6 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <title>Product View</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
     <link rel="stylesheet" href="./assets/css/style.css" />
     <link rel="stylesheet" href="./assets/css/productVision.css" />
   </head>
@@ -10,59 +12,90 @@
     <header>
       <div class="top-header">
         <div class="left-section">
-          <a class="logo" href="./index.html">
-            <img src="#" alt="BOBO" class="logo" />
+          <a class="header-logo-link" href="./index.html">
+            <img src="#" alt="BOBO" class="header-logo" />
           </a>
-          <div class="deliver-to">
-            <span class="small-text">Deliver to</span>
-            <span class="bold-text">Azerbaijan</span>
-          </div>
         </div>
-
+        <div class="deliver-to">
+          <span class="small-text">Deliver to</span>
+          <span class="bold-text">Azerbaijan</span>
+        </div>
         <div class="search-bar">
-          <select class="search-select">
-            <option>All</option>
-            <option>Books</option>
-            <option>Electronics</option>
-          </select>
           <input type="text" placeholder="Search BOBO" />
           <button class="search-button">🔍</button>
         </div>
-
+        <div class="line"></div>
         <div class="right-section">
           <div class="language">
             <img src="https://flagcdn.com/us.svg" width="20" alt="EN" /> EN
           </div>
           <div class="account">
             <span class="small-text">Hello, sign in</span><br />
-            <span class="bold-text">Account & Lists ▼</span>
+            <!-- <span class="bold-text">Account & Lists ▼</span> -->
           </div>
           <div class="orders">
             <span class="small-text">Returns</span><br />
             <span class="bold-text">& Orders</span>
           </div>
           <a class="cart" href="./cart.html">
-            <div class="cart">🛒 Cart <span class="cart-count">0</span></div></a
-          >
+            <img src="./assets/Img/CartSVG.svg" alt="" />
+            <span class="cart-count">0</span>
+          </a>
+        </div>
+        <!-- Mobile NavBar -->
+        <button class="burger-btn" onclick="toggleMenu()">☰</button>
+
+        <div class="overlay" onclick="toggleMenu()" id="overlay"></div>
+
+        <div class="sidebar" id="sidebar">
+          <div class="sidebar-header">
+            <a class="sidebar-header-link" href="#">
+              <img src="./assets/Img/User.png" alt="" />
+            </a>
+            <a class="sidebar-header-link" href="./cart.html">
+              <img src="./assets/Img/Cart.png" alt="" />
+            </a>
+            <div class="sidebar-line"></div>
+          </div>
+
+          <div class="mobile-search-bar">
+            <input type="text" placeholder="Search BOBO" />
+            <button class="mobile-search-button">🔍</button>
+          </div>
+          <div class="mobile-nav-items">
+            <div class="mobile-nav-item">
+              <a class="mobile-nav-item-link" href="./shop.html">Products</a>
+            </div>
+            <div class="mobile-nav-item">
+              <a class="mobile-nav-item-link" href="./costumerServis.html"
+                >Costumer Servis</a
+              >
+            </div>
+            <div class="mobile-nav-item">
+              <a class="mobile-nav-item-link" href="./ourStores.html"
+                >Our Stores</a
+              >
+            </div>
+            <div class="mobile-nav-item">
+              <a class="mobile-nav-item-link" href="./aboutUs.html">
+                About Us</a
+              >
+            </div>
+          </div>
+
+          <div class="nav-bar-language">
+            <img src="https://flagcdn.com/us.svg" width="20" alt="EN" />
+            <select name="language" id="language-select">
+              <option class="navbar-language" value="EN">EN</option>
+              <option class="navbar-language" value="AZ">AZ</option>
+              <option class="navbar-language" value="RU">RU</option>
+            </select>
+          </div>
+          <!-- Add to the menu -->
         </div>
       </div>
 
       <nav class="nav-bar">
-        <div class="MenuItem">
-          <a class="MenuItem" href="#" id="menuBtn">☰</a>
-
-          <!-- Modal -->
-          <div id="menuModal" class="modal">
-            <div class="modal-content">
-              <span class="closeModal">&times;</span>
-              <h2>Categories</h2>
-              <ul id="categoryList"></ul>
-
-              <h2>Stores</h2>
-              <ul id="storeList"></ul>
-            </div>
-          </div>
-        </div>
         <div class="nav-item">
           <a class="nav-item" href="./shop.html">Products</a>
         </div>
@@ -70,13 +103,10 @@
           <a class="nav-item" href="./costumerServis.html">Costumer Servis</a>
         </div>
         <div class="nav-item">
-          <a class="nav-item" href="./ourShops.html">Our Shops</a>
+          <a class="nav-item" href="./ourStores.html">Our Stores</a>
         </div>
         <div class="nav-item">
-          <a class="nav-item" href="./aboutUs.html"> Abour Us</a>
-        </div>
-        <div class="nav-item">
-          <a class="nav-item" href="./checkout.html"> Checkout</a>
+          <a class="nav-item" href="./aboutUs.html"> About Us</a>
         </div>
       </nav>
     </header>
@@ -117,6 +147,9 @@
           <ul>
             <li><a href="#">Careers</a></li>
             <li><a href="#">Blog</a></li>
+            <li class="returns-footer-item">
+              <a href="#">Returns &amp; Orders</a>
+            </li>
           </ul>
         </div>
         <div class="column">
@@ -150,22 +183,19 @@
         <img src="#" alt="BOBO logo" class="logo" />
         <div class="selectors">
           <select>
-            <option>English</option>
-            <option>Azerbaijan</option>
-          </select>
-          <select>
-            <option>USD - U.S. Dollar</option>
             <option>AZN - AZ. Manat</option>
+            <option>USD - U.S. Dollar</option>
           </select>
           <select>
-            <option>United States</option>
             <option>Azerbaijan</option>
+            <option>United States</option>
           </select>
         </div>
       </div>
     </footer>
     <script src="./assets/js/productVision.js"></script>
     <script src="./assets/js/header.js"></script>
+    <script src="./assets/js/navBar.js"></script>
     <script src="./assets/js/modal.js"></script>
   </body>
 </html>

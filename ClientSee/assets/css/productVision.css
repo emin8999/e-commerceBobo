@@ -1,8 +1,13 @@
 .product-page {
   display: flex;
-  max-width: 1200px;
+  justify-content: center;
+  max-width: 1350px;
   margin: auto;
   gap: 40px;
+  padding: 0 20px;
+
+  padding-top: 195px;
+  margin-bottom: 20px;
 }
 
 .gallery {
@@ -28,18 +33,17 @@
 }
 
 .main-image {
-  width: 600px;
-  height: 700px;
+  min-width: 250px;
+  height: 200px;
   object-fit: cover;
   border: 1px solid #ccc;
+  padding: 20px;
   border-radius: 8px;
 }
 
 .product-info {
-  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 12px;
 }
 
 .price-box {
@@ -71,7 +75,7 @@
 .buttons button {
   background-color: #ffd814;
   border: 1px solid #fcd200;
-  padding: 10px;
+  padding: 15px;
   font-size: 16px;
   border-radius: 8px;
   cursor: pointer;
@@ -80,4 +84,16 @@
 
 .buttons button:hover {
   background-color: #f7ca00;
+}
+@media (max-width: 900px) {
+  .product-page {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+@media (max-width: 600px) {
+  .product-page {
+    padding-top: 110px;
+    margin-bottom: 30px;
+  }
 }
