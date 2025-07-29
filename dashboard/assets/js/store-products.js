@@ -33,7 +33,7 @@ function renderProducts(products, filterText = "", filterStatus = "all") {
 
     filtered.forEach((product) => {
         const imageUrl = product.imageUrls && product.imageUrls.length > 0 ?
-            `${BACKEND_BASE_URL}${product.imageUrls[0]}` :
+            `${product.imageUrls[0]}` :
             "";
 
         const sizes = product.sizeQuantities.map(sq => sq.size).join(", ");

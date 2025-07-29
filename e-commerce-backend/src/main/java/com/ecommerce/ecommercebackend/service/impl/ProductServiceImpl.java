@@ -28,6 +28,7 @@ public class ProductServiceImpl implements ProductService {
     private final StoreSecurityUtil storeSecurityUtil;
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
+    private final ProductUtility productUtility;
 
     @Override
     @Transactional
@@ -51,7 +52,7 @@ public class ProductServiceImpl implements ProductService {
 
         ProductEntity productToSave = productRepository.save(product);
 
-        List<String> imagePaths = ProductUtility.saveProductImages(
+        List<String> imagePaths = productUtility.saveProductImages(
                 productRequestDto.getImageUrls(),
                 store.getId(),
                 productToSave.getId()

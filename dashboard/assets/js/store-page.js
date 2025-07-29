@@ -22,9 +22,8 @@ document.addEventListener("DOMContentLoaded", async() => {
         document.getElementById("storeName").textContent = store.name || "";
         document.getElementById("storeCategory").textContent = store.category || "";
         document.getElementById("storeDescription").textContent = store.location || "";
-        const baseUrl = "http://localhost:8080/home/images/";
-        document.getElementById("storeLogo").src = baseUrl + store.logo;
-        document.getElementById("storeBanner").style.backgroundImage = `url('${baseUrl + store.banner}')`;
+        document.getElementById("storeLogo").src = store.logo;
+        document.getElementById("storeBanner").style.backgroundImage = `url('${store.banner}')`;
 
         if (store.phone) {
             document.getElementById("storeContact").innerHTML = `📞 Contact: ${store.phone}`;
