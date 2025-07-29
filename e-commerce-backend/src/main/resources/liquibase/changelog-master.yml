@@ -10,6 +10,6 @@ databaseChangeLog:
   - include:
       file: liquibase/changelog/05-product_image_entity.yml
   - include:
-      file: liquibase/changelog/06-product_colors.yml
+      file: liquibase/changelog/06-product_entity_colors.yml
   - include:
-      file: liquibase/changelog/07-product_entity_colors.yml
+      file: liquibase/changelog/07-product_size_quantity.yml

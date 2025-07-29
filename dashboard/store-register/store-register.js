@@ -1,6 +1,4 @@
-document
-  .getElementById("storeRegisterForm")
-  .addEventListener("submit", async function (e) {
+document.getElementById("storeRegisterForm").addEventListener("submit", async function(e) {
     e.preventDefault();
 
     const storeName = document.getElementById("storeName").value.trim();
@@ -20,59 +18,44 @@ document
     errorMsg.textContent = "";
 
     if (password !== confirmPassword) {
-      errorMsg.textContent = "Passwords do not match.";
-      return;
+        errorMsg.textContent = "Passwords do not match.";
+        return;
     }
-
     if (!terms) {
-      errorMsg.textContent = "You must agree to the terms and conditions.";
-      return;
+        errorMsg.textContent = "You must agree to the terms and conditions.";
+        return;
     }
 
-    const storeUsers = JSON.parse(localStorage.getItem("storeUsers") || "[]");
+    const formData = new FormData();
+    formData.append("name", storeName);
+    formData.append("ownerName", ownerName);
+    formData.append("email", email);
+    formData.append("password", password);
+    formData.append("confirmPassword", confirmPassword);
+    formData.append("phone", phone);
+    formData.append("description", description);
+    formData.append("category", category);
+    formData.append("location", location);
+    formData.append("agreedToTerms", terms);
 
-    if (storeUsers.some((user) => user.email === email)) {
-      errorMsg.textContent = "Email is already registered.";
-      return;
+    if (logoFile) formData.append("logo", logoFile);
+    if (bannerFile) formData.append("banner", bannerFile);
+
+    try {
+        const response = await fetch("http://localhost:8080/home/store/register", {
+            method: "POST",
+            body: formData,
+        });
+
+        if (response.ok) {
+            alert("Store registered successfully!");
+            window.location.href = "store-login.html";
+        } else {
+            const errorData = await response.json();
+            errorMsg.textContent = errorData.message || "Registration failed.";
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        errorMsg.textContent = "Server error. Please try again later.";
     }
-
-    if (
-      storeUsers.some(
-        (user) => user.storeName.toLowerCase() === storeName.toLowerCase()
-      )
-    ) {
-      errorMsg.textContent = "Store name is already taken.";
-      return;
-    }
-
-    const toBase64 = (file) =>
-      new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
-
-    const logoBase64 = logoFile ? await toBase64(logoFile) : null;
-    const bannerBase64 = bannerFile ? await toBase64(bannerFile) : null;
-
-    const newStore = {
-      storeId: Date.now().toString(),
-      storeName,
-      ownerName,
-      email,
-      password,
-      phone,
-      logo: logoBase64,
-      banner: bannerBase64,
-      description,
-      category,
-      location,
-      createdAt: new Date().toISOString(),
-    };
-
-    storeUsers.push(newStore);
-    localStorage.setItem("storeUsers", JSON.stringify(storeUsers));
-    alert("Store registered successfully!");
-    window.location.href = "store-login.html";
-  });
+});

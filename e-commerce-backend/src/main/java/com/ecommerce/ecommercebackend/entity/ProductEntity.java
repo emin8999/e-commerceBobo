@@ -1,5 +1,7 @@
 package com.ecommerce.ecommercebackend.entity;
 
+import com.ecommerce.ecommercebackend.enums.ProductAvailability;
+import com.ecommerce.ecommercebackend.enums.ProductSize;
 import com.ecommerce.ecommercebackend.enums.ProductStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -32,14 +34,11 @@ public class ProductEntity {
 
     private String category;
 
-    @ElementCollection
-    private List<String> sizes;
+    @Column(nullable = false)
+    private ProductAvailability availability;
 
     @ElementCollection
     private List<String> colors;
-
-    @Column(nullable = false)
-    private Integer quantity;
 
     @Enumerated(EnumType.STRING)
     private ProductStatus status;
@@ -56,4 +55,7 @@ public class ProductEntity {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<ProductImageEntity> images = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductSizeQuantity> sizeQuantities = new ArrayList<>();
 }

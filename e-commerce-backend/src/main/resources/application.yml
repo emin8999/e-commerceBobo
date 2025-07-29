@@ -1,6 +1,9 @@
 spring:
   profiles:
     active: db
+  web:
+    resources:
+      static-locations: classpath:/static/, file:images/
 
 server:
   servlet:

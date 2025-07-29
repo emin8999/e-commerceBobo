@@ -18,13 +18,13 @@ public interface StoreMapper {
     StoreEntity mapToStoreEntity(StoreRegisterRequest storeRegisterRequest);
 
 
-    @Mapping(target = "logo", expression = "java(mapImage(storeEntity.getId(), \"logo\", storeEntity.getLogo()))")
-    @Mapping(target = "banner", expression = "java(mapImage(storeEntity.getId(), \"banner\", storeEntity.getBanner()))")
+//    @Mapping(target = "logo", expression = "java(mapImage(storeEntity.getId(), \"logo\", storeEntity.getLogo()))")
+//    @Mapping(target = "banner", expression = "java(mapImage(storeEntity.getId(), \"banner\", storeEntity.getBanner()))")
     StoreResponseDto mapToStoreResponse(StoreEntity storeEntity);
 
-    default String mapImage(Long storeId, String type, String filename) {
-        return filename != null && !filename.isEmpty()
-                ? "images/store_" + storeId + "/" + type + "/" + filename
-                : null;
-    }
+//    default String mapImage(Long storeId, String type, String filename) {
+//        return filename != null && !filename.isEmpty()
+//                ? "images/store_" + storeId + "/" + type + "/" + filename
+//                : null;
+//    }
 }

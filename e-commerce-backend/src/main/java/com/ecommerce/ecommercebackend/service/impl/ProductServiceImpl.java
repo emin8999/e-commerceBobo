@@ -4,6 +4,7 @@ import com.ecommerce.ecommercebackend.dto.request.product.ProductRequestDto;
 import com.ecommerce.ecommercebackend.dto.response.product.ProductResponseDto;
 import com.ecommerce.ecommercebackend.entity.ProductEntity;
 import com.ecommerce.ecommercebackend.entity.ProductImageEntity;
+import com.ecommerce.ecommercebackend.entity.ProductSizeQuantity;
 import com.ecommerce.ecommercebackend.entity.StoreEntity;
 import com.ecommerce.ecommercebackend.mapper.ProductMapper;
 import com.ecommerce.ecommercebackend.repository.ProductRepository;
@@ -34,6 +35,19 @@ public class ProductServiceImpl implements ProductService {
         StoreEntity store = storeSecurityUtil.getCurrentStore();
         ProductEntity product = productMapper.mapToProductEntity(productRequestDto);
         product.setStore(store);
+
+        List<ProductSizeQuantity> sizeQuantityEntities = productRequestDto.getSizeQuantities()
+                .stream()
+                .map(dto -> {
+                    ProductSizeQuantity entity = new ProductSizeQuantity();
+                    entity.setSize(dto.getSize());
+                    entity.setQuantity(dto.getQuantity());
+                    entity.setProduct(product);
+                    return entity;
+                })
+                .collect(Collectors.toList());
+
+        product.setSizeQuantities(sizeQuantityEntities);
 
         ProductEntity productToSave = productRepository.save(product);
 
