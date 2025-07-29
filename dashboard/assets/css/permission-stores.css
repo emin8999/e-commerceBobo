@@ -15,8 +15,8 @@ body {
   height: 100vh;
   flex-direction: column;
   max-width: 100%;
-  margin: 40px auto;
   overflow: auto;
+  flex: 1;
   width: 800px;
   padding: 30px;
   background: #ffffff;

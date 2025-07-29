@@ -1,4 +1,4 @@
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -10,14 +10,13 @@ body {
   color: #333;
 }
 
-.sidebar{
+.sidebar {
   height: 100vh;
 }
 
 .products-container {
   max-width: 100%;
-  width: 800px;
-  margin: 0 auto;
+  flex: 1;
   background: #ffffff;
   padding: 40px 20px;
   border-radius: 10px;
@@ -55,7 +54,7 @@ h1 {
   border-radius: 8px;
   overflow: auto;
   display: flex;
-    flex-wrap: wrap;
+  flex-wrap: wrap;
 }
 
 .products-table th,

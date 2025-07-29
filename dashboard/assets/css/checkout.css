@@ -11,8 +11,7 @@ body {
 
 .container {
   width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
+  flex: 1;
   background: #fff;
   padding: 40px 30px;
   border-radius: 10px;
@@ -107,4 +106,15 @@ tbody tr:hover {
 .actions .delete {
   background-color: #f44336;
   color: white;
+}
+@media (max-width: 1350px) {
+  .filters {
+    flex-direction: column;
+  }
+
+  .filters input,
+  .filters button {
+    width: 100%;
+    margin-bottom: 10px;
+  }
 }

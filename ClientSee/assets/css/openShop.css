@@ -1,0 +1,111 @@
+.open-shop-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 25px;
+  padding-top: 200px;
+}
+
+.open-shop-title-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  align-items: center;
+  max-width: 600px;
+}
+.open-shop-title-p {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.open-shop-about-company {
+  border: 1px solid #ff6600;
+  border-radius: 40px;
+  padding: 20px;
+}
+.open-shop-sections {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
+}
+.open-shop-list {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  align-items: flex-start;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.open-shop-section {
+  display: flex;
+  border: 1px solid #ff6600;
+  border-radius: 40px;
+  width: 100%;
+  padding: 20px;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  max-width: 500px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.open-shop-section:hover {
+  transform: scale(1.02);
+  transition: all 0.3s ease;
+}
+h1,
+h2 {
+  color: #ff6600;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+.button {
+  display: inline-block;
+  background: #ff6600;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  text-decoration: none;
+  border-radius: 6px;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.button:hover {
+  background: #e65c00;
+}
+
+.faq-item {
+  margin-bottom: 10px;
+}
+
+.job-title {
+  font-weight: bold;
+  margin-top: 10px;
+}
+.height-section {
+  height: 100%;
+}
+
+.job-desc {
+  margin-bottom: 10px;
+  color: #555;
+}
+
+@media (max-width: 900px) {
+  .open-shop-main {
+    padding: 100px 20px 0;
+  }
+  .open-shop-section {
+    max-width: 100%;
+  }
+  .open-shop-title-wrapper {
+    max-width: 90%;
+  }
+}

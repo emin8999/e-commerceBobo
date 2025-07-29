@@ -1,4 +1,4 @@
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -11,8 +11,7 @@ body {
 
 .container {
   max-width: 100%;
-  width: 800px;
-  margin: 0 auto;
+  flex: 1;
   background: #ffffff;
   padding: 40px 20px;
   border-radius: 10px;

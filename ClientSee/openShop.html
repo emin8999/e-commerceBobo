@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./assets/css/style.css" />
+    <link rel="stylesheet" href="./assets/css/openShop.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <header>
+      <div class="top-header">
+        <div class="left-section">
+          <a class="header-logo-link" href="./index.html">
+            <img src="#" alt="BOBO" class="header-logo" />
+          </a>
+        </div>
+        <div class="deliver-to">
+          <span class="small-text">Deliver to</span>
+          <span class="bold-text">Azerbaijan</span>
+        </div>
+        <div class="search-bar">
+          <input type="text" placeholder="Search BOBO" />
+          <button class="search-button">🔍</button>
+        </div>
+        <div class="line"></div>
+        <div class="right-section">
+          <div class="language">
+            <img src="https://flagcdn.com/us.svg" width="20" alt="EN" /> EN
+          </div>
+          <div class="account">
+            <span class="small-text">Hello, sign in</span><br />
+            <!-- <span class="bold-text">Account & Lists ▼</span> -->
+          </div>
+          <div class="orders">
+            <span class="small-text">Returns</span><br />
+            <span class="bold-text">& Orders</span>
+          </div>
+          <a class="cart" href="./cart.html">
+            <img src="./assets/Img/CartSVG.svg" alt="" />
+            <span class="cart-count">0</span>
+          </a>
+        </div>
+        <!-- Mobile NavBar -->
+        <button class="burger-btn" onclick="toggleMenu()">☰</button>
+
+        <div class="overlay" onclick="toggleMenu()" id="overlay"></div>
+
+        <div class="sidebar" id="sidebar">
+          <div class="sidebar-header">
+            <a class="sidebar-header-link" href="#">
+              <img src="./assets/Img/User.png" alt="" />
+            </a>
+            <a class="sidebar-header-link" href="./cart.html">
+              <img src="./assets/Img/CartSVG.svg" alt="" />
+            </a>
+            <div class="sidebar-line"></div>
+          </div>
+
+          <div class="mobile-search-bar">
+            <input type="text" placeholder="Search BOBO" />
+            <button class="mobile-search-button">🔍</button>
+          </div>
+          <div class="mobile-nav-items">
+            <div class="mobile-nav-item">
+              <a class="mobile-nav-item-link" href="./shop.html">Products</a>
+            </div>
+            <div class="mobile-nav-item">
+              <a class="mobile-nav-item-link" href="./costumerServis.html"
+                >Costumer Servis</a
+              >
+            </div>
+            <div class="mobile-nav-item">
+              <a class="mobile-nav-item-link" href="./ourStores.html"
+                >Our Stores</a
+              >
+            </div>
+            <div class="mobile-nav-item">
+              <a class="mobile-nav-item-link" href="./aboutUs.html">
+                About Us</a
+              >
+            </div>
+          </div>
+
+          <div class="nav-bar-language">
+            <img src="https://flagcdn.com/us.svg" width="20" alt="EN" />
+            <select name="language" id="language-select">
+              <option class="navbar-language" value="EN">EN</option>
+              <option class="navbar-language" value="AZ">AZ</option>
+              <option class="navbar-language" value="RU">RU</option>
+            </select>
+          </div>
+          <!-- Add to the menu -->
+        </div>
+      </div>
+
+      <nav class="nav-bar">
+        <div class="nav-item">
+          <a class="nav-item" href="./shop.html">Products</a>
+        </div>
+        <div class="nav-item">
+          <a class="nav-item" href="./costumerServis.html">Costumer Servis</a>
+        </div>
+        <div class="nav-item">
+          <a class="nav-item" href="./ourStores.html">Our Stores</a>
+        </div>
+        <div class="nav-item">
+          <a class="nav-item" href="./aboutUs.html"> About Us</a>
+        </div>
+      </nav>
+    </header>
+    <main class="open-shop-main">
+      <div class="open-shop-title-wrapper">
+        <h1 class="open-shop-title">Join the BOBO Team</h1>
+        <p class="open-shop-title-p">
+          Помоги нам строить будущее электронной коммерции.
+        </p>
+      </div>
+      <div class="open-shop-title-wrapper open-shop-about-company">
+        <h2>О компании</h2>
+        <p>
+          BOBO — это больше, чем маркетплейс. Мы создаём цифровую экосистему,
+          где малый и средний бизнес может расти, а покупатели — находить
+          лучшее.
+        </p>
+      </div>
+      <div class="open-shop-sections">
+        <section class="open-shop-section">
+          <h2>Почему стоит работать в BOBO?</h2>
+          <ul class="open-shop-list">
+            <li>🚀 Быстрорастущая технологическая компания</li>
+            <li>💡 Инновационные проекты и реальные вызовы</li>
+            <li>🤝 Дружная и профессиональная команда</li>
+            <li>📚 Постоянное обучение и рост</li>
+            <li>💻 Возможность работать удалённо</li>
+          </ul>
+        </section>
+
+        <section class="open-shop-section">
+          <h2>Открытые вакансии</h2>
+          <div class="job-title">📌 Frontend Developer</div>
+          <div class="job-desc">
+            React, Tailwind, REST API — Удалённо / гибрид
+          </div>
+
+          <div class="job-title">📌 Backend Developer</div>
+          <div class="job-desc">
+            Node.js, PostgreSQL, Supabase — Удалённо / гибрид
+          </div>
+
+          <div class="job-title">📌 UI/UX Designer</div>
+          <div class="job-desc">
+            Figma, веб-интерфейсы, брендинг — Удалённо / гибрид
+          </div>
+
+          <div class="job-title">📌 Digital Marketing Intern</div>
+          <div class="job-desc">SMM, контент, SEO — Стажировка / удалённо</div>
+
+          <div class="job-title">📌 Project Manager</div>
+          <div class="job-desc">
+            Управление задачами, Agile — Удалённо / офис
+          </div>
+
+          <a href="#" class="button">Посмотреть все вакансии</a>
+        </section>
+
+        <section class="open-shop-section">
+          <h2>Что мы предлагаем</h2>
+          <ul class="open-shop-list">
+            <li>✔️ Конкурентная оплата труда</li>
+            <li>✔️ Гибкий график и удалёнка</li>
+            <li>✔️ Внутренние тренинги и хакатоны</li>
+            <li>✔️ Поддержка менторов и карьерный рост</li>
+            <li>✔️ Современные инструменты и технологии</li>
+            <li>✔️ Работа в мультикультурной среде</li>
+          </ul>
+        </section>
+
+        <section class="open-shop-section height-section">
+          <h2>Как подать заявку?</h2>
+          <ul>
+            <li>🔹 Отправьте своё резюме</li>
+            <li>🔹 Нажмите [Отправить заявку]</li>
+          </ul>
+          <a href="#" class="button">Apply Now</a>
+        </section>
+
+        <section class="open-shop-section">
+          <h2>Часто задаваемые вопросы (FAQ)</h2>
+          <div class="faq-item">❓ Где находится ваш офис?</div>
+          <div class="faq-item">❓ Можно ли пройти стажировку без опыта?</div>
+          <div class="faq-item">❓ Какие технологии вы используете?</div>
+          <div class="faq-item">❓ Как быстро вы отвечаете кандидатам?</div>
+        </section>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="footer-columns">
+        <div class="column">
+          <h3>Get to Know Us</h3>
+          <ul>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Blog</a></li>
+            <li class="returns-footer-item">
+              <a href="#">Returns &amp; Orders</a>
+            </li>
+          </ul>
+        </div>
+        <div class="column">
+          <h3>Make Money with Us</h3>
+          <ul>
+            <li><a href="./sellProducts.html">Sell products on BOBO</a></li>
+            <li><a href="#">Open your shop on BOBO</a></li>
+          </ul>
+        </div>
+        <div class="column">
+          <h3>Let Us Help You</h3>
+          <ul>
+            <li><a href="#">Your Account</a></li>
+            <li><a href="#">Your Orders</a></li>
+            <li><a href="#">Login For Sellers</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <img src="#" alt="BOBO logo" class="logo" />
+        <div class="selectors">
+          <select>
+            <option>AZN - AZ. Manat</option>
+            <option>USD - U.S. Dollar</option>
+          </select>
+          <select>
+            <option>Azerbaijan</option>
+            <option>United States</option>
+          </select>
+        </div>
+      </div>
+    </footer>
+    <script src="./assets/js/navBar.js"></script>
+  </body>
+</html>
