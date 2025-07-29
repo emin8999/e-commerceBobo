@@ -184,27 +184,36 @@
             placeholder="Category"
             required
           />
-          <input
-            type="text"
-            id="productSizes"
-            placeholder="Sizes (comma-separated)"
-          />
+          <div class="size-wrapper">
+            <div class="size-items">
+              <select id="productSizes" class="size-input">
+                <option value="">Size</option>
+                <option value="2XS">2XS</option>
+                <option value="XS">XS</option>
+                <option value="S">S</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+                <option value="XL">XL</option>
+                <option value="2XL">2XL</option>
+              </select>
+              <input
+                type="number"
+                id="productQuantity"
+                placeholder="Quantity"
+                class="quantity-input"
+                required
+              />
+            </div>
+
+            <input type="button" value="+" class="add-size-btn" />
+          </div>
+
           <input
             type="text"
             id="productColors"
             placeholder="Colors (comma-separated)"
           />
-          <input
-            type="number"
-            id="productQuantity"
-            placeholder="Quantity"
-            required
-          />
-          <select id="productAvailability" required>
-            <option value="">-- Availability --</option>
-            <option value="In Stock">In Stock</option>
-            <option value="Out of Stock">Out of Stock</option>
-          </select>
+
           <input
             type="file"
             id="productImages"
@@ -212,7 +221,7 @@
             multiple
             required
           />
-          <select id="productStore" required></select>
+          <input type="text" id="productStore" name="productStore" readonly />
           <button type="submit">Add Product</button>
         </form>
         <div id="addProductMessage"></div>
