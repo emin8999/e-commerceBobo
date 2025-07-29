@@ -105,6 +105,7 @@
           <button class="accordion-header">
             Customers <span class="icon">➕</span>
           </button>
+
           <div class="accordion-content">
             <a href="store-owner.html">Store’s Owners</a>
             <a href="all-customers.html">All Customers</a>
@@ -184,27 +185,32 @@
             placeholder="Category"
             required
           />
-          <div class="size-wrapper">
-            <div class="size-items">
-              <select id="productSizes" class="size-input">
+
+          <!-- SIZE + QUANTITY SECTION -->
+          <!-- SIZE + QUANTITY SECTION -->
+          <div class="size-wrapper" id="sizeQuantitiesWrapper">
+            <div class="size-quantity-wrapper">
+              <select name="productSizes" class="size-input" required>
                 <option value="">Size</option>
-                <option value="2XS">2XS</option>
+                <option value="TWO_XS">2XS</option>
                 <option value="XS">XS</option>
                 <option value="S">S</option>
                 <option value="M">M</option>
                 <option value="L">L</option>
                 <option value="XL">XL</option>
-                <option value="2XL">2XL</option>
+                <option value="TWO_XL">2XL</option>
               </select>
               <input
                 type="number"
-                id="productQuantity"
-                placeholder="Quantity"
+                name="quantities"
                 class="quantity-input"
+                placeholder="Quantity"
                 required
               />
+              <button type="button" class="remove-button" style="display: none">
+                X
+              </button>
             </div>
-
             <input type="button" value="+" class="add-size-btn" />
           </div>
 
@@ -213,7 +219,6 @@
             id="productColors"
             placeholder="Colors (comma-separated)"
           />
-
           <input
             type="file"
             id="productImages"
@@ -222,6 +227,7 @@
             required
           />
           <input type="text" id="productStore" name="productStore" readonly />
+
           <button type="submit">Add Product</button>
         </form>
         <div id="addProductMessage"></div>

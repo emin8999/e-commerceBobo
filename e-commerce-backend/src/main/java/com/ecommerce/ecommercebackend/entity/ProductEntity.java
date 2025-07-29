@@ -33,13 +33,7 @@ public class ProductEntity {
     private String category;
 
     @ElementCollection
-    private List<String> sizes;
-
-    @ElementCollection
     private List<String> colors;
-
-    @Column(nullable = false)
-    private Integer quantity;
 
     @Enumerated(EnumType.STRING)
     private ProductStatus status;
@@ -56,4 +50,7 @@ public class ProductEntity {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<ProductImageEntity> images = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductSizeQuantity> sizeQuantities = new ArrayList<>();
 }

@@ -13,7 +13,6 @@ import java.util.Set;
 
 @RequiredArgsConstructor
 public class UserPrincipal implements UserDetails {
-
     private final UserEntity user;
 
     @Override

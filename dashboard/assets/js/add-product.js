@@ -1,107 +1,139 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const storeSelect = document.getElementById("productStore");
-  const form = document.getElementById("addProductForm");
-  const message = document.getElementById("addProductMessage");
+    const form = document.getElementById("addProductForm");
+    const addBtn = document.querySelector(".add-size-btn");
+    const wrapper = document.getElementById("sizeQuantitiesWrapper");
+    const message = document.getElementById("addProductMessage");
+    const storeNameInput = document.getElementById("productStore");
 
-  // Load store names from localStorage
-  const stores = JSON.parse(localStorage.getItem("stores")) || [];
-  stores.forEach((store) => {
-    const option = document.createElement("option");
-    option.value = store.id;
-    option.textContent = store.name;
-    storeSelect.appendChild(option);
-  });
-  const addBtn = document.querySelector(".add-size-btn");
-  const sizeWrapper = document.querySelector(".size-wrapper");
-
-  addBtn.addEventListener("click", () => {
-    const newSizeBlock = document.createElement("div");
-    newSizeBlock.classList.add("size-items");
-
-    newSizeBlock.innerHTML = `
-      <select id="productSizes" class="size-input">
-                <option value="">Size</option>
-                <option value="2XS">2XS</option>
-                <option value="XS">XS</option>
-                <option value="S">S</option>
-                <option value="M">M</option>
-                <option value="L">L</option>
-                <option value="XL">XL</option>
-                <option value="2XL">2XL</option>
-              </select>
-              <input
-                type="number"
-                id="productQuantity"
-                placeholder="Quantity"
-                class="quantity-input"
-                required
-              />
-    `;
-
-    sizeWrapper.insertBefore(newSizeBlock, addBtn);
-  });
-  const storeData = {
-    name: "BOBO Store",
-    id: "store123",
-    address: "Baku, Azerbaijan",
-    owner: "Rustam Kerimli",
-  };
-
-  localStorage.setItem("storeInfo", JSON.stringify(storeData));
-
-  const storeInput = document.getElementById("productStore");
-  const stored = localStorage.getItem("storeInfo");
-
-  if (stored && storeInput) {
-    const storeObj = JSON.parse(stored);
-    storeInput.value = storeObj.name;
-  }
-
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-
-    const product = {
-      id: `prod-${Date.now()}`,
-      name: document.getElementById("productName").value,
-      description: document.getElementById("productDescription").value,
-      price: parseFloat(document.getElementById("productPrice").value),
-      category: document.getElementById("productCategory").value,
-      sizes: document
-        .getElementById("productSizes")
-        .value.split(",")
-        .map((s) => s.trim()),
-      colors: document
-        .getElementById("productColors")
-        .value.split(",")
-        .map((c) => c.trim()),
-      quantity: parseInt(document.getElementById("productQuantity").value),
-      availability: document.getElementById("productAvailability").value,
-      storeId: document.getElementById("productStore").value,
-      images: [],
-    };
-
-    const imageFiles = document.getElementById("productImages").files;
-    const readers = [];
-
-    for (let i = 0; i < imageFiles.length; i++) {
-      const reader = new FileReader();
-      readers.push(
-        new Promise((resolve) => {
-          reader.onload = () => resolve(reader.result);
-          reader.readAsDataURL(imageFiles[i]);
-        })
-      );
+    const jwtToken = localStorage.getItem("jwtToken");
+    if (jwtToken) {
+        try {
+            const decodedToken = JSON.parse(atob(jwtToken.split('.')[1]));
+            const storeName = decodedToken.storeName || decodedToken.sub || "Unknown Store";
+            storeNameInput.value = storeName;
+        } catch (err) {
+            console.error("Invalid token:", err);
+            storeNameInput.value = "Invalid token";
+        }
+    } else {
+        storeNameInput.value = "No token found";
     }
 
-    Promise.all(readers).then((base64Images) => {
-      product.images = base64Images;
+    const sizeOptions = `
+    <option value="">Size</option>
+    <option value="TWO_XS">2XS</option>
+    <option value="XS">XS</option>
+    <option value="S">S</option>
+    <option value="M">M</option>
+    <option value="L">L</option>
+    <option value="XL">XL</option>
+    <option value="TWO_XL">2XL</option>
+  `;
 
-      const products = JSON.parse(localStorage.getItem("products")) || [];
-      products.push(product);
-      localStorage.setItem("products", JSON.stringify(products));
+    addBtn.addEventListener("click", () => {
+        const sizeBlock = document.createElement("div");
+        sizeBlock.classList.add("size-quantity-wrapper");
 
-      message.textContent = "✅ Product successfully added!";
-      form.reset();
+        sizeBlock.innerHTML = `
+      <select name="productSizes" class="size-input" required>
+        ${sizeOptions}
+      </select>
+      <input type="number" name="quantities" class="quantity-input" placeholder="Quantity" required />
+      <button type="button" class="remove-button">X</button>
+    `;
+
+        wrapper.insertBefore(sizeBlock, addBtn);
+
+        sizeBlock.querySelector(".remove-button").addEventListener("click", () => {
+            sizeBlock.remove();
+            updateRemoveButtons();
+        });
+
+        updateRemoveButtons();
     });
-  });
+
+    function updateRemoveButtons() {
+        const allRemoveBtns = wrapper.querySelectorAll(".remove-button");
+        if (allRemoveBtns.length > 1) {
+            allRemoveBtns.forEach(btn => btn.style.display = "inline-block");
+        } else {
+            allRemoveBtns.forEach(btn => btn.style.display = "none");
+        }
+    }
+
+    updateRemoveButtons();
+
+    form.addEventListener("submit", async(e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+        const sizeElements = formData.getAll("productSizes");
+        const quantityElements = formData.getAll("quantities");
+
+        const sizeQuantities = sizeElements.map((size, index) => ({
+            size: size,
+            quantity: parseInt(quantityElements[index])
+        }));
+
+        const colorsRaw = formData.get("productColors");
+        const body = {
+            name: formData.get("productName"),
+            description: formData.get("productDescription"),
+            price: parseFloat(formData.get("productPrice")),
+            category: formData.get("productCategory"),
+            sizeQuantities: sizeQuantities,
+            colors: colorsRaw ? colorsRaw.split(",").map(c => c.trim()) : []
+        };
+
+
+        try {
+            const response = await fetch("http://localhost:8080/home/product", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + jwtToken
+                },
+                body: JSON.stringify(body)
+            });
+
+            if (!response.ok) throw new Error("Something went wrong");
+
+            message.innerText = "Product added successfully!";
+            form.reset();
+
+            wrapper.innerHTML = `
+        <div class="size-quantity-wrapper">
+          <select name="productSizes" class="size-input" required>
+            ${sizeOptions}
+          </select>
+          <input type="number" name="quantities" class="quantity-input" placeholder="Quantity" required />
+          <button type="button" class="remove-button" style="display:none;">X</button>
+        </div>
+        <input type="button" value="+" class="add-size-btn" />
+      `;
+
+            const newAddBtn = document.querySelector(".add-size-btn");
+            newAddBtn.addEventListener("click", () => {
+                const sizeBlock = document.createElement("div");
+                sizeBlock.classList.add("size-quantity-wrapper");
+                sizeBlock.innerHTML = `
+          <select name="productSizes" class="size-input" required>
+            ${sizeOptions}
+          </select>
+          <input type="number" name="quantities" class="quantity-input" placeholder="Quantity" required />
+          <button type="button" class="remove-button">X</button>
+        `;
+                wrapper.insertBefore(sizeBlock, newAddBtn);
+                sizeBlock.querySelector(".remove-button").addEventListener("click", () => {
+                    sizeBlock.remove();
+                    updateRemoveButtons();
+                });
+                updateRemoveButtons();
+            });
+
+            updateRemoveButtons();
+        } catch (error) {
+            console.error(error);
+            message.innerText = "Error adding product.";
+        }
+    });
 });

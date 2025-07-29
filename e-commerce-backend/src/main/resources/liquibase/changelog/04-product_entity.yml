@@ -36,11 +36,6 @@ databaseChangeLog:
                   name: category
                   type: VARCHAR(30)
 
-              - column:
-                  name: quantity
-                  type: INTEGER
-                  constraints:
-                    nullable: false
 
               - column:
                   name: status

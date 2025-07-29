@@ -1,6 +1,9 @@
 spring:
   profiles:
     active: db
+  web:
+    resources:
+      static-locations: classpath:/static/, file:images/
 
 server:
   servlet:
@@ -12,3 +15,9 @@ jwt:
 
 file:
   upload-dir: images
+
+cloudinary:
+  cloud-name: drzqytgdt
+  api-key: 968449147357678
+  api-secret: toZUNGbC3jF44TLI3RhyQiFG8gI
+

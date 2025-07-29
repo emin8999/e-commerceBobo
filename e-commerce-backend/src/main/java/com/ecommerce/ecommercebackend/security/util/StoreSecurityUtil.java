@@ -16,7 +16,7 @@ public class StoreSecurityUtil {
         if (auth != null) {
             Object principal = auth.getPrincipal();
             if (principal instanceof StorePrincipal storePrincipal) {
-                return storePrincipal.store();
+                return storePrincipal.getStore();
             }
         }
 
