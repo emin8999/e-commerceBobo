@@ -5,14 +5,22 @@ body {
   margin: 0;
   padding: 0;
 }
-
+.permission-sales-main {
+  display: flex;
+  height: auto;
+  background-color: #f0f4f8;
+}
 .container {
-  max-width: 1100px;
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
   margin: 40px auto;
-  padding: 20px 30px;
-  background-color: #fff;
+  padding: 30px;
+  background: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  overflow: auto;
+  height: 100vh;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
 }
 
 h2,
@@ -72,7 +80,6 @@ input[type="checkbox"] {
 /* Table Styles */
 .table-container {
   margin-top: 40px;
-  overflow-x: auto;
 }
 
 table {

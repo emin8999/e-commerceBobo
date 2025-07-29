@@ -4,16 +4,29 @@ body {
   font-family: Arial, sans-serif;
   background-color: #f8f8f8;
   margin: 0;
-  padding: 20px;
 }
-
-header h1 {
+.all-customers-wrapper {
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+  margin: 40px auto;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 12px;
+  height: 100vh;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+.all-customers-wrapper h1 {
   text-align: center;
   margin-bottom: 20px;
   color: #003366;
 }
-
-section table {
+.all-customers-main {
+  display: flex;
+  height: auto;
+  background-color: #f0f4f8;
+}
+.all-customers-wrapper table {
   width: 100%;
   border-collapse: collapse;
   background: #fff;
@@ -22,14 +35,14 @@ section table {
   overflow: hidden;
 }
 
-section th,
-section td {
+.all-customers-wrapper th,
+.all-customers-wrapper td {
   padding: 12px 15px;
   border-bottom: 1px solid #ddd;
   text-align: left;
 }
 
-section th {
+.all-customers-wrapper th {
   background-color: #003366;
   color: white;
 }

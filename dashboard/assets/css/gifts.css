@@ -5,14 +5,22 @@ body {
   background-color: #f7f8fa;
   color: #333;
 }
-
+.gifts-main {
+  display: flex;
+  height: auto;
+  background-color: #f0f4f8;
+}
 .container {
-  max-width: 1100px;
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
   margin: 40px auto;
-  padding: 20px;
-  background: #fff;
+  padding: 30px;
+  background: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow: auto;
+  height: 100vh;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
 }
 
 h1 {
@@ -70,12 +78,13 @@ table tbody tr:hover {
 }
 
 /* Buttons */
-button {
+.open-gifts-btn {
   background-color: #3a7bd5;
   color: white;
   padding: 10px 18px;
   font-size: 14px;
   border: none;
+  margin-bottom: 20px;
   border-radius: 6px;
   cursor: pointer;
   transition: background-color 0.2s ease;
@@ -87,7 +96,7 @@ button:hover {
 
 /* Modal */
 .modal {
-  display: flex;
+  display: none;
   position: fixed;
   z-index: 999;
   left: 0;

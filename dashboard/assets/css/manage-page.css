@@ -1,6 +1,6 @@
-*{
+* {
   margin: 0;
-  padding: 0; 
+  padding: 0;
   box-sizing: border-box;
 }
 
@@ -10,12 +10,12 @@ body {
   color: #333;
 }
 
-
 .manage-container {
   width: 800px;
   max-width: 100%;
   margin: auto;
   padding: 40px 20px;
+  height: 100vh;
 }
 
 h1 {

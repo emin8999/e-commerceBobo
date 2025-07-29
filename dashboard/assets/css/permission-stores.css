@@ -5,14 +5,23 @@ body {
   padding: 0;
   color: #333;
 }
-
+.permission-stores-main {
+  display: flex;
+  height: auto;
+  background-color: #f0f4f8;
+}
 .container {
-  max-width: 800px;
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
+  max-width: 100%;
   margin: 40px auto;
+  overflow: auto;
+  width: 800px;
   padding: 30px;
-  background: #fff;
+  background: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
 }
 
 h1,

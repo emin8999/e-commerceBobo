@@ -2,7 +2,6 @@ body {
   font-family: "Segoe UI", sans-serif;
   background-color: #f4f6f8;
   margin: 0;
-  padding: 20px;
   color: #333;
 }
 
@@ -12,32 +11,51 @@ header {
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  margin-bottom: 20px;
 }
-
-header h1 {
+.category-main {
+  display: flex;
+  height: auto;
+  background-color: #f0f4f8;
+}
+.category-from-container h1 {
   font-size: 24px;
-  flex: 1 1 100%;
+  margin-bottom: 15px;
+}
+.selects-wrapper {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
 }
 
-header button,
-header select,
-header input {
+.category-from-container {
+  display: flex;
+  height: 100vh;
+
+  flex-direction: column;
+  max-width: 100%;
+  margin: 40px auto;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+.selects-wrapper button,
+.selects-wrapper select,
+.selects-wrapper input {
   padding: 10px 14px;
   font-size: 14px;
   border-radius: 6px;
   border: 1px solid #ccc;
   background-color: #fff;
 }
-
-header button {
+.selects-wrapper button {
   background-color: #007bff;
   color: white;
   border: none;
   cursor: pointer;
 }
 
-header button:hover {
+.selects-wrapper button:hover {
   background-color: #0056b3;
 }
 
