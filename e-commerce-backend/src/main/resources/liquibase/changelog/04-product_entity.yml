@@ -36,11 +36,6 @@ databaseChangeLog:
                   name: category
                   type: VARCHAR(30)
 
-              - column:
-                  name: availability
-                  type: VARCHAR(50)
-                  constraints:
-                    nullable: false
 
               - column:
                   name: status

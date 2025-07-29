@@ -25,6 +25,7 @@ public interface ProductMapper {
 //    @Mapping(target = "sizes", expression = "java(mapCommaSeparatedStringToList(dto.getSizes()))")
     @Mapping(target = "colors", expression = "java(mapCommaSeparatedStringToList(dto.getColors()))")
     @Mapping(target = "images", ignore = true)
+    @Mapping(target = "status", defaultValue = "ACTIVE")
     ProductEntity mapToProductEntity(ProductRequestDto dto);
 
     @Mapping(target = "imageUrls", expression = "java(mapImages(entity.getImages()))")

@@ -1,7 +1,5 @@
 package com.ecommerce.ecommercebackend.entity;
 
-import com.ecommerce.ecommercebackend.enums.ProductAvailability;
-import com.ecommerce.ecommercebackend.enums.ProductSize;
 import com.ecommerce.ecommercebackend.enums.ProductStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -33,9 +31,6 @@ public class ProductEntity {
     private Double price;
 
     private String category;
-
-    @Column(nullable = false)
-    private ProductAvailability availability;
 
     @ElementCollection
     private List<String> colors;

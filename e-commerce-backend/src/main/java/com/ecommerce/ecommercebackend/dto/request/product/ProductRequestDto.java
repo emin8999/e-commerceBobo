@@ -1,8 +1,6 @@
 package com.ecommerce.ecommercebackend.dto.request.product;
 
 import com.ecommerce.ecommercebackend.dto.response.product.SizeQuantityDto;
-import com.ecommerce.ecommercebackend.enums.ProductAvailability;
-import com.ecommerce.ecommercebackend.enums.ProductSize;
 import com.ecommerce.ecommercebackend.enums.ProductStatus;
 import jakarta.validation.constraints.*;
 import lombok.Data;
@@ -28,17 +26,13 @@ public class ProductRequestDto {
     @Size(max = 30, message = "Category must be less than 30 characters")
     private String category;
 
-    @NotNull(message = "availability is required")
-    private ProductAvailability availability;
-
     @NotBlank(message = "Colors field is required (comma-separated values)")
     private String colors;
 
+    private ProductStatus status;
+
     @NotEmpty(message = "Sizes with quantities are required")
     private List<SizeQuantityDto> sizeQuantities;
-
-    @NotNull(message = "Product status is required")
-    private ProductStatus status;
 
     @NotEmpty(message = "At least one product image must be uploaded")
     private List<@NotNull MultipartFile> imageUrls;
