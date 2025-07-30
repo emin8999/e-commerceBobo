@@ -2,8 +2,9 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>BOBO</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Account</title>
+    <link rel="stylesheet" href="./assets/css/account.css" />
     <link rel="stylesheet" href="./assets/css/style.css" />
   </head>
   <body>
@@ -51,7 +52,7 @@
               <img src="./assets/Img/User.png" alt="" />
             </a>
             <a class="sidebar-header-link" href="./cart.html">
-              <img src="./assets/Img/CartSVG.svg" alt="" />
+              <img src="./assets/Img/Cart.png" alt="" />
             </a>
             <div class="sidebar-line"></div>
           </div>
@@ -108,15 +109,80 @@
         </div>
       </nav>
     </header>
-    <main><div id="shopContainer"></div></main>
+    <div class="account-header">
+      <h1>Your Account</h1>
+      <p id="user-info"></p>
+    </div>
+
+    <main class="grid-container">
+      <div class="card">
+        <div>
+          <img src="./assets/accountImg/order.png" alt="Orders" />
+        </div>
+        <div>
+          <h3>Your Orders</h3>
+          <p>Track, return, cancel an order, download invoice or buy again</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div>
+          <img src="./assets/accountImg/login.png" alt="Login" />
+        </div>
+        <div>
+          <h3>Login & Security</h3>
+          <p>Edit login, name, and mobile number</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div>
+          <img src="./assets/accountImg/adress.png" alt="Addresses" />
+        </div>
+        <div>
+          <h3>Addresses</h3>
+          <p>Edit, remove or set default address</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div>
+          <img src="./assets/accountImg/payment.png" alt="Payments" />
+        </div>
+        <div>
+          <h3>Your Payments</h3>
+          <p>View all transactions, manage payment methods and settings</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div>
+          <img src="./assets/accountImg/mesage.png" alt="Messages" />
+        </div>
+        <div>
+          <h3>Your Messages</h3>
+          <p>View or respond to messages from Sellers or Support</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div>
+          <img src="./assets/accountImg/customer.png" alt="Customer Service" />
+        </div>
+        <div>
+          <h3>Customer Service</h3>
+          <p>Browse self-service options or contact us</p>
+        </div>
+      </div>
+    </main>
 
     <footer class="footer">
       <div class="footer-columns">
         <div class="column">
           <h3>Get to Know Us</h3>
           <ul>
-            <li><a href="#">Careers</a></li>
-            <li><a href="#">Blog</a></li>
+            <li><a href="careers.html">Careers</a></li>
+            <li><a href="aboutUs.html">About Us</a></li>
             <li class="returns-footer-item">
               <a href="#">Returns &amp; Orders</a>
             </li>
@@ -125,20 +191,11 @@
         <div class="column">
           <h3>Make Money with Us</h3>
           <ul>
-            <li><a href="./sellProducts.html">Sell products on BOBO</a></li>
+            <li><a href="startSelling.html">Sell products on BOBO</a></li>
             <li><a href="#">Open your shop on BOBO</a></li>
-            <!-- <li><a href="#">Sell apps on BOBO</a></li> -->
           </ul>
         </div>
-        <!-- <div class="column">
-          <h3>BOBO Payment Products</h3>
-          <ul>
-            <li><a href="#">BOBO Business Card</a></li>
-            <li><a href="#">Shop with Points</a></li>
-            <li><a href="#">Reload Your Balance</a></li>
-            <li><a href="#">BOBO Currency Converter</a></li>
-          </ul>
-        </div> -->
+
         <div class="column">
           <h3>Let Us Help You</h3>
           <ul>
@@ -166,6 +223,5 @@
 
     <script src="./assets/js/header.js"></script>
     <script src="./assets/js/navBar.js"></script>
-    <script src="./assets/js/ourStores.js"></script>
   </body>
 </html>
