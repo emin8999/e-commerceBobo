@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./assets/css/style.css" />
+    <link rel="stylesheet" href="./assets/css/returnAndOrders.css" />
+
+    <title>Document</title>
+  </head>
+  <body>
+    <header>
+      <div class="top-header">
+        <div class="left-section">
+          <a class="header-logo-link" href="./index.html">
+            <img src="#" alt="BOBO" class="header-logo" />
+          </a>
+        </div>
+        <div class="deliver-to">
+          <span class="small-text">Deliver to</span>
+          <span class="bold-text">Azerbaijan</span>
+        </div>
+        <div class="search-bar">
+          <input type="text" placeholder="Search BOBO" />
+          <button class="search-button">🔍</button>
+        </div>
+        <div class="line"></div>
+        <div class="right-section">
+          <div class="language">
+            <img src="https://flagcdn.com/us.svg" width="20" alt="EN" /> EN
+          </div>
+          <div class="account">
+            <a href="./signIn.html" class="small-text">Hello, sign in</a><br />
+            <!-- <span class="bold-text">Account & Lists ▼</span> -->
+          </div>
+          <div class="orders">
+            <a href="#" class="small-text">Returns</a><br />
+            <a href="#" class="bold-text">& Orders</a>
+          </div>
+          <a class="cart" href="./cart.html">
+            <img src="./assets/Img/CartSVG.svg" alt="" />
+            <span class="cart-count">0</span>
+          </a>
+        </div>
+        <!-- Mobile NavBar -->
+        <button class="burger-btn" onclick="toggleMenu()">☰</button>
+
+        <div class="overlay" onclick="toggleMenu()" id="overlay"></div>
+
+        <div class="sidebar" id="sidebar">
+          <div class="sidebar-header">
+            <a class="sidebar-header-link" href="#">
+              <img src="./assets/Img/User.png" alt="" />
+            </a>
+            <a class="sidebar-header-link" href="./cart.html">
+              <img src="./assets/Img/CartSVG.svg" alt="" />
+            </a>
+            <div class="sidebar-line"></div>
+          </div>
+
+          <div class="mobile-search-bar">
+            <input type="text" placeholder="Search BOBO" />
+            <button class="mobile-search-button">🔍</button>
+          </div>
+          <div class="mobile-nav-items">
+            <div class="mobile-nav-item">
+              <a class="mobile-nav-item-link" href="./shop.html">Products</a>
+            </div>
+            <div class="mobile-nav-item">
+              <a class="mobile-nav-item-link" href="./costumerServis.html"
+                >Costumer Servis</a
+              >
+            </div>
+            <div class="mobile-nav-item">
+              <a class="mobile-nav-item-link" href="./ourStores.html"
+                >Our Stores</a
+              >
+            </div>
+            <div class="mobile-nav-item">
+              <a class="mobile-nav-item-link" href="./aboutUs.html">
+                About Us</a
+              >
+            </div>
+          </div>
+
+          <div class="nav-bar-language">
+            <img src="https://flagcdn.com/us.svg" width="20" alt="EN" />
+            <select name="language" id="language-select">
+              <option class="navbar-language" value="EN">EN</option>
+              <option class="navbar-language" value="AZ">AZ</option>
+              <option class="navbar-language" value="RU">RU</option>
+            </select>
+          </div>
+          <!-- Add to the menu -->
+        </div>
+      </div>
+
+      <nav class="nav-bar">
+        <div class="nav-item">
+          <a class="nav-item" href="./shop.html">Products</a>
+        </div>
+        <div class="nav-item">
+          <a class="nav-item" href="./costumerServis.html">Costumer Servis</a>
+        </div>
+        <div class="nav-item">
+          <a class="nav-item" href="./ourStores.html">Our Stores</a>
+        </div>
+        <div class="nav-item">
+          <a class="nav-item" href="./aboutUs.html"> About Us</a>
+        </div>
+      </nav>
+    </header>
+    <main class="shipping-policy">
+      <h1 class="shipping-title">🚚 BOBO Shipping Policy</h1>
+      <div class="shipping-sections">
+        <section class="shipping-section">
+          <h2>
+            <i data-lucide="book-text" class="icon"></i>1. General Provisions
+          </h2>
+          <p>
+            BOBO is committed to providing fast, safe, and convenient delivery
+            of products to its customers.
+          </p>
+        </section>
+
+        <section class="shipping-section">
+          <h2><i data-lucide="truck" class="icon"></i>2. Delivery Methods</h2>
+
+          <h3>2.1. Pickup Point</h3>
+          <ul>
+            <li>Pickup from a store or location</li>
+            <li><strong>Cost:</strong> Free</li>
+            <li>
+              <strong>Availability:</strong> Only for products with pickup
+              option
+            </li>
+            <li><strong>Storage period:</strong> 5 calendar days</li>
+          </ul>
+
+          <h3>2.2. Courier Delivery Within the City</h3>
+          <ul>
+            <li><strong>Cost:</strong> 2 AZN</li>
+            <li><strong>Timeframe:</strong> 1–2 business days</li>
+            <li><strong>Delivery hours:</strong> Mon–Sat, 10:00–20:00</li>
+          </ul>
+
+          <h3>2.3. Regional Delivery</h3>
+          <ul>
+            <li><strong>Cost:</strong> from 5 AZN</li>
+            <li><strong>Timeframe:</strong> 2–5 business days</li>
+          </ul>
+
+          <h3>2.4. International Delivery</h3>
+          <ul>
+            <li><strong>Availability:</strong> Selected countries</li>
+            <li><strong>Cost:</strong> Individually calculated</li>
+            <li><strong>Timeframe:</strong> 7–21 business days</li>
+          </ul>
+        </section>
+
+        <section class="shipping-section">
+          <h2>
+            <i data-lucide="dollar-sign" class="icon"></i>3. Delivery Costs
+          </h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Area</th>
+                <th>Cost</th>
+                <th>Free Shipping</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Within the city</td>
+                <td>3 AZN</td>
+                <td>Over 100 AZN</td>
+              </tr>
+              <tr>
+                <td>Other regions</td>
+                <td>From 5 AZN</td>
+                <td>Over 150 AZN</td>
+              </tr>
+              <tr>
+                <td>International</td>
+                <td>Individually</td>
+                <td>–</td>
+              </tr>
+              <tr>
+                <td>Pickup</td>
+                <td>Free</td>
+                <td>Always</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="shipping-section">
+          <h2>
+            <i data-lucide="clock" class="icon"></i>4. Processing & Delivery
+            Time
+          </h2>
+          <ul>
+            <li>Processed within 1 business day</li>
+            <li>City: up to 2 days</li>
+            <li>Regional: up to 5 days</li>
+            <li>International: 7–21 days</li>
+          </ul>
+        </section>
+
+        <section class="shipping-section">
+          <h2><i data-lucide="search" class="icon"></i>5. Order Tracking</h2>
+          <p>
+            Customers receive a tracking number via email and dashboard after
+            shipment.
+          </p>
+        </section>
+
+        <section class="shipping-section">
+          <h2>
+            <i data-lucide="rotate-ccw" class="icon"></i>6. Return Conditions
+          </h2>
+          <ul>
+            <li>Return within 14 days if defective or unsuitable</li>
+            <li>Original condition and packaging required</li>
+            <li>Receipt or order confirmation must be provided</li>
+          </ul>
+        </section>
+
+        <section class="shipping-section">
+          <h2>
+            <i data-lucide="alert-triangle" class="icon"></i>7. Special Cases
+          </h2>
+          <ul>
+            <li>
+              Unjustified refusal may require prepayment for future orders
+            </li>
+            <li>Delays possible during holidays or sales periods</li>
+          </ul>
+        </section>
+
+        <section class="shipping-section">
+          <h2>
+            <i data-lucide="phone" class="icon"></i>8. Contact Information
+          </h2>
+          <ul>
+            <li><strong>Email:</strong> support@bobo.market</li>
+            <li><strong>Phone:</strong> +994 50 000 00 00</li>
+            <li><strong>Chat:</strong> 10:00 – 22:00 on the website</li>
+          </ul>
+        </section>
+      </div>
+    </main>
+
+    <script>
+      lucide.createIcons();
+    </script>
+    <footer class="footer">
+      <div class="footer-columns">
+        <div class="column">
+          <h3>Get to Know Us</h3>
+          <ul>
+            <li><a href="./careers.html">Careers</a></li>
+            <li><a href="./aboutUs.html">About Us</a></li>
+            <li class="returns-footer-item">
+              <a href="#">Returns &amp; Orders</a>
+            </li>
+          </ul>
+        </div>
+        <div class="column">
+          <h3>Make Money with Us</h3>
+          <ul>
+            <li><a href="./sellProducts.html">Sell products on BOBO</a></li>
+            <li>
+              <a href="../dashboard/store-login.html">Open your shop on BOBO</a>
+            </li>
+            <!-- <li><a href="#">Sell apps on BOBO</a></li> -->
+          </ul>
+        </div>
+
+        <div class="column">
+          <h3>Let Us Help You</h3>
+          <ul>
+            <li><a href="account.html">Your Account</a></li>
+            <li><a href="#">Your Orders</a></li>
+            <li><a href="#">Login For Sellers</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <img src="#" alt="BOBO logo" class="logo" />
+        <div class="selectors">
+          <select>
+            <option>AZN - AZ. Manat</option>
+            <option>USD - U.S. Dollar</option>
+          </select>
+          <select>
+            <option>Azerbaijan</option>
+            <option>United States</option>
+          </select>
+        </div>
+      </div>
+    </footer>
+    <script src="./assets/js/header.js"></script>
+    <script src="./assets/js/navBar.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+  </body>
+</html>
