@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const priceValue = document.getElementById("price-value");
 
   priceRange.max = maxPrice;
-  priceRange.value = 0; // ← значение по умолчанию: 0
+  priceRange.value = 0;
   priceValue.textContent = 0;
 
   priceRange.addEventListener("input", () => {
