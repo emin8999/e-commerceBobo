@@ -32,12 +32,12 @@
             <img src="https://flagcdn.com/us.svg" width="20" alt="EN" /> EN
           </div>
           <div class="account">
-            <span class="small-text">Hello, sign in</span><br />
+            <a href="./signIn.html" class="small-text">Hello, sign in</a><br />
             <!-- <span class="bold-text">Account & Lists ▼</span> -->
           </div>
           <div class="orders">
-            <span class="small-text">Returns</span><br />
-            <span class="bold-text">& Orders</span>
+            <a href="#" class="small-text">Returns</a><br />
+            <a href="#" class="bold-text">& Orders</a>
           </div>
           <a class="cart" href="./cart.html">
             <img src="./assets/Img/CartSVG.svg" alt="" />
@@ -115,44 +115,49 @@
     <main>
       <div class="shopContainer">
         <div class="ShopFilter">
-          <div class="filter-box">
-            <h2>Product Filters</h2>
-
-            <label>Name</label>
-            <input
-              type="text"
-              id="filter-name"
-              placeholder="Enter product name"
+          <button id="toggle-filters" class="filter-toggle-btn toggle-button">
+            <img
+              id="filter-icon"
+              src="./assets/Img/FilterSVG.svg"
+              alt="Filter"
             />
+          </button>
 
-            <label>Category</label>
-            <input
-              type="text"
-              id="filter-category"
-              placeholder="e.g. Clothing"
-            />
+          <div class="filter-box-wrapper">
+            <div class="filter-box">
+              <h2>Product Filters</h2>
 
-            <label>Store</label>
-            <input type="text" id="filter-shop" placeholder="Store name" />
+              <label>Name</label>
+              <input
+                type="text"
+                id="filter-name"
+                placeholder="Enter product name"
+              />
 
-            <label>Size</label>
-            <input type="text" id="filter-size" placeholder="M, L, XL..." />
+              <label>Category</label>
+              <input
+                type="text"
+                id="filter-category"
+                placeholder="e.g. Clothing"
+              />
 
-            <label>Color</label>
-            <input
-              type="text"
-              id="filter-color"
-              placeholder="White, Black..."
-            />
+              <label>Store</label>
+              <input type="text" id="filter-shop" placeholder="Store name" />
 
-            <label>Max Price</label>
-            <input
-              type="number"
-              id="filter-price"
-              placeholder="Maximum price"
-            />
+              <label>Size</label>
+              <input type="text" id="filter-size" placeholder="M, L, XL..." />
 
-            <button onclick="applyFilters()">Apply Filters</button>
+              <label>Color</label>
+              <input
+                type="text"
+                id="filter-color"
+                placeholder="White, Black..."
+              />
+
+              <label>Max Price: <span id="price-value">0</span>$</label>
+              <input type="range" id="filter-price" min="0" step="1" />
+              <button onclick="applyFilters()">Apply Filters</button>
+            </div>
           </div>
         </div>
         <div class="shopContainer-products">

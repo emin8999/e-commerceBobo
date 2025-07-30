@@ -16,6 +16,34 @@ function updateCartCountDisplay() {
   localStorage.setItem("cartCount", count);
 }
 
+localStorage.setItem("maxPrice", "15000");
+
+document.addEventListener("DOMContentLoaded", () => {
+  const maxPrice = parseInt(localStorage.getItem("maxPrice")) || 100;
+  const priceRange = document.getElementById("filter-price");
+  const priceValue = document.getElementById("price-value");
+
+  priceRange.max = maxPrice;
+  priceRange.value = 0; // ← значение по умолчанию: 0
+  priceValue.textContent = 0;
+
+  priceRange.addEventListener("input", () => {
+    priceValue.textContent = priceRange.value;
+  });
+});
+const toggleButton = document.getElementById("toggle-filters");
+const filterWrapper = document.querySelector(".filter-box-wrapper");
+const filterIcon = document.getElementById("filter-icon");
+
+toggleButton.addEventListener("click", () => {
+  filterWrapper.classList.toggle("open");
+
+  const isOpen = filterWrapper.classList.contains("open");
+  filterIcon.src = isOpen
+    ? "./assets/Img/CloseSVG.svg"
+    : "./assets/Img/FilterSVG.svg";
+});
+
 // Добавляем товар в корзину
 function addToCart(product) {
   const index = cart.findIndex((p) => p.id === product.id);

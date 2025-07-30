@@ -64,11 +64,13 @@ a {
 }
 
 .small-text {
+  color: white;
   font-size: 12px;
 }
 
 .bold-text {
   font-weight: bold;
+  color: white;
   font-size: 14px;
 }
 
