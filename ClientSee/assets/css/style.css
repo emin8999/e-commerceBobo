@@ -7,6 +7,10 @@ input:focus {
   border: none;
   box-shadow: none;
 }
+
+.main-page {
+  padding-top: 225px;
+}
 header {
   position: fixed;
   top: 0;
@@ -370,6 +374,7 @@ a {
   display: flex;
   justify-content: space-between;
   margin-bottom: 20px;
+  margin-top: 7px;
 }
 .sidebar-header-link img {
   width: 35px;
