@@ -1,0 +1,63 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background-color: #f4f4f4;
+}
+
+.account-header {
+  text-align: center;
+  padding: 20px 0;
+  margin-top: 174px;
+  background-color: #fff;
+  border-bottom: 1px solid #ddd;
+}
+
+#user-info {
+  color: #555;
+  font-size: 0.95rem;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  padding: 30px;
+
+  margin: auto;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 12px;
+  transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+}
+
+.card img {
+  width: 60px;
+  height: 60px;
+  /* margin-bottom: 15px; */
+}
+
+.card h3 {
+  margin: 5px 0;
+  font-size: 1.1rem;
+}
+
+.card p {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+@media (max-width: 600px) {
+  .account-header {
+    margin-top: 91px;
+  }
+}
