@@ -68,4 +68,96 @@ document.querySelector(".prev").addEventListener("click", prevSlide);
 showSlide(0);
 current = 0;
 
-setInterval(nextSlide, 7000);
+setInterval(nextSlide, 5000);
+
+const defaultCategories = [
+  { title: "Одежда", icon: "👗" },
+  { title: "Обувь", icon: "👟" },
+  { title: "Электроника", icon: "📱" },
+  { title: "Продукты", icon: "🛒" },
+  { title: "Книги", icon: "📚" },
+  { title: "Игрушки", icon: "🧸" },
+  { title: "Украшения", icon: "💍" },
+  { title: "Техника", icon: "💻" },
+  { title: "Косметика", icon: "💄" },
+  { title: "Мебель", icon: "🛋️" },
+  { title: "Автотовары", icon: "🚗" },
+  { title: "Дом и сад", icon: "🏡" },
+  { title: "Спорт", icon: "🏀" },
+  { title: "Здоровье", icon: "🩺" },
+  { title: "Музыка", icon: "🎧" },
+  { title: "Фильмы", icon: "🎬" },
+  { title: "Фото", icon: "📷" },
+  { title: "Подарки", icon: "🎁" },
+  { title: "Питомцы", icon: "🐶" },
+  { title: "Детское", icon: "🍼" },
+  { title: "Туризм", icon: "🏕️" },
+  { title: "Канцтовары", icon: "✏️" },
+  { title: "Инструменты", icon: "🛠️" },
+  { title: "Игры", icon: "🎮" },
+  { title: "Аксессуары", icon: "🧢" },
+];
+
+if (!localStorage.getItem("categories")) {
+  localStorage.setItem("categories", JSON.stringify(defaultCategories));
+}
+
+const categories = JSON.parse(localStorage.getItem("categories"));
+const slider = document.getElementById("categorySlider");
+
+categories.forEach((cat, i) => {
+  const card = document.createElement("div");
+  card.className = "category-card";
+  card.style.animationDelay = `${i * 0.05}s`;
+  card.innerHTML = `
+    <div class="icon" style="font-size: 36px">${cat.icon}</div>
+    <h3>${cat.title}</h3>
+  `;
+  slider.appendChild(card);
+});
+
+let currentPage = 0;
+const cardsPerPage = 5;
+
+function updateSliderPosition() {
+  const offset = currentPage * (150 + 20) * cardsPerPage;
+  slider.style.transition = "transform 0.6s ease-in-out";
+  slider.style.transform = `translateX(-${offset}px)`;
+}
+
+document.querySelector(".cat-next").addEventListener("click", () => {
+  const maxPage = Math.floor(categories.length / cardsPerPage);
+  currentPage = currentPage + 1 >= maxPage ? 0 : currentPage + 1;
+  updateSliderPosition();
+});
+
+document.querySelector(".cat-prev").addEventListener("click", () => {
+  const maxPage = Math.floor(categories.length / cardsPerPage);
+  currentPage = currentPage === 0 ? maxPage - 1 : currentPage - 1;
+  updateSliderPosition();
+});
+
+let wheelTimeout;
+const debounceWheel = (callback, delay = 300) => {
+  if (wheelTimeout) clearTimeout(wheelTimeout);
+  wheelTimeout = setTimeout(callback, delay);
+};
+
+document.querySelector(".category-slider-wrapper").addEventListener(
+  "wheel",
+  (e) => {
+    e.preventDefault();
+
+    debounceWheel(() => {
+      if (e.deltaY > 0 || e.deltaX > 0) {
+        const maxPage = Math.floor(categories.length / cardsPerPage);
+        currentPage = currentPage + 1 >= maxPage ? 0 : currentPage + 1;
+      } else {
+        const maxPage = Math.floor(categories.length / cardsPerPage);
+        currentPage = currentPage === 0 ? maxPage - 1 : currentPage - 1;
+      }
+      updateSliderPosition();
+    }, 200);
+  },
+  { passive: false }
+);
