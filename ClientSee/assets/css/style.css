@@ -9,7 +9,8 @@ input:focus {
 }
 
 .main-page {
-  padding-top: 225px;
+  padding-top: 190px;
+  margin-bottom: 20px;
 }
 header {
   position: fixed;
