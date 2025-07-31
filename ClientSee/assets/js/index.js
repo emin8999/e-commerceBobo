@@ -161,3 +161,149 @@ document.querySelector(".category-slider-wrapper").addEventListener(
   },
   { passive: false }
 );
+
+const defaultFeatured = [
+  {
+    title: "Смарт-часы",
+    label: "🔥 New",
+    image: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?w=400",
+  },
+  {
+    title: "Наушники",
+    label: "⭐ Top",
+    image: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?w=400",
+  },
+  {
+    title: "Беспроводная колонка",
+    label: "💥 Discount",
+    image: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?w=400",
+  },
+  {
+    title: "Фитнес-браслет",
+    label: "🔥 New",
+    image: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?w=400",
+  },
+  {
+    title: "Электросамокат",
+    label: "⭐ Top",
+    image: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?w=400",
+  },
+  {
+    title: "LED-лампа",
+    label: "💥 Discount",
+    image: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?w=400",
+  },
+  {
+    title: "Кофеварка",
+    label: "🔥 New",
+    image: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?w=400",
+  },
+  {
+    title: "Игровая мышь",
+    label: "⭐ Top",
+    image: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?w=400",
+  },
+  {
+    title: "Смарт-часы",
+    label: "🔥 New",
+    image: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?w=400",
+  },
+  {
+    title: "Наушники",
+    label: "⭐ Top",
+    image: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?w=400",
+  },
+  {
+    title: "Беспроводная колонка",
+    label: "💥 Discount",
+    image: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?w=400",
+  },
+  {
+    title: "Фитнес-браслет",
+    label: "🔥 New",
+    image: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?w=400",
+  },
+  {
+    title: "Электросамокат",
+    label: "⭐ Top",
+    image: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?w=400",
+  },
+  {
+    title: "LED-лампа",
+    label: "💥 Discount",
+    image: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?w=400",
+  },
+  {
+    title: "Кофеварка",
+    label: "🔥 New",
+    image: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?w=400",
+  },
+  {
+    title: "Игровая мышь",
+    label: "⭐ Top",
+    image: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?w=400",
+  },
+];
+
+if (!localStorage.getItem("featuredProducts")) {
+  localStorage.setItem("featuredProducts", JSON.stringify(defaultFeatured));
+}
+
+const featured = JSON.parse(localStorage.getItem("featuredProducts"));
+const featSlider = document.getElementById("featuredSlider");
+
+featured.forEach((item, i) => {
+  const card = document.createElement("div");
+  card.className = "featured-card";
+  card.style.animationDelay = `${i * 0.05}s`;
+  card.innerHTML = `
+    <span class="label">${item.label}</span>
+    <img src="${item.image}" alt="${item.title}" />
+    <h3>${item.title}</h3>
+  `;
+  featSlider.appendChild(card);
+});
+
+let featPage = 0;
+const featCardsPerPage = 4;
+
+function updateFeaturedSlider() {
+  const offset = featPage * (200 + 20) * featCardsPerPage;
+  featSlider.style.transform = `translateX(-${offset}px)`;
+}
+
+document.querySelector(".feat-next").addEventListener("click", () => {
+  const maxPage = Math.floor(featured.length / featCardsPerPage);
+  featPage = featPage + 1 >= maxPage ? 0 : featPage + 1;
+  updateFeaturedSlider();
+});
+
+document.querySelector(".feat-prev").addEventListener("click", () => {
+  const maxPage = Math.floor(featured.length / featCardsPerPage);
+  featPage = featPage === 0 ? maxPage - 1 : featPage - 1;
+  updateFeaturedSlider();
+});
+
+// Прокрутка колесом мыши
+let wheelTimeoutProd;
+const debounceWheelProd = (callback, delay = 300) => {
+  if (wheelTimeoutProd) clearTimeout(wheelTimeoutProd);
+  wheelTimeoutProd = setTimeout(callback, delay);
+};
+
+document.querySelector(".featured-slider-wrapper").addEventListener(
+  "wheel",
+  (e) => {
+    e.preventDefault();
+    debounceWheelProd(() => {
+      const maxPage = Math.floor(featured.length / featCardsPerPage);
+      if (e.deltaY > 0 || e.deltaX > 0) {
+        featPage = featPage + 1 >= maxPage ? 0 : featPage + 1;
+      } else {
+        featPage = featPage === 0 ? maxPage - 1 : featPage - 1;
+      }
+      updateFeaturedSlider();
+    }, 200);
+  },
+  { passive: false }
+);
