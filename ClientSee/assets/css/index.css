@@ -167,38 +167,6 @@
   font-weight: 500;
 }
 
-.category-nav {
-  position: absolute;
-  top: 50%;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  transform: translateY(-50%);
-  pointer-events: none;
-  margin: 0 10px;
-}
-
-.category-nav button {
-  pointer-events: all;
-  background: rgba(255, 255, 255, 0.9);
-  border: none;
-  border-radius: 50%;
-  font-size: 24px;
-  width: 40px;
-  height: 40px;
-  cursor: pointer;
-  transition: all 0.3s;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-}
-
-.category-nav button:hover {
-  background-color: #ff6f61;
-  color: white;
-  transform: scale(1.1);
-}
-.cat-next {
-  margin-right: 40px;
-}
 .featured-products-section {
   max-width: 1350px;
   margin: 60px auto;
@@ -258,33 +226,89 @@
   color: #ff5a3c;
 }
 
-.featured-nav {
-  position: absolute;
-  top: 50%;
-  width: 100%;
+.discounts-section {
+  width: 1350px;
+  margin: auto;
+  padding: 40px 0;
+}
+
+.discounts-section h2 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.countdown-timer {
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+  color: #ff4d4f;
+}
+
+.discounts-slider {
   display: flex;
-  justify-content: space-between;
-  transform: translateY(-50%);
-  pointer-events: none;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding-bottom: 10px;
 }
 
-.featured-nav button {
-  pointer-events: all;
-  background: rgba(255, 255, 255, 0.9);
-  border: none;
-  border-radius: 50%;
-  font-size: 24px;
-  width: 40px;
-  height: 40px;
-  cursor: pointer;
-  transition: all 0.3s;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+.discounts-slider::-webkit-scrollbar {
+  display: none;
 }
 
-.featured-nav button:hover {
-  background-color: #ff6f61;
-  color: white;
-  transform: scale(1.1);
+.discount-card {
+  display: flex;
+  min-width: 250px;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+  flex-direction: column;
+  align-items: center;
+}
+.price-block {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin: 5px 0 10px;
+}
+
+.old-price {
+  color: #999;
+  text-decoration: line-through;
+  font-size: 0.95rem;
+}
+
+.new-price {
+  color: #e60023;
+  font-weight: bold;
+  font-size: 1.05rem;
+}
+
+.discount-label {
+  color: #2ecc71;
+  font-size: 0.9rem;
+}
+
+.discount-card:hover {
+  transform: scale(1.05);
+}
+
+.discount-card img {
+  width: 100px;
+  height: 100px;
+  border-radius: 10px;
+}
+
+.discount-card h4 {
+  margin: 10px 0 5px;
+  font-size: 1.1rem;
+}
+
+.discount-card span {
+  color: #ff4d4f;
+  font-weight: bold;
 }
 
 @keyframes fadeInUpFeat {

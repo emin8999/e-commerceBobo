@@ -125,18 +125,6 @@ function updateSliderPosition() {
   slider.style.transform = `translateX(-${offset}px)`;
 }
 
-document.querySelector(".cat-next").addEventListener("click", () => {
-  const maxPage = Math.floor(categories.length / cardsPerPage);
-  currentPage = currentPage + 1 >= maxPage ? 0 : currentPage + 1;
-  updateSliderPosition();
-});
-
-document.querySelector(".cat-prev").addEventListener("click", () => {
-  const maxPage = Math.floor(categories.length / cardsPerPage);
-  currentPage = currentPage === 0 ? maxPage - 1 : currentPage - 1;
-  updateSliderPosition();
-});
-
 let wheelTimeout;
 const debounceWheel = (callback, delay = 300) => {
   if (wheelTimeout) clearTimeout(wheelTimeout);
@@ -272,18 +260,6 @@ function updateFeaturedSlider() {
   featSlider.style.transform = `translateX(-${offset}px)`;
 }
 
-document.querySelector(".feat-next").addEventListener("click", () => {
-  const maxPage = Math.floor(featured.length / featCardsPerPage);
-  featPage = featPage + 1 >= maxPage ? 0 : featPage + 1;
-  updateFeaturedSlider();
-});
-
-document.querySelector(".feat-prev").addEventListener("click", () => {
-  const maxPage = Math.floor(featured.length / featCardsPerPage);
-  featPage = featPage === 0 ? maxPage - 1 : featPage - 1;
-  updateFeaturedSlider();
-});
-
 // Прокрутка колесом мыши
 let wheelTimeoutProd;
 const debounceWheelProd = (callback, delay = 300) => {
@@ -307,3 +283,227 @@ document.querySelector(".featured-slider-wrapper").addEventListener(
   },
   { passive: false }
 );
+// 20 товаров с рабочими картинками и ценами
+const defaultDiscountProducts = [
+  {
+    id: 1,
+    title: "Смарт-часы",
+    discount: 20,
+    oldPrice: 120,
+    image: "https://images.unsplash.com/photo-1517430816045-df4b7de11d1d?w=400",
+  },
+  {
+    id: 2,
+    title: "Наушники",
+    discount: 25,
+    oldPrice: 80,
+    image: "https://images.unsplash.com/photo-1580894894513-f99b87890c6b?w=400",
+  },
+  {
+    id: 3,
+    title: "Ноутбук",
+    discount: 15,
+    oldPrice: 850,
+    image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400",
+  },
+  {
+    id: 4,
+    title: "Смартфон",
+    discount: 30,
+    oldPrice: 600,
+    image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400",
+  },
+  {
+    id: 5,
+    title: "Фотоаппарат",
+    discount: 10,
+    oldPrice: 500,
+    image: "https://images.unsplash.com/photo-1519183071298-a2962be96c8e?w=400",
+  },
+  {
+    id: 6,
+    title: "Геймпад",
+    discount: 15,
+    oldPrice: 70,
+    image: "https://images.unsplash.com/photo-1587202372775-98973f833cb3?w=400",
+  },
+  {
+    id: 7,
+    title: "Монитор",
+    discount: 20,
+    oldPrice: 300,
+    image: "https://images.unsplash.com/photo-1587206661348-06c9be2a84d7?w=400",
+  },
+  {
+    id: 8,
+    title: "Клавиатура",
+    discount: 10,
+    oldPrice: 60,
+    image: "https://images.unsplash.com/photo-1587202372616-2f6ca1697a07?w=400",
+  },
+  {
+    id: 9,
+    title: "Мышка",
+    discount: 12,
+    oldPrice: 40,
+    image: "https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?w=400",
+  },
+  {
+    id: 10,
+    title: "Умная колонка",
+    discount: 25,
+    oldPrice: 90,
+    image: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=400",
+  },
+  {
+    id: 11,
+    title: "Пауэрбанк",
+    discount: 18,
+    oldPrice: 50,
+    image: "https://images.unsplash.com/photo-1592307480634-45d939b5082d?w=400",
+  },
+  {
+    id: 12,
+    title: "Планшет",
+    discount: 22,
+    oldPrice: 300,
+    image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400",
+  },
+  {
+    id: 13,
+    title: "Телевизор",
+    discount: 30,
+    oldPrice: 1000,
+    image: "https://images.unsplash.com/photo-1580910051073-daa4a1c12cda?w=400",
+  },
+  {
+    id: 14,
+    title: "Фитнес-браслет",
+    discount: 17,
+    oldPrice: 100,
+    image: "https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?w=400",
+  },
+  {
+    id: 15,
+    title: "Bluetooth колонка",
+    discount: 19,
+    oldPrice: 65,
+    image: "https://images.unsplash.com/photo-1593805571331-3a9e3f2cf7d3?w=400",
+  },
+  {
+    id: 16,
+    title: "Игровая консоль",
+    discount: 28,
+    oldPrice: 600,
+    image: "https://images.unsplash.com/photo-1606813908982-8941586c6c9b?w=400",
+  },
+  {
+    id: 17,
+    title: "Проектор",
+    discount: 14,
+    oldPrice: 400,
+    image: "https://images.unsplash.com/photo-1586943350684-738498cb8825?w=400",
+  },
+  {
+    id: 18,
+    title: "Веб-камера",
+    discount: 16,
+    oldPrice: 90,
+    image: "https://images.unsplash.com/photo-1611186871348-b2b6f6e9f9a0?w=400",
+  },
+  {
+    id: 19,
+    title: "Очки VR",
+    discount: 35,
+    oldPrice: 200,
+    image: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?w=400",
+  },
+  {
+    id: 20,
+    title: "Роутер",
+    discount: 13,
+    oldPrice: 70,
+    image: "https://images.unsplash.com/photo-1611571289373-dce94dca5fcf?w=400",
+  },
+];
+
+// Сохраняем в localStorage
+if (!localStorage.getItem("discountProducts")) {
+  localStorage.setItem(
+    "discountProducts",
+    JSON.stringify(defaultDiscountProducts)
+  );
+}
+
+const discountsSlider = document.getElementById("discountsSlider");
+const products = JSON.parse(localStorage.getItem("discountProducts"));
+
+// Формат в долларах
+function formatUSD(price) {
+  return `$${price.toFixed(2)}`;
+}
+
+// Отрисовка карточек
+products.forEach((product) => {
+  const newPrice = product.oldPrice * (1 - product.discount / 100);
+  const card = document.createElement("div");
+  card.className = "discount-card";
+  card.innerHTML = `
+    <img src="${product.image}" alt="${product.title}" />
+    <h4>${product.title}</h4>
+    <div class="price-block">
+      <span class="old-price">${formatUSD(product.oldPrice)}</span>
+      <span class="new-price">${formatUSD(newPrice)}</span>
+    </div>
+    <span class="discount-label">Скидка: ${product.discount}%</span>
+  `;
+  discountsSlider.appendChild(card);
+});
+
+// Прокрутка колесом мыши на 3 карточки + возврат в начало
+discountsSlider.addEventListener("wheel", (e) => {
+  e.preventDefault();
+  const scrollAmount = 270 * 3;
+  const maxScrollLeft =
+    discountsSlider.scrollWidth - discountsSlider.clientWidth;
+
+  if (e.deltaY > 0) {
+    if (Math.ceil(discountsSlider.scrollLeft + scrollAmount) >= maxScrollLeft) {
+      discountsSlider.scrollTo({ left: 0, behavior: "smooth" });
+    } else {
+      discountsSlider.scrollLeft += scrollAmount;
+    }
+  } else {
+    discountsSlider.scrollLeft -= scrollAmount;
+  }
+});
+
+// Счётчик обратного отсчёта
+function startCountdown(targetDate) {
+  const countdownEl = document.getElementById("countdown");
+
+  function updateCountdown() {
+    const now = new Date();
+    const diff = targetDate - now;
+
+    if (diff <= 0) {
+      countdownEl.textContent = "Акция завершена!";
+      clearInterval(intervalId);
+      return;
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    countdownEl.textContent = `${days}д ${hours}ч ${minutes}м ${seconds}с`;
+  }
+
+  updateCountdown();
+  const intervalId = setInterval(updateCountdown, 1000);
+}
+
+const endDate = new Date();
+endDate.setDate(endDate.getDate() + 2);
+startCountdown(endDate);
