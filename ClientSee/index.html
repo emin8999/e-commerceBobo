@@ -6,6 +6,11 @@
     <title>BOBO</title>
     <link rel="stylesheet" href="./assets/css/style.css" />
     <link rel="stylesheet" href="./assets/css/index.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   </head>
   <body>
     <header>
@@ -111,56 +116,27 @@
     </header>
     <main class="main-page">
       <section class="hero-slider">
-        <div class="slider-wrapper">
-          <!-- <div class="slide">
-            <img src="./assets/Img/sliderİmg.jpg" alt="..." />
-            <div class="slide-content">
-              <h1>Твой текст</h1>
-              <button class="cta-btn">Посмотреть</button>
-            </div>
-          </div>
-          <div class="slide active">
-            <img src="./assets/Img/sliderİmg.jpg" alt="..." />
-            <div class="slide-content">
-              <h1>Твой текст</h1>
-              <button class="cta-btn">Посмотреть</button>
-            </div>
-          </div>
-          <div class="slide">
-            <img src="./assets/Img/sliderİmg.jpg" alt="..." />
-            <div class="slide-content">
-              <h1>Твой текст</h1>
-              <button class="cta-btn">Посмотреть</button>
-            </div>
-          </div>
-          <div class="slide">
-            <img src="./assets/Img/sliderİmg.jpg" alt="..." />
-            <div class="slide-content">
-              <h1>Твой текст</h1>
-              <button class="cta-btn">Посмотреть</button>
-            </div>
-          </div>
-          <div class="slide">
-            <img src="./assets/Img/sliderİmg.jpg" alt="..." />
-            <div class="slide-content">
-              <h1>Твой текст</h1>
-              <button class="cta-btn">Посмотреть</button>
-            </div>
-          </div> -->
-        </div>
+        <div class="swiper hero-swiper">
+          <div class="swiper-wrapper" id="hero-slides-wrapper"></div>
 
-        <!-- Навигация -->
-        <div class="slider-nav">
-          <button class="prev">&#10094;</button>
-          <button class="next">&#10095;</button>
+          <div class="slider-nav">
+            <button class="prev">&#10094;</button>
+            <button class="next">&#10095;</button>
+          </div>
         </div>
       </section>
+
       <section class="category-slider-section">
         <h2 class="section-title">Категории</h2>
         <div class="category-slider-wrapper">
-          <div class="category-slider" id="categorySlider"></div>
+          <div class="swiper category-swiper">
+            <div class="swiper-wrapper" id="categorySlider">
+              <!-- Карточки вставляются JS -->
+            </div>
+          </div>
         </div>
       </section>
+
       <section class="featured-products-section">
         <h2 class="section-title">Рекомендуемые товары</h2>
         <div class="featured-slider-wrapper">
@@ -235,6 +211,7 @@
 
     <script src="./assets/js/header.js"></script>
     <script src="./assets/js/index.js"></script>
+
     <script src="./assets/js/navBar.js"></script>
   </body>
 </html>

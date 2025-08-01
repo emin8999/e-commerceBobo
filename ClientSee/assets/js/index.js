@@ -1,4 +1,4 @@
-const slidesDataExample = [
+const defaultSlides = [
   {
     img: "./assets/Img/sliderImg.jpg",
     title: "Начать покупки",
@@ -16,59 +16,42 @@ const slidesDataExample = [
   },
 ];
 
+// Сохраняем в localStorage если пусто
 if (!localStorage.getItem("heroSlides")) {
-  localStorage.setItem("heroSlides", JSON.stringify(slidesDataExample));
+  localStorage.setItem("heroSlides", JSON.stringify(defaultSlides));
 }
 
-const sliderWrapper = document.querySelector(".slider-wrapper");
+const slidesData = JSON.parse(localStorage.getItem("heroSlides"));
+const wrapper = document.getElementById("hero-slides-wrapper");
 
-let slidesData = JSON.parse(localStorage.getItem("heroSlides")) || [];
-
-function createSlide({ img, title, btnText }, isActive = false) {
-  const slide = document.createElement("div");
-  slide.classList.add("slide");
-  if (isActive) slide.classList.add("active");
-
-  slide.innerHTML = `
+slidesData.forEach(({ img, title, btnText }) => {
+  const slideEl = document.createElement("div");
+  slideEl.classList.add("swiper-slide");
+  slideEl.innerHTML = `
       <img src="${img}" alt="${title}" />
       <div class="slide-content">
         <h1>${title}</h1>
         <button class="cta-btn">${btnText}</button>
       </div>
     `;
-  return slide;
-}
-
-sliderWrapper.innerHTML = "";
-slidesData.forEach((slideData, index) => {
-  sliderWrapper.appendChild(createSlide(slideData, index === 0));
+  wrapper.appendChild(slideEl);
 });
 
-const slides = document.querySelectorAll(".slide");
-let current = 0;
-
-function showSlide(index) {
-  slides.forEach((slide) => slide.classList.remove("active"));
-  slides[index].classList.add("active");
-}
-
-function nextSlide() {
-  current = (current + 1) % slides.length;
-  showSlide(current);
-}
-
-function prevSlide() {
-  current = (current - 1 + slides.length) % slides.length;
-  showSlide(current);
-}
-
-document.querySelector(".next").addEventListener("click", nextSlide);
-document.querySelector(".prev").addEventListener("click", prevSlide);
-
-showSlide(0);
-current = 0;
-
-setInterval(nextSlide, 5000);
+const swiper = new Swiper(".hero-swiper", {
+  loop: true,
+  autoplay: {
+    delay: 5000,
+    disableOnInteraction: false,
+  },
+  navigation: {
+    nextEl: ".next",
+    prevEl: ".prev",
+  },
+  effect: "fade",
+  fadeEffect: {
+    crossFade: true,
+  },
+});
 
 const defaultCategories = [
   { title: "Одежда", icon: "👗" },
@@ -103,53 +86,38 @@ if (!localStorage.getItem("categories")) {
 }
 
 const categories = JSON.parse(localStorage.getItem("categories"));
-const slider = document.getElementById("categorySlider");
+const sliderWrapper = document.getElementById("categorySlider");
 
 categories.forEach((cat, i) => {
-  const card = document.createElement("div");
-  card.className = "category-card";
-  card.style.animationDelay = `${i * 0.05}s`;
-  card.innerHTML = `
-    <div class="icon" style="font-size: 36px">${cat.icon}</div>
-    <h3>${cat.title}</h3>
-  `;
-  slider.appendChild(card);
+  const slide = document.createElement("div");
+  slide.className = "swiper-slide";
+  slide.innerHTML = `
+      <div class="category-card" style="animation-delay: ${i * 0.05}s">
+        <div class="icon" style="font-size: 36px">${cat.icon}</div>
+        <h3>${cat.title}</h3>
+      </div>
+    `;
+  sliderWrapper.appendChild(slide);
 });
+const emptySlide = document.createElement("div");
+emptySlide.className = "swiper-slide";
+emptySlide.style.minWidth = "30px";
+sliderWrapper.appendChild(emptySlide);
 
-let currentPage = 0;
-const cardsPerPage = 5;
-
-function updateSliderPosition() {
-  const offset = currentPage * (150 + 20) * cardsPerPage;
-  slider.style.transition = "transform 0.6s ease-in-out";
-  slider.style.transform = `translateX(-${offset}px)`;
-}
-
-let wheelTimeout;
-const debounceWheel = (callback, delay = 300) => {
-  if (wheelTimeout) clearTimeout(wheelTimeout);
-  wheelTimeout = setTimeout(callback, delay);
-};
-
-document.querySelector(".category-slider-wrapper").addEventListener(
-  "wheel",
-  (e) => {
-    e.preventDefault();
-
-    debounceWheel(() => {
-      if (e.deltaY > 0 || e.deltaX > 0) {
-        const maxPage = Math.floor(categories.length / cardsPerPage);
-        currentPage = currentPage + 1 >= maxPage ? 0 : currentPage + 1;
-      } else {
-        const maxPage = Math.floor(categories.length / cardsPerPage);
-        currentPage = currentPage === 0 ? maxPage - 1 : currentPage - 1;
-      }
-      updateSliderPosition();
-    }, 200);
+new Swiper(".category-swiper", {
+  slidesPerView: "auto",
+  spaceBetween: 20,
+  freeMode: true,
+  mousewheel: true,
+  grabCursor: true,
+  breakpoints: {
+    0: { slidesPerView: 2.2 },
+    480: { slidesPerView: 3 },
+    768: { slidesPerView: 4 },
+    1024: { slidesPerView: 6 },
+    1280: { slidesPerView: 8 },
   },
-  { passive: false }
-);
-
+});
 const defaultFeatured = [
   {
     title: "Смарт-часы",
@@ -253,9 +221,10 @@ featured.forEach((item, i) => {
 });
 
 let featPage = 0;
-const featCardsPerPage = 4;
+const featCardsPerPage = getCardsPerPage(4);
 
 function updateFeaturedSlider() {
+  const featCardsPerPage = getCardsPerPage(4);
   const offset = featPage * (200 + 20) * featCardsPerPage;
   featSlider.style.transform = `translateX(-${offset}px)`;
 }
@@ -283,7 +252,6 @@ document.querySelector(".featured-slider-wrapper").addEventListener(
   },
   { passive: false }
 );
-// 20 товаров с рабочими картинками и ценами
 const defaultDiscountProducts = [
   {
     id: 1,
@@ -427,7 +395,6 @@ const defaultDiscountProducts = [
   },
 ];
 
-// Сохраняем в localStorage
 if (!localStorage.getItem("discountProducts")) {
   localStorage.setItem(
     "discountProducts",
@@ -438,12 +405,10 @@ if (!localStorage.getItem("discountProducts")) {
 const discountsSlider = document.getElementById("discountsSlider");
 const products = JSON.parse(localStorage.getItem("discountProducts"));
 
-// Формат в долларах
 function formatUSD(price) {
   return `$${price.toFixed(2)}`;
 }
 
-// Отрисовка карточек
 products.forEach((product) => {
   const newPrice = product.oldPrice * (1 - product.discount / 100);
   const card = document.createElement("div");
@@ -460,7 +425,6 @@ products.forEach((product) => {
   discountsSlider.appendChild(card);
 });
 
-// Прокрутка колесом мыши на 3 карточки + возврат в начало
 discountsSlider.addEventListener("wheel", (e) => {
   e.preventDefault();
   const scrollAmount = 270 * 3;
@@ -478,7 +442,6 @@ discountsSlider.addEventListener("wheel", (e) => {
   }
 });
 
-// Счётчик обратного отсчёта
 function startCountdown(targetDate) {
   const countdownEl = document.getElementById("countdown");
 
@@ -507,3 +470,75 @@ function startCountdown(targetDate) {
 const endDate = new Date();
 endDate.setDate(endDate.getDate() + 2);
 startCountdown(endDate);
+
+function addSwipeSupport(wrapper, onSwipeLeft, onSwipeRight) {
+  let touchStartX = 0;
+  let touchEndX = 0;
+
+  wrapper.addEventListener("touchstart", (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+  });
+
+  wrapper.addEventListener("touchend", (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipe();
+  });
+
+  function handleSwipe() {
+    const swipeDistance = touchEndX - touchStartX;
+    if (Math.abs(swipeDistance) < 50) return;
+
+    if (swipeDistance < 0) {
+      onSwipeLeft();
+    } else {
+      onSwipeRight();
+    }
+  }
+}
+
+addSwipeSupport(
+  document.querySelector(".category-slider-wrapper"),
+  () => {
+    const maxPage = Math.floor(categories.length / cardsPerPage);
+    currentPage = currentPage + 1 >= maxPage ? 0 : currentPage + 1;
+    updateSliderPosition();
+  },
+  () => {
+    const maxPage = Math.floor(categories.length / cardsPerPage);
+    currentPage = currentPage === 0 ? maxPage - 1 : currentPage - 1;
+    updateSliderPosition();
+  }
+);
+
+addSwipeSupport(
+  document.querySelector(".featured-slider-wrapper"),
+  () => {
+    const maxPage = Math.floor(featured.length / featCardsPerPage);
+    featPage = featPage + 1 >= maxPage ? 0 : featPage + 1;
+    updateFeaturedSlider();
+  },
+  () => {
+    const maxPage = Math.floor(featured.length / featCardsPerPage);
+    featPage = featPage === 0 ? maxPage - 1 : featPage - 1;
+    updateFeaturedSlider();
+  }
+);
+
+addSwipeSupport(
+  discountsSlider,
+  () => {
+    const scrollAmount = 270 * 3;
+    const maxScrollLeft =
+      discountsSlider.scrollWidth - discountsSlider.clientWidth;
+
+    if (Math.ceil(discountsSlider.scrollLeft + scrollAmount) >= maxScrollLeft) {
+      discountsSlider.scrollTo({ left: 0, behavior: "smooth" });
+    } else {
+      discountsSlider.scrollBy({ left: scrollAmount, behavior: "smooth" });
+    }
+  },
+  () => {
+    const scrollAmount = 270 * 3;
+    discountsSlider.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+  }
+);
