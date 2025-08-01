@@ -18,4 +18,6 @@ public interface StoreService {
     List<StoreResponseDto> getAllStores();
 
     void deleteStore(Long id);
+
+    void logout(String token);
 }

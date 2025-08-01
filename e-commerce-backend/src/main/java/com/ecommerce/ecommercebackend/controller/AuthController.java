@@ -5,8 +5,10 @@ import com.ecommerce.ecommercebackend.dto.request.user.RegisterRequestDto;
 import com.ecommerce.ecommercebackend.dto.response.user.LoginResponseDto;
 import com.ecommerce.ecommercebackend.dto.response.user.RegisterResponseDto;
 import com.ecommerce.ecommercebackend.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,5 +30,16 @@ public class AuthController {
     public ResponseEntity<LoginResponseDto> login(@RequestBody @Valid LoginRequestDto loginRequestDto) {
         LoginResponseDto response = userService.login(loginRequestDto);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletRequest request) {
+        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            userService.logout(token);
+            return ResponseEntity.ok("Logged out successfully");
+        }
+        return ResponseEntity.badRequest().body("No valid token provided");
     }
 }

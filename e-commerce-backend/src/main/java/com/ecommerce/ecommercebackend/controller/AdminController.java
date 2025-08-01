@@ -8,8 +8,10 @@ import com.ecommerce.ecommercebackend.entity.UserEntity;
 import com.ecommerce.ecommercebackend.service.ProductService;
 import com.ecommerce.ecommercebackend.service.StoreService;
 import com.ecommerce.ecommercebackend.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -73,5 +75,16 @@ public class AdminController {
     public ResponseEntity<Object> getSystemStats() {
         Object stats = userService.getSystemStats();
         return ResponseEntity.ok(stats);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletRequest request) {
+        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            userService.logout(token);
+            return ResponseEntity.ok("Admin logged out successfully");
+        }
+        return ResponseEntity.badRequest().body("No valid token provided");
     }
 }

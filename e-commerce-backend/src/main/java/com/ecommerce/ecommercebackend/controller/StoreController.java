@@ -5,8 +5,10 @@ import com.ecommerce.ecommercebackend.dto.request.user.LoginRequestDto;
 import com.ecommerce.ecommercebackend.dto.response.store.StoreResponseDto;
 import com.ecommerce.ecommercebackend.dto.response.user.LoginResponseDto;
 import com.ecommerce.ecommercebackend.service.StoreService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -37,5 +39,16 @@ public class StoreController {
     public ResponseEntity<StoreResponseDto> getStoreInfo() throws AccessDeniedException, java.nio.file.AccessDeniedException {
         StoreResponseDto dto = storeService.getCurrentStoreInfo();
         return ResponseEntity.ok(dto);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletRequest request) {
+        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            storeService.logout(token);
+            return ResponseEntity.ok("Store logged out successfully");
+        }
+        return ResponseEntity.badRequest().body("No valid token provided");
     }
 }

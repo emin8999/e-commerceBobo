@@ -30,4 +30,6 @@ public interface UserService {
     Object addUserAddress(Object address);
 
     Object getSystemStats();
+
+    void logout(String token);
 }

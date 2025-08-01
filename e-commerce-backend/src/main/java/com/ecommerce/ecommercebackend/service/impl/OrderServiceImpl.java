@@ -41,7 +41,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         BigDecimal totalAmount = cartItems.stream()
-            .map(item -> item.getProduct().getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+            .map(item -> BigDecimal.valueOf(item.getProduct().getPrice()).multiply(BigDecimal.valueOf(item.getQuantity())))
             .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         OrderEntity order = OrderEntity.builder()
@@ -53,23 +53,26 @@ public class OrderServiceImpl implements OrderService {
             .notes(createOrderRequestDto.getNotes())
             .build();
 
+
+        final OrderEntity savedOrder = orderRepository.save(order);
+
         List<OrderItemEntity> orderItems = cartItems.stream()
             .map(cartItem -> {
                 OrderItemEntity orderItem = OrderItemEntity.builder()
-                    .order(order)
+                    .order(savedOrder)
                     .product(cartItem.getProduct())
                     .quantity(cartItem.getQuantity())
                     .size(cartItem.getSize())
-                    .unitPrice(cartItem.getProduct().getPrice())
-                    .totalPrice(cartItem.getProduct().getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity())))
+                    .unitPrice(BigDecimal.valueOf(cartItem.getProduct().getPrice()))
+                    .totalPrice(BigDecimal.valueOf(cartItem.getProduct().getPrice()).multiply(BigDecimal.valueOf(cartItem.getQuantity())))
                     .build();
                 orderItem.updateFromProduct(cartItem.getProduct());
                 return orderItem;
             })
             .collect(Collectors.toList());
 
-        order.setOrderItems(orderItems);
-        order = orderRepository.save(order);
+        savedOrder.setOrderItems(orderItems);
+        order = orderRepository.save(savedOrder);
 
         cartRepository.deleteByUserId(currentUser.getId());
 

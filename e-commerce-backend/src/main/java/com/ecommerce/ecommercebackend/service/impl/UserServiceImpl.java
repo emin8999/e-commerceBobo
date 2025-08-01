@@ -10,6 +10,7 @@ import com.ecommerce.ecommercebackend.mapper.UserMapper;
 import com.ecommerce.ecommercebackend.repository.UserRepository;
 import com.ecommerce.ecommercebackend.security.jwt.JwtService;
 import com.ecommerce.ecommercebackend.security.user.UserPrincipal;
+import com.ecommerce.ecommercebackend.service.TokenBlacklistService;
 import com.ecommerce.ecommercebackend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,6 +34,7 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final TokenBlacklistService tokenBlacklistService;
 
     @Override
     public RegisterResponseDto register(RegisterRequestDto registerRequestDto) {
@@ -160,5 +162,11 @@ public class UserServiceImpl implements UserService {
         stats.put("totalUsers", userRepository.count());
         stats.put("message", "More stats will be implemented later");
         return stats;
+    }
+
+    @Override
+    public void logout(String token) {
+        tokenBlacklistService.blacklistToken(token);
+        SecurityContextHolder.clearContext();
     }
 }

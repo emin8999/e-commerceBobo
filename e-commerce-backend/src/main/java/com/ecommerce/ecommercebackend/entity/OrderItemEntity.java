@@ -72,9 +72,9 @@ public class OrderItemEntity {
 
     public void updateFromProduct(ProductEntity product) {
         this.productName = product.getName();
-        this.unitPrice = product.getPrice();
-        if (product.getProductImages() != null && !product.getProductImages().isEmpty()) {
-            this.productImage = product.getProductImages().get(0).getImageUrl();
+        this.unitPrice = BigDecimal.valueOf(product.getPrice());
+        if (product.getImages() != null && !product.getImages().isEmpty()) {
+            this.productImage = product.getImages().get(0).getImageUrl();
         }
         calculateTotalPrice();
     }

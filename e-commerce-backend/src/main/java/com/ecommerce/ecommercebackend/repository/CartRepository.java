@@ -34,7 +34,7 @@ public interface CartRepository extends JpaRepository<CartEntity, Long> {
     @Query("SELECT SUM(c.quantity * c.product.price) FROM CartEntity c WHERE c.user.id = :userId")
     BigDecimal getTotalAmountByUserId(@Param("userId") Long userId);
     
-    @Query("SELECT c FROM CartEntity c JOIN FETCH c.product p LEFT JOIN FETCH p.productImages WHERE c.user.id = :userId ORDER BY c.createdAt DESC")
+    @Query("SELECT c FROM CartEntity c JOIN FETCH c.product p LEFT JOIN FETCH p.images WHERE c.user.id = :userId ORDER BY c.createdAt DESC")
     List<CartEntity> findByUserIdWithProductDetails(@Param("userId") Long userId);
     
     @Modifying

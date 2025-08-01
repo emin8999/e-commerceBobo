@@ -8,6 +8,7 @@ import com.ecommerce.ecommercebackend.entity.CartEntity;
 import com.ecommerce.ecommercebackend.entity.ProductEntity;
 import com.ecommerce.ecommercebackend.entity.UserEntity;
 import com.ecommerce.ecommercebackend.enums.ProductStatus;
+import com.ecommerce.ecommercebackend.enums.ProductSize;
 import com.ecommerce.ecommercebackend.repository.CartRepository;
 import com.ecommerce.ecommercebackend.repository.ProductRepository;
 import com.ecommerce.ecommercebackend.repository.UserRepository;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,37 +39,45 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartResponseDto addToCart(AddToCartRequestDto addToCartRequestDto) {
-        log.info("Adding product {} to cart for user", addToCartRequestDto.getProductId());
+        log.info("Adding product {} to cart", addToCartRequestDto.getProductId());
         
-        UserEntity currentUser = getCurrentUser();
         ProductEntity product = getProductById(addToCartRequestDto.getProductId());
-        
         validateProductAvailability(product);
         validateQuantity(addToCartRequestDto.getQuantity());
         
-        Optional<CartEntity> existingCartItem = cartRepository.findByUserAndProductAndSize(
-            currentUser, product, addToCartRequestDto.getSize()
-        );
 
-        CartEntity cartItem;
-        if (existingCartItem.isPresent()) {
-            cartItem = existingCartItem.get();
-            int newQuantity = cartItem.getQuantity() + addToCartRequestDto.getQuantity();
-            validateTotalQuantity(newQuantity);
-            cartItem.setQuantity(newQuantity);
-            log.info("Updated existing cart item quantity to {}", newQuantity);
+        UserEntity currentUser = getCurrentUserOrNull();
+        
+        if (currentUser != null) {
+
+            Optional<CartEntity> existingCartItem = cartRepository.findByUserAndProductAndSize(
+                currentUser, product, addToCartRequestDto.getSize()
+            );
+
+            CartEntity cartItem;
+            if (existingCartItem.isPresent()) {
+                cartItem = existingCartItem.get();
+                int newQuantity = cartItem.getQuantity() + addToCartRequestDto.getQuantity();
+                validateTotalQuantity(newQuantity);
+                cartItem.setQuantity(newQuantity);
+                log.info("Updated existing cart item quantity to {}", newQuantity);
+            } else {
+                cartItem = CartEntity.builder()
+                    .user(currentUser)
+                    .product(product)
+                    .quantity(addToCartRequestDto.getQuantity())
+                    .size(addToCartRequestDto.getSize())
+                    .build();
+                log.info("Created new cart item for product {}", product.getId());
+            }
+
+            cartItem = cartRepository.save(cartItem);
+            return mapToCartResponseDto(cartItem);
         } else {
-            cartItem = CartEntity.builder()
-                .user(currentUser)
-                .product(product)
-                .quantity(addToCartRequestDto.getQuantity())
-                .size(addToCartRequestDto.getSize())
-                .build();
-            log.info("Created new cart item for product {}", product.getId());
-        }
 
-        cartItem = cartRepository.save(cartItem);
-        return mapToCartResponseDto(cartItem);
+            log.info("Anonymous user adding product {} to cart", product.getId());
+            return createMockCartResponse(product, addToCartRequestDto);
+        }
     }
 
     @Override
@@ -156,7 +166,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartResponseDto moveToWishlist(Long cartItemId) {
-        // TODO: Implement wishlist functionality
+
         throw new UnsupportedOperationException("Wishlist functionality not implemented yet");
     }
 
@@ -177,7 +187,7 @@ public class CartServiceImpl implements CartService {
             if (product.getStatus() != ProductStatus.ACTIVE) {
                 throw new RuntimeException("Product " + product.getName() + " is no longer available");
             }
-            // TODO: Add stock validation when stock management is implemented
+
         }
     }
 
@@ -188,10 +198,9 @@ public class CartServiceImpl implements CartService {
         UserEntity currentUser = getCurrentUser();
         List<CartEntity> cartItems = cartRepository.findByUserIdWithProductDetails(currentUser.getId());
         
-        // This method ensures cart calculations use current product prices
-        // Useful for long-running cart sessions
+
         cartItems.forEach(cartItem -> {
-            // Force refresh from database to get current prices
+
             ProductEntity product = productRepository.findById(cartItem.getProduct().getId())
                 .orElseThrow(() -> new RuntimeException("Product not found: " + cartItem.getProduct().getId()));
             cartItem.setProduct(product);
@@ -202,6 +211,18 @@ public class CartServiceImpl implements CartService {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.findByEmail(email)
             .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+    
+    private UserEntity getCurrentUserOrNull() {
+        try {
+            String email = SecurityContextHolder.getContext().getAuthentication().getName();
+            if ("anonymousUser".equals(email)) {
+                return null;
+            }
+            return userRepository.findByEmail(email).orElse(null);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private ProductEntity getProductById(Long productId) {
@@ -230,7 +251,7 @@ public class CartServiceImpl implements CartService {
     }
 
     private void validateTotalQuantity(Integer quantity) {
-        // TODO: Implement stock validation when stock management is added
+
         validateQuantity(quantity);
     }
 
@@ -266,7 +287,7 @@ public class CartServiceImpl implements CartService {
             .sum();
 
         BigDecimal subtotal = cartItems.stream()
-            .map(item -> item.getProduct().getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+            .map(item -> BigDecimal.valueOf(item.getProduct().getPrice()).multiply(BigDecimal.valueOf(item.getQuantity())))
             .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         boolean hasUnavailableItems = cartItems.stream()
@@ -288,7 +309,7 @@ public class CartServiceImpl implements CartService {
 
     private CartResponseDto mapToCartResponseDto(CartEntity cartItem) {
         ProductEntity product = cartItem.getProduct();
-        BigDecimal unitPrice = product.getPrice();
+        BigDecimal unitPrice = BigDecimal.valueOf(product.getPrice());
         BigDecimal totalPrice = unitPrice.multiply(BigDecimal.valueOf(cartItem.getQuantity()));
 
         return CartResponseDto.builder()
@@ -297,23 +318,53 @@ public class CartServiceImpl implements CartService {
             .productName(product.getName())
             .productDescription(product.getDescription())
             .productPrice(unitPrice)
-            .productImage(product.getProductImages().isEmpty() ? null : 
-                product.getProductImages().get(0).getImageUrl())
-            .productImages(product.getProductImages().stream()
+            .productImage(product.getImages().isEmpty() ? null : 
+                product.getImages().get(0).getImageUrl())
+            .productImages(product.getImages().stream()
                 .map(img -> img.getImageUrl())
                 .collect(Collectors.toList()))
             .productCategory(product.getCategory())
             .quantity(cartItem.getQuantity())
             .size(cartItem.getSize())
-            .availableSizes(product.getProductSizeQuantities().stream()
-                .map(sq -> sq.getSize().name())
+            .availableSizes(product.getSizeQuantities().stream()
+                .map(sq -> sq.getSize().getLabel())
                 .collect(Collectors.toList()))
             .unitPrice(unitPrice)
             .totalPrice(totalPrice)
             .productAvailable(product.getStatus() == ProductStatus.ACTIVE)
-            .productStock(999) // TODO: Implement actual stock when stock management is added
+            .productStock(999)
             .createdAt(cartItem.getCreatedAt())
             .updatedAt(cartItem.getUpdatedAt())
+            .build();
+    }
+    
+    private CartResponseDto createMockCartResponse(ProductEntity product, AddToCartRequestDto requestDto) {
+        BigDecimal unitPrice = BigDecimal.valueOf(product.getPrice());
+        BigDecimal totalPrice = unitPrice.multiply(BigDecimal.valueOf(requestDto.getQuantity()));
+        
+        return CartResponseDto.builder()
+            .id(-1L)
+            .productId(product.getId())
+            .productName(product.getName())
+            .productDescription(product.getDescription())
+            .productPrice(unitPrice)
+            .productImage(product.getImages().isEmpty() ? null : 
+                product.getImages().get(0).getImageUrl())
+            .productImages(product.getImages().stream()
+                .map(img -> img.getImageUrl())
+                .collect(Collectors.toList()))
+            .productCategory(product.getCategory())
+            .quantity(requestDto.getQuantity())
+            .size(requestDto.getSize())
+            .availableSizes(product.getSizeQuantities().stream()
+                .map(sq -> sq.getSize().getLabel())
+                .collect(Collectors.toList()))
+            .unitPrice(unitPrice)
+            .totalPrice(totalPrice)
+            .productAvailable(product.getStatus() == ProductStatus.ACTIVE)
+            .productStock(999)
+            .createdAt(LocalDateTime.now())
+            .updatedAt(LocalDateTime.now())
             .build();
     }
 }
