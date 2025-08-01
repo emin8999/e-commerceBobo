@@ -6,6 +6,10 @@
     <title>BOBO</title>
     <link rel="stylesheet" href="./assets/css/style.css" />
     <link rel="stylesheet" href="./assets/css/signUp.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
   </head>
   <body>
     <header>
@@ -113,34 +117,43 @@
       <div class="container">
         <h1>Sign Up</h1>
         <form id="registerForm">
-          <label>Email Address</label>
-          <input type="email" id="email" required />
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" required />
 
-          <label>Password</label>
+          <label for="surname">Surname</label>
+          <input type="text" id="surname" name="surname" required />
+
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" name="phone" required />
+
+          <label for="address">Address</label>
+          <input type="text" id="address" name="address" required />
+
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required />
+
+          <label for="password">Password</label>
           <div class="password-wrapper">
-            <input type="password" id="password" required />
-            <span id="togglePassword" class="eye">👁️</span>
+            <input type="password" id="password" name="password" required />
+            <span id="togglePassword" class="eye fa-solid fa-eye"></span>
           </div>
+
           <p class="note">
-            Your password must contain <strong>at least 10 characters</strong>,
-            including
-            <strong
-              >one uppercase letter, one lowercase letter, and one
-              number</strong
-            >.
+            Password must be at least <strong>10 characters</strong>, including
+            <strong>1 uppercase, 1 lowercase, 1 number</strong>.
           </p>
 
-          <label>Gender (optional)</label>
-          <div class="gender-box">
-            <button type="button" class="gender" data-value="woman">
-              Woman
-            </button>
-            <button type="button" class="gender" data-value="man">Man</button>
-          </div>
+          <label for="gender">Gender (optional)</label>
+          <select id="gender" name="gender" class="gender-select">
+            <option value="">Select gender</option>
+            <option value="female">Female</option>
+            <option value="male">Male</option>
+            <option value="other">Other</option>
+          </select>
 
           <label class="checkbox">
-            <input type="checkbox" id="consent3" required />
-            I accept the Membership Agreement and data processing terms...
+            <input type="checkbox" id="consent" required />
+            I accept the Membership Agreement.
           </label>
 
           <button type="submit" class="submit-btn">SUBSCRIBE</button>
@@ -149,7 +162,6 @@
             By subscribing, I agree to the
             <a href="#">Membership Agreement</a>.
           </p>
-
           <div class="social-buttons">
             <button type="button" class="google" onclick="signInWithGoogle()">
               Sign up with Google
@@ -213,6 +225,7 @@
         </div>
       </div>
     </footer>
+
     <script src="./assets/js/signUp.js"></script>
     <script src="./assets/js/header.js"></script>
     <script src="./assets/js/navBar.js"></script>

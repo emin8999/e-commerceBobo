@@ -27,12 +27,68 @@ function signInWithGoogle() {
   alert("Google авторизация пока что демонстрационная :)");
 }
 
+const passwordInput = document.getElementById("password");
+const togglePassword = document.getElementById("togglePassword");
+
+togglePassword.addEventListener("click", () => {
+  const isVisible = passwordInput.type === "text";
+  passwordInput.type = isVisible ? "password" : "text";
+  togglePassword.classList.toggle("fa-eye", isVisible);
+  togglePassword.classList.toggle("fa-eye-slash", !isVisible);
+});
+
+// 📤 Submit form to backend
 document
-  .getElementById("togglePassword")
-  .addEventListener("click", function () {
-    const passwordInput = document.getElementById("password");
-    const type =
-      passwordInput.getAttribute("type") === "password" ? "text" : "password";
-    passwordInput.setAttribute("type", type);
-    this.textContent = type === "password" ? "👁️" : "🙈";
+  .getElementById("registerForm")
+  .addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    // Получаем значения всех полей
+    const name = document.getElementById("name").value.trim();
+    const surname = document.getElementById("surname").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const address = document.getElementById("address").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const gender = document.getElementById("gender").value;
+    const consentChecked = document.getElementById("consent").checked;
+
+    // Проверка: все поля заполнены, но чекбокс НЕ отмечен
+    const allFilled = name && surname && phone && address && email && password;
+
+    if (allFilled && !consentChecked) {
+      document.getElementById("consentModal").style.display = "block";
+      return;
+    }
+
+    // Отправка на бэк
+    const formData = {
+      name,
+      surname,
+      phone,
+      address,
+      email,
+      password,
+      gender,
+    };
+
+    try {
+      const response = await fetch("https://your-backend-api.com/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        alert("Successfully registered!");
+        e.target.reset();
+      } else {
+        const error = await response.json();
+        alert("Error: " + error.message);
+      }
+    } catch (err) {
+      alert("Network error: " + err.message);
+    }
   });
