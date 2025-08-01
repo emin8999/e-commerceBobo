@@ -6,6 +6,7 @@ import com.ecommerce.ecommercebackend.entity.ProductEntity;
 import com.ecommerce.ecommercebackend.entity.ProductImageEntity;
 import com.ecommerce.ecommercebackend.entity.ProductSizeQuantity;
 import com.ecommerce.ecommercebackend.entity.StoreEntity;
+import com.ecommerce.ecommercebackend.enums.ProductStatus;
 import com.ecommerce.ecommercebackend.mapper.ProductMapper;
 import com.ecommerce.ecommercebackend.repository.ProductRepository;
 import com.ecommerce.ecommercebackend.security.util.StoreSecurityUtil;
@@ -91,5 +92,54 @@ public class ProductServiceImpl implements ProductService {
         return stream
                 .map(productMapper::mapToProductResponseDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductResponseDto> getAllActiveProducts() {
+        List<ProductEntity> products = productRepository.findByStatus(ProductStatus.ACTIVE);
+        return products.stream()
+                .map(productMapper::mapToProductResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public ProductResponseDto getActiveProductById(Long id) {
+        ProductEntity product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+        
+        if (product.getStatus() != ProductStatus.ACTIVE) {
+            throw new RuntimeException("Product is not available");
+        }
+        
+        return productMapper.mapToProductResponseDto(product);
+    }
+
+    @Override
+    public List<ProductResponseDto> getActiveProductsByCategory(String category) {
+        List<ProductEntity> products = productRepository.findByCategoryAndStatus(category, ProductStatus.ACTIVE);
+        return products.stream()
+                .map(productMapper::mapToProductResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductResponseDto> getActiveProductsByStore(Long storeId) {
+        List<ProductEntity> products = productRepository.findByStoreIdAndStatus(storeId, ProductStatus.ACTIVE);
+        return products.stream()
+                .map(productMapper::mapToProductResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductResponseDto> getAllProducts() {
+        List<ProductEntity> products = productRepository.findAll();
+        return products.stream()
+                .map(productMapper::mapToProductResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteProduct(Long id) {
+        productRepository.deleteById(id);
     }
 }

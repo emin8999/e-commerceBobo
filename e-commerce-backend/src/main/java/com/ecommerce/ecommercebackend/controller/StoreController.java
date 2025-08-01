@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*")
@@ -32,6 +33,7 @@ public class StoreController {
     }
 
     @GetMapping("/info")
+    @PreAuthorize("authentication.name == authentication.name")
     public ResponseEntity<StoreResponseDto> getStoreInfo() throws AccessDeniedException, java.nio.file.AccessDeniedException {
         StoreResponseDto dto = storeService.getCurrentStoreInfo();
         return ResponseEntity.ok(dto);

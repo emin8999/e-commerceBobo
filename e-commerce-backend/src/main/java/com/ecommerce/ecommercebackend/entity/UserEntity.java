@@ -28,6 +28,15 @@ public class UserEntity {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
+    private String surname;
+
+    @Column(length = 500)
+    private String address;
+
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
