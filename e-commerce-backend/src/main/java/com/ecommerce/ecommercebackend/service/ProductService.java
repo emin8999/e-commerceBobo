@@ -10,4 +10,16 @@ public interface ProductService {
     ProductResponseDto addProduct(ProductRequestDto productRequestDto) throws AccessDeniedException;
 
     List<ProductResponseDto> getAllProductsOfCurrentStore() throws AccessDeniedException;
+
+    List<ProductResponseDto> getAllActiveProducts();
+
+    ProductResponseDto getActiveProductById(Long id);
+
+    List<ProductResponseDto> getActiveProductsByCategory(String category);
+
+    List<ProductResponseDto> getActiveProductsByStore(Long storeId);
+
+    List<ProductResponseDto> getAllProducts();
+
+    void deleteProduct(Long id);
 }

@@ -10,14 +10,19 @@ import com.ecommerce.ecommercebackend.repository.StoreRepository;
 import com.ecommerce.ecommercebackend.security.jwt.JwtService;
 import com.ecommerce.ecommercebackend.security.store.StorePrincipal;
 import com.ecommerce.ecommercebackend.security.util.StoreSecurityUtil;
+import com.ecommerce.ecommercebackend.service.TokenBlacklistService;
 import com.ecommerce.ecommercebackend.service.StoreService;
 import com.ecommerce.ecommercebackend.cloudinary.CloudinaryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import java.nio.file.AccessDeniedException;
 
@@ -32,6 +37,7 @@ public class StoreServiceImpl implements StoreService {
     private final AuthenticationManager authenticationManager;
     private final StoreSecurityUtil storeSecurityUtil;
     private final CloudinaryService cloudinaryService;
+    private final TokenBlacklistService tokenBlacklistService;
 
     public void registerStore(StoreRegisterRequest request) {
         if (storeRepository.existsByEmail(request.getEmail())) {
@@ -85,5 +91,24 @@ public class StoreServiceImpl implements StoreService {
     public StoreResponseDto getCurrentStoreInfo() throws AccessDeniedException {
         StoreEntity store = storeSecurityUtil.getCurrentStore();
         return storeMapper.mapToStoreResponse(store);
+    }
+
+    @Override
+    public List<StoreResponseDto> getAllStores() {
+        List<StoreEntity> stores = storeRepository.findAll();
+        return stores.stream()
+                .map(storeMapper::mapToStoreResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteStore(Long id) {
+        storeRepository.deleteById(id);
+    }
+
+    @Override
+    public void logout(String token) {
+        tokenBlacklistService.blacklistToken(token);
+        SecurityContextHolder.clearContext();
     }
 }

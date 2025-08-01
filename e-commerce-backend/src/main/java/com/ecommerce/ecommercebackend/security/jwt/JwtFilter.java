@@ -2,6 +2,7 @@ package com.ecommerce.ecommercebackend.security.jwt;
 
 
 import com.ecommerce.ecommercebackend.security.MyUserServiceDetails;
+import com.ecommerce.ecommercebackend.service.TokenBlacklistService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,6 +24,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final MyUserServiceDetails userDetailService;
+    private final TokenBlacklistService tokenBlacklistService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -36,6 +38,12 @@ public class JwtFilter extends OncePerRequestFilter {
 
         if (authHeader != null && authHeader.startsWith(tokenPrefix)) {
             jwtToken = authHeader.substring(tokenPrefix.length());
+            
+            if (tokenBlacklistService.isTokenBlacklisted(jwtToken)) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token has been invalidated");
+                return;
+            }
+            
             try {
                 username = jwtService.extractUserName(jwtToken);
             } catch (Exception e) {

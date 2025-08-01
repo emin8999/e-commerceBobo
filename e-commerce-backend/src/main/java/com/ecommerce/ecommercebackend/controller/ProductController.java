@@ -32,4 +32,28 @@ public class ProductController {
         List<ProductResponseDto> products = productService.getAllProductsOfCurrentStore();
         return ResponseEntity.ok(products);
     }
+
+    @GetMapping("/public")
+    public ResponseEntity<List<ProductResponseDto>> getAllActiveProducts() {
+        List<ProductResponseDto> products = productService.getAllActiveProducts();
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/public/{id}")
+    public ResponseEntity<ProductResponseDto> getProductById(@PathVariable Long id) {
+        ProductResponseDto product = productService.getActiveProductById(id);
+        return ResponseEntity.ok(product);
+    }
+
+    @GetMapping("/public/category/{category}")
+    public ResponseEntity<List<ProductResponseDto>> getProductsByCategory(@PathVariable String category) {
+        List<ProductResponseDto> products = productService.getActiveProductsByCategory(category);
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/public/store/{storeId}")
+    public ResponseEntity<List<ProductResponseDto>> getProductsByStore(@PathVariable Long storeId) {
+        List<ProductResponseDto> products = productService.getActiveProductsByStore(storeId);
+        return ResponseEntity.ok(products);
+    }
 }

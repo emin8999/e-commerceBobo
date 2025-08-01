@@ -13,7 +13,14 @@ public interface UserMapper {
     @Mapping(target = "roles", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(source = "name", target = "name")
+    @Mapping(source = "surname", target = "surname") 
+    @Mapping(source = "email", target = "email")
+    @Mapping(source = "password", target = "password")
+    @Mapping(source = "address", target = "address")
+    @Mapping(source = "gender", target = "gender")
     UserEntity mapToUser(RegisterRequestDto registerRequestDto);
 
+    @Mapping(target = "message", ignore = true)
     RegisterResponseDto mapToRegisterResponseDto(UserEntity user);
 }
