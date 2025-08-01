@@ -1,3 +1,30 @@
+localStorage.removeItem("isRegistered");
+
+const email = localStorage.getItem("userEmail");
+const password = localStorage.getItem("userPassword");
+
+if (email && password) {
+  localStorage.setItem("isRegistered", "true");
+} else {
+  localStorage.setItem("isRegistered", "false");
+}
+
+const cartLinks = document.querySelectorAll('[id="cartLink"]');
+
+cartLinks.forEach((link) => {
+  link.addEventListener("click", function (e) {
+    e.preventDefault();
+
+    const isUserRegistered = localStorage.getItem("isRegistered") === "true";
+
+    if (isUserRegistered) {
+      window.location.href = "cart.html";
+    } else {
+      window.location.href = "signIn.html";
+    }
+  });
+});
+
 function updateCartCountFromStorage() {
   const cart = JSON.parse(localStorage.getItem("cart") || "[]");
   const total = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);

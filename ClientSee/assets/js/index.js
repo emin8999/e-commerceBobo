@@ -16,7 +16,6 @@ const defaultSlides = [
   },
 ];
 
-// Сохраняем в localStorage если пусто
 if (!localStorage.getItem("heroSlides")) {
   localStorage.setItem("heroSlides", JSON.stringify(defaultSlides));
 }
