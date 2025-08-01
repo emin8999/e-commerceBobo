@@ -1,0 +1,96 @@
+.admin-log-main {
+  display: flex;
+}
+.login-container {
+  background: wred;
+  margin: 40px auto;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+  height: 800px;
+}
+h2 {
+  text-align: center;
+  color: #003366;
+}
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-top: 5px;
+  font-size: 16px;
+}
+
+#togglePassword {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  color: #555;
+}
+.eye-icon {
+  margin-bottom: 10px;
+}
+.hidden {
+  display: none;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+}
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-top: 5px;
+}
+.password-wrapper {
+  position: relative;
+}
+#togglePassword {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 1.1rem;
+}
+.checkbox-wrapper {
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.button-login {
+  width: 100%;
+  padding: 12px;
+  margin-top: 20px;
+  background-color: #003366;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+}
