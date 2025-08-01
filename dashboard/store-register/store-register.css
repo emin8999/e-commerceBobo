@@ -23,7 +23,9 @@ h2 {
   text-align: center;
   color: #003366;
 }
-
+#terms {
+  width: auto;
+}
 label {
   display: block;
   margin-top: 15px;

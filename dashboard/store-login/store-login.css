@@ -6,12 +6,8 @@ body {
   background-color: #f3f6fa;
 }
 
-.sidebar{
-  height: 100vh;
-}
-
 .login-container {
-  background: wred;
+  background: white;
   margin: 40px auto;
   padding: 30px;
   border-radius: 12px;
@@ -25,36 +21,66 @@ h2 {
   text-align: center;
   color: #003366;
 }
+
 label {
   display: block;
   margin-top: 15px;
   font-weight: bold;
 }
+
 input[type="email"],
-input[type="password"] {
+input[type="password"],
+input[type="text"] {
   width: 100%;
+  height: 40px;
   padding: 10px;
+  padding-right: 40px;
   border-radius: 6px;
   border: 1px solid #ccc;
   margin-top: 5px;
+  font-size: 16px;
+  box-sizing: border-box;
+  line-height: 1.2;
 }
+
 .password-wrapper {
   position: relative;
-}
-#togglePassword {
-  position: absolute;
-  top: 50%;
-  right: 10px;
-  transform: translateY(-50%);
-  cursor: pointer;
-  font-size: 1.1rem;
-}
-.checkbox-wrapper {
-  margin-top: 15px;
   display: flex;
   align-items: center;
-  gap: 10px;
 }
+
+#togglePassword {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-50%);
+  outline: none;
+}
+
+/* Скрываем и показываем иконки */
+#eyeOpen {
+  display: block; /* теперь открыт глаз виден изначально */
+  width: 20px;
+  height: 20px;
+  stroke: #003366;
+}
+
+#eyeClosed {
+  display: none; /* закрытый глаз скрыт */
+  width: 20px;
+  height: 20px;
+  stroke: #003366;
+}
+
 .button-login {
   width: 100%;
   padding: 12px;
@@ -66,31 +92,10 @@ input[type="password"] {
   cursor: pointer;
   font-size: 1rem;
 }
+
 .error-message {
   color: red;
   margin-top: 10px;
   font-size: 0.9rem;
   text-align: center;
-}
-.forgot-password {
-  display: block;
-  margin-top: 10px;
-  text-align: center;
-  font-size: 0.9rem;
-  color: #003366;
-}
-.register-redirect {
-  text-align: center;
-  margin-top: 12px;
-  font-size: 0.9rem;
-}
-
-.register-redirect a {
-  color: #003366;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.register-redirect a:hover {
-  text-decoration: underline;
 }
