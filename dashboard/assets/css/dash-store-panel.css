@@ -1,0 +1,32 @@
+.store-panel-sidebar {
+  width: 280px;
+  background-color: #003366;
+  color: white;
+  overflow-y: auto;
+  height: 100vh;
+}
+
+.store-panel-item {
+  border-bottom: 1px solid #004080;
+}
+
+.store-panel-content {
+  overflow: hidden;
+  background-color: #002244;
+  transition: max-height 0.4s ease;
+}
+
+.store-panel-content a {
+  display: block;
+  padding: 15px 30px;
+  color: #cce0ff;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.store-panel-content a:hover {
+  background-color: #003366;
+}
+.store-panel-border {
+  border: 1px solid inherit;
+}

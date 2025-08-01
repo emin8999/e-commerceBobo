@@ -37,13 +37,11 @@ togglePassword.addEventListener("click", () => {
   togglePassword.classList.toggle("fa-eye-slash", !isVisible);
 });
 
-// 📤 Submit form to backend
 document
   .getElementById("registerForm")
   .addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    // Получаем значения всех полей
     const name = document.getElementById("name").value.trim();
     const surname = document.getElementById("surname").value.trim();
     const phone = document.getElementById("phone").value.trim();
@@ -53,7 +51,6 @@ document
     const gender = document.getElementById("gender").value;
     const consentChecked = document.getElementById("consent").checked;
 
-    // Проверка: все поля заполнены, но чекбокс НЕ отмечен
     const allFilled = name && surname && phone && address && email && password;
 
     if (allFilled && !consentChecked) {
@@ -61,7 +58,6 @@ document
       return;
     }
 
-    // Отправка на бэк
     const formData = {
       name,
       surname,

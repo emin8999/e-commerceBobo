@@ -1,33 +1,34 @@
-// Toggle password visibility
 const togglePassword = document.getElementById("togglePassword");
 const passwordInput = document.getElementById("password");
 
 if (togglePassword && passwordInput) {
   togglePassword.addEventListener("click", () => {
-    const type =
-      passwordInput.getAttribute("type") === "password" ? "text" : "password";
-    passwordInput.setAttribute("type", type);
-    togglePassword.textContent = type === "password" ? "👁️" : "🙈";
+    const isPasswordVisible = passwordInput.type === "text";
+    passwordInput.type = isPasswordVisible ? "password" : "text";
+
+    togglePassword.classList.toggle("fa-eye", isPasswordVisible);
+    togglePassword.classList.toggle("fa-eye-slash", !isPasswordVisible);
   });
 }
 
-// Handle form submission
 const loginForm = document.getElementById("loginForm");
 if (loginForm) {
   loginForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
+
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
 
     if (email && password) {
       localStorage.setItem("userEmail", email);
       alert("Logged in successfully!");
       loginForm.reset();
+    } else {
+      alert("Please fill in both email and password.");
     }
   });
 }
 
-// Redirect to signup page
 const signupButton = document.querySelector(".signup");
 if (signupButton) {
   signupButton.addEventListener("click", () => {
@@ -35,7 +36,8 @@ if (signupButton) {
   });
 }
 
-// Demo Google login
 function signInWithGoogle() {
   alert("Google sign-in clicked (demo mode)");
 }
+
+window.signInWithGoogle = signInWithGoogle;

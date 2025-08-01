@@ -6,19 +6,16 @@ const eyeOpen = document.getElementById("eyeOpen");
 const eyeClosed = document.getElementById("eyeClosed");
 const errorMsg = document.getElementById("errorMsg");
 
-// Переключение видимости пароля и иконок
 togglePassword.addEventListener("mousedown", (e) => {
-  e.preventDefault(); // Не даём кнопке фокусироваться
+  e.preventDefault();
 
   const isVisible = passwordInput.type === "text";
   passwordInput.type = isVisible ? "password" : "text";
 
-  // Переключение иконок
   eyeOpen.style.display = isVisible ? "block" : "none";
   eyeClosed.style.display = isVisible ? "none" : "block";
 });
 
-// Обработка отправки формы
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -36,10 +33,8 @@ form.addEventListener("submit", async (e) => {
     if (response.ok) {
       const result = await response.json();
 
-      // Сохраняем токен в localStorage
       localStorage.setItem("jwtToken", result.token);
 
-      // Перенаправляем на страницу магазина
       window.location.href = "store-products.html";
     } else {
       const errorData = await response.json();

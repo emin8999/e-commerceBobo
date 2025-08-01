@@ -70,7 +70,7 @@ localStorage.setItem(
 
 const productJSON = localStorage.getItem("product");
 const addressJSON = localStorage.getItem("address");
-const products = JSON.parse(productJSON); // массив
+const products = JSON.parse(productJSON);
 const address = JSON.parse(addressJSON);
 
 const addressDiv = document.querySelector(".address-details");

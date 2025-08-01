@@ -1,13 +1,11 @@
 const cartContainer = document.getElementById("cartContainer");
 const summarySubtotal = document.getElementById("summarySubtotal");
 
-// Функция для обработки клика на кнопку "Proceed to checkout"
 document
   .querySelector(".checkout-button")
   .addEventListener("click", function () {
     window.location.href = "checkout.html";
   });
-// Функция для отображения содержимого корзины
 function renderCart() {
   const cart = JSON.parse(localStorage.getItem("cart") || "[]");
   cartContainer.innerHTML = "";
@@ -72,7 +70,6 @@ function renderCart() {
     count > 1 ? "s" : ""
   }): $${total.toFixed(2)}`;
 
-  // Обработчики кнопок
   document.querySelectorAll(".increase").forEach((btn) =>
     btn.addEventListener("click", function () {
       const i = this.dataset.index;
