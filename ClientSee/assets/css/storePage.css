@@ -4,7 +4,7 @@ header {
   text-align: center;
 }
 .store-page-main {
-  padding-top: 180px; /* Adjusted for consistent top padding */
+  padding-top: 180px;
 }
 
 .store-title {
@@ -68,4 +68,9 @@ header {
 
 .back-btn:hover {
   background-color: #e68a00;
+}
+@media (max-width: 600px) {
+  .store-page-main {
+    padding-top: 90px;
+  }
 }

@@ -117,10 +117,3 @@ table tr:nth-child(even) {
     font-size: 1.2rem;
   }
 }
-@media (min-width: 600px) {
-  main.shipping-policy {
-    padding: 20px;
-    margin-left: 20px;
-    margin-right: 20px;
-  }
-}

@@ -444,6 +444,10 @@ a {
   .burger-btn {
     display: block;
   }
+  .main-page {
+    padding-top: 110px;
+    margin-bottom: 20px;
+  }
   #shopContainer {
     padding-top: 80px;
   }

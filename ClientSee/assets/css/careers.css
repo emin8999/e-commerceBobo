@@ -98,7 +98,7 @@ ul {
   color: #555;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 600px) {
   .open-shop-main {
     padding: 100px 20px 0;
   }

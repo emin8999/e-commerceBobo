@@ -6,7 +6,7 @@ h1 {
   color: #003366;
 }
 
-#consent {
+#consent input[type="checkbox"] {
   width: auto;
 }
 input[type="text"]:focus,
@@ -47,7 +47,8 @@ select:focus {
 
 input[type="email"],
 input[type="password"],
-input[type="text"] {
+#registerForm input[type="text"],
+input[type="tel"] {
   width: 100%;
   padding: 10px;
   border-radius: 6px;
@@ -195,9 +196,8 @@ label {
   font-weight: bold;
 }
 
-input,
+#registerForm input,
 select {
-  width: 100%;
   padding: 10px;
   border-radius: 6px;
   border: 1px solid #ccc;
