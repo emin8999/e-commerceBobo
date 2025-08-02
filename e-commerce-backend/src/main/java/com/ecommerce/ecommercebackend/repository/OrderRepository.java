@@ -1,6 +1,7 @@
 package com.ecommerce.ecommercebackend.repository;
 
 import com.ecommerce.ecommercebackend.entity.OrderEntity;
+import com.ecommerce.ecommercebackend.entity.OrderItemEntity;
 import com.ecommerce.ecommercebackend.entity.UserEntity;
 import com.ecommerce.ecommercebackend.enums.OrderStatus;
 import org.springframework.data.domain.Page;
@@ -64,4 +65,16 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
     
     @Query("SELECT AVG(o.totalAmount) FROM OrderEntity o WHERE o.status = 'DELIVERED'")
     BigDecimal getAverageOrderValue();
+    
+    @Query("SELECT DISTINCT o FROM OrderEntity o JOIN FETCH o.orderItems oi JOIN FETCH oi.product p WHERE p.store.id = :storeId ORDER BY o.createdAt DESC")
+    List<OrderEntity> findByStoreIdWithOrderItems(@Param("storeId") Long storeId);
+    
+    @Query("SELECT COUNT(DISTINCT o) FROM OrderEntity o JOIN o.orderItems oi JOIN oi.product p WHERE p.store.id = :storeId")
+    Long countByStoreId(@Param("storeId") Long storeId);
+    
+    @Query("SELECT SUM(oi.totalPrice) FROM OrderItemEntity oi JOIN oi.product p WHERE p.store.id = :storeId AND oi.order.status = 'DELIVERED'")
+    BigDecimal getTotalEarningsByStoreId(@Param("storeId") Long storeId);
+    
+    @Query("SELECT DISTINCT o FROM OrderEntity o JOIN o.orderItems oi JOIN oi.product p WHERE p.store.id = :storeId AND o.status = :status ORDER BY o.createdAt DESC")
+    List<OrderEntity> findByStoreIdAndStatus(@Param("storeId") Long storeId, @Param("status") OrderStatus status);
 }

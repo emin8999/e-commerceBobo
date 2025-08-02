@@ -8,7 +8,9 @@ import com.ecommerce.ecommercebackend.enums.OrderStatus;
 import com.ecommerce.ecommercebackend.repository.CartRepository;
 import com.ecommerce.ecommercebackend.repository.OrderRepository;
 import com.ecommerce.ecommercebackend.repository.UserRepository;
+import com.ecommerce.ecommercebackend.security.util.StoreSecurityUtil;
 import com.ecommerce.ecommercebackend.service.OrderService;
+import org.springframework.security.access.AccessDeniedException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,6 +30,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final CartRepository cartRepository;
     private final UserRepository userRepository;
+    private final StoreSecurityUtil storeSecurityUtil;
 
     @Override
     public OrderResponseDto createOrderFromCart(CreateOrderRequestDto createOrderRequestDto) {
@@ -202,5 +205,28 @@ public class OrderServiceImpl implements OrderService {
             .totalPrice(orderItem.getTotalPrice())
             .productAvailable(orderItem.getProduct().getStatus().name().equals("ACTIVE"))
             .build();
+    }
+
+    @Override
+    public List<OrderResponseDto> getStoreOrders() throws AccessDeniedException, java.nio.file.AccessDeniedException {
+        StoreEntity store = storeSecurityUtil.getCurrentStore();
+        List<OrderEntity> orders = orderRepository.findByStoreIdWithOrderItems(store.getId());
+        
+        return orders.stream()
+                .map(this::mapToOrderResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Long getStoreOrderCount() throws AccessDeniedException, java.nio.file.AccessDeniedException {
+        StoreEntity store = storeSecurityUtil.getCurrentStore();
+        return orderRepository.countByStoreId(store.getId());
+    }
+
+    @Override
+    public BigDecimal getStoreEarnings() throws AccessDeniedException, java.nio.file.AccessDeniedException {
+        StoreEntity store = storeSecurityUtil.getCurrentStore();
+        BigDecimal earnings = orderRepository.getTotalEarningsByStoreId(store.getId());
+        return earnings != null ? earnings : BigDecimal.ZERO;
     }
 }
