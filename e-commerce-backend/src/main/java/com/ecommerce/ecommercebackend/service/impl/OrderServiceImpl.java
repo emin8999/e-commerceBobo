@@ -10,6 +10,7 @@ import com.ecommerce.ecommercebackend.repository.OrderRepository;
 import com.ecommerce.ecommercebackend.repository.UserRepository;
 import com.ecommerce.ecommercebackend.security.util.StoreSecurityUtil;
 import com.ecommerce.ecommercebackend.service.OrderService;
+import com.ecommerce.ecommercebackend.service.UserService;
 import org.springframework.security.access.AccessDeniedException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,7 @@ public class OrderServiceImpl implements OrderService {
     private final CartRepository cartRepository;
     private final UserRepository userRepository;
     private final StoreSecurityUtil storeSecurityUtil;
+    private final UserService userService;
 
     @Override
     public OrderResponseDto createOrderFromCart(CreateOrderRequestDto createOrderRequestDto) {
@@ -47,11 +49,13 @@ public class OrderServiceImpl implements OrderService {
             .map(item -> BigDecimal.valueOf(item.getProduct().getPrice()).multiply(BigDecimal.valueOf(item.getQuantity())))
             .reduce(BigDecimal.ZERO, BigDecimal::add);
 
+        String deliveryAddress = determineDeliveryAddress(createOrderRequestDto.getDeliveryAddress(), currentUser);
+
         OrderEntity order = OrderEntity.builder()
             .user(currentUser)
             .totalAmount(totalAmount)
             .status(OrderStatus.PENDING)
-            .deliveryAddress(createOrderRequestDto.getDeliveryAddress())
+            .deliveryAddress(deliveryAddress)
             .phoneNumber(createOrderRequestDto.getPhoneNumber())
             .notes(createOrderRequestDto.getNotes())
             .build();
@@ -81,6 +85,25 @@ public class OrderServiceImpl implements OrderService {
 
         log.info("Order created successfully with ID: {}", order.getId());
         return mapToOrderResponseDto(order);
+    }
+
+    private String determineDeliveryAddress(String requestDeliveryAddress, UserEntity currentUser) {
+        String currentUserAddress = currentUser.getAddress();
+        
+        if (requestDeliveryAddress == null || requestDeliveryAddress.trim().isEmpty()) {
+            if (currentUserAddress == null || currentUserAddress.trim().isEmpty()) {
+                throw new RuntimeException("No delivery address provided and user has no default address");
+            }
+            return currentUserAddress;
+        }
+        
+        requestDeliveryAddress = requestDeliveryAddress.trim();
+        
+        if (currentUserAddress == null || !requestDeliveryAddress.equals(currentUserAddress)) {
+            userService.updateUserAddress(requestDeliveryAddress);
+        }
+        
+        return requestDeliveryAddress;
     }
 
     @Override
@@ -193,17 +216,29 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private OrderItemResponseDto mapToOrderItemResponseDto(OrderItemEntity orderItem) {
+        ProductEntity product = orderItem.getProduct();
+        
+        List<String> productImages = product.getImages() != null ? 
+            product.getImages().stream()
+                .map(img -> img.getImageUrl())
+                .collect(Collectors.toList()) : List.of();
+        
         return OrderItemResponseDto.builder()
             .id(orderItem.getId())
-            .productId(orderItem.getProduct().getId())
+            .productId(product.getId())
             .productName(orderItem.getProductName())
+            .productDescription(product.getDescription())
             .productImage(orderItem.getProductImage())
-            .productCategory(orderItem.getProduct().getCategory())
+            .productImages(productImages)
+            .productCategory(product.getCategory())
             .quantity(orderItem.getQuantity())
             .size(orderItem.getSize())
             .unitPrice(orderItem.getUnitPrice())
+            .originalPrice(BigDecimal.valueOf(product.getPrice()))
             .totalPrice(orderItem.getTotalPrice())
-            .productAvailable(orderItem.getProduct().getStatus().name().equals("ACTIVE"))
+            .productAvailable(product.getStatus().name().equals("ACTIVE"))
+            .storeId(product.getStore() != null ? product.getStore().getId() : null)
+            .storeName(product.getStore() != null ? product.getStore().getName() : null)
             .build();
     }
 

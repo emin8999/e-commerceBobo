@@ -32,4 +32,6 @@ public interface UserService {
     Object getSystemStats();
 
     void logout(String token);
+
+    void updateUserAddress(String address);
 }

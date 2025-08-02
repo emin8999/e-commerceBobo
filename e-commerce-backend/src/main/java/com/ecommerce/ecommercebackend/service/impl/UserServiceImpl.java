@@ -169,4 +169,11 @@ public class UserServiceImpl implements UserService {
         tokenBlacklistService.blacklistToken(token);
         SecurityContextHolder.clearContext();
     }
+
+    @Override
+    public void updateUserAddress(String address) {
+        UserEntity currentUser = getCurrentUser();
+        currentUser.setAddress(address);
+        userRepository.save(currentUser);
+    }
 }

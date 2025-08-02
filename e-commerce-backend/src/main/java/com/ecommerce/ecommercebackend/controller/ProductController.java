@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping(consumes = "multipart/form-data")
+    @PreAuthorize("hasRole('STORE')")
     public ResponseEntity<ProductResponseDto> addProduct(@ModelAttribute @Valid ProductRequestDto productRequestDto)
             throws AccessDeniedException, java.nio.file.AccessDeniedException {
         ProductResponseDto savedProduct = productService.addProduct(productRequestDto);
@@ -28,6 +30,7 @@ public class ProductController {
     }
 
     @GetMapping("/my-store")
+    @PreAuthorize("hasRole('STORE')")
     public ResponseEntity<List<ProductResponseDto>> getProductsOfCurrentStore() throws AccessDeniedException, java.nio.file.AccessDeniedException {
         List<ProductResponseDto> products = productService.getAllProductsOfCurrentStore();
         return ResponseEntity.ok(products);
