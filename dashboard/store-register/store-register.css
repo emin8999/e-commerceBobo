@@ -69,6 +69,10 @@ textarea {
   border-radius: 6px;
   cursor: pointer;
   font-size: 1rem;
+  transition: all 0.3s ease;
+}
+.button-register:hover {
+  background-color: rgb(2, 35, 71);
 }
 
 .error-message {

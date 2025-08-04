@@ -91,8 +91,25 @@ input[type="text"] {
   border-radius: 6px;
   cursor: pointer;
   font-size: 1rem;
+  transition: all 0.3s ease;
 }
+.button-login:hover {
+  background-color: rgb(2, 35, 71);
+}
+.reg-store-link {
+  display: flex;
+  justify-content: center;
+}
+.reg-store-link a {
+  text-decoration: none;
+  font-size: 18px;
+  transition: all 0.3s ease;
 
+  color: #003366;
+}
+.reg-store-link a:hover {
+  color: rgb(245, 148, 92);
+}
 .error-message {
   color: red;
   margin-top: 10px;
