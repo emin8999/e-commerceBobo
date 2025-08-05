@@ -47,7 +47,7 @@ a {
   color: rgb(255, 255, 255);
 }
 .header-logo {
-  width: 100px;
+  width: 40px;
   margin-right: 10px;
   text-decoration: none;
   color: rgb(255, 255, 255);
@@ -271,7 +271,7 @@ a {
 }
 
 .footer-bottom .logo {
-  width: 100px;
+  width: 40px;
   filter: brightness(0) invert(1);
 }
 
