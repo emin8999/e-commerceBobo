@@ -1,5 +1,6 @@
 .your-payments-main {
   margin-top: 200px;
+  margin-bottom: 15px;
 }
 .payment-container {
   background-color: white;
@@ -77,4 +78,12 @@
 
 .card-item span {
   display: block;
+}
+@media (max-width: 600px) {
+  .payment-container {
+    margin: 0 20px;
+  }
+  .your-payments-main {
+    margin-top: 115px;
+  }
 }

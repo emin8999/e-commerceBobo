@@ -1,0 +1,149 @@
+.messages-main {
+  margin-top: 200px;
+}
+.messages-page-container {
+  max-width: 1200px;
+  margin: 30px auto;
+  padding: 20px;
+  background-color: white;
+  border-radius: 10px;
+}
+
+.page-title {
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.recipient-selector {
+  margin-bottom: 20px;
+}
+
+.recipient-label {
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.recipient-select {
+  padding: 8px;
+  font-size: 16px;
+}
+
+.conversations-container {
+  display: flex;
+  gap: 20px;
+}
+
+.conversations-list {
+  width: 25%;
+  background-color: #f9f9f9;
+  border-right: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.conversations-title {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.conversation-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.conversation-item {
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.conversation-item:hover {
+  background-color: #eee;
+}
+
+.conversation-item.active {
+  background-color: #d6eaff;
+  font-weight: bold;
+}
+
+.message-chat-box {
+  width: 75%;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.chat-header {
+  padding: 12px;
+  font-weight: bold;
+  border-bottom: 1px solid #ddd;
+  background-color: #f3f3f3;
+  border-radius: 8px 8px 0 0;
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 15px;
+  height: 300px;
+  overflow-y: auto;
+  background-color: #fafafa;
+}
+
+.chat-message {
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  background-color: #e1f5fe;
+  border-radius: 10px;
+  max-width: 70%;
+}
+
+.chat-message.from-admin {
+  background-color: #ffe0b2;
+}
+
+.chat-message.from-store {
+  background-color: #dcedc8;
+}
+
+.message-input-container {
+  display: flex;
+  padding: 10px;
+  border-top: 1px solid #ccc;
+  background-color: #fff;
+  border-radius: 0 0 8px 8px;
+}
+
+.message-input {
+  flex: 1;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  resize: none;
+  height: 60px;
+  margin-right: 10px;
+}
+
+.send-message-button {
+  padding: 10px 16px;
+  background-color: #0077cc;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.send-message-button:hover {
+  background-color: #005fa3;
+}
+@media (max-width: 600px) {
+  .messages-main {
+    margin-top: 110px;
+  }
+}

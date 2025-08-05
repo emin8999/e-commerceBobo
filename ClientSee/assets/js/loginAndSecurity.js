@@ -63,21 +63,29 @@ document
     //     messageDiv.style.color = "red";
     //   });
   });
-
 document.querySelectorAll(".toggle-password").forEach((toggle) => {
+  const targetId = toggle.getAttribute("data-target");
+  const input = document.getElementById(targetId);
+  const eyeOpen = toggle.querySelector(".icon-eye-open");
+  const eyeClosed = toggle.querySelector(".icon-eye-closed");
+
+  if (input) {
+    input.type = "password";
+    if (eyeOpen) eyeOpen.style.display = "inline";
+    if (eyeClosed) eyeClosed.style.display = "none";
+  }
+
   toggle.addEventListener("click", () => {
-    const targetId = toggle.getAttribute("data-target");
-    const input = document.getElementById(targetId);
     if (!input) return;
 
     if (input.type === "password") {
       input.type = "text";
-      toggle.querySelector(".icon-eye-open").style.display = "inline";
-      toggle.querySelector(".icon-eye-closed").style.display = "none";
+      if (eyeOpen) eyeOpen.style.display = "none";
+      if (eyeClosed) eyeClosed.style.display = "inline";
     } else {
       input.type = "password";
-      toggle.querySelector(".icon-eye-open").style.display = "none";
-      toggle.querySelector(".icon-eye-closed").style.display = "inline";
+      if (eyeOpen) eyeOpen.style.display = "inline";
+      if (eyeClosed) eyeClosed.style.display = "none";
     }
   });
 });

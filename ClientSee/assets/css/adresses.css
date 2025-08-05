@@ -128,3 +128,8 @@
   flex-direction: column;
   gap: 12px;
 }
+@media (max-width: 600px) {
+  .adresses-main {
+    margin-top: 125px;
+  }
+}

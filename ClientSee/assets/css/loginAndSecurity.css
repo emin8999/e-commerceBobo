@@ -128,3 +128,8 @@ input:focus {
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+@media (max-width: 600px) {
+  .security-main {
+    margin-top: 135px;
+  }
+}
