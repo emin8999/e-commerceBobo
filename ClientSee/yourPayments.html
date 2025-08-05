@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./assets/css/style.css" />
+    <link rel="stylesheet" href="./assets/css/yourPayments.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <header>
+      <div class="top-header">
+        <div class="left-section">
+          <a class="header-logo-link" href="./index.html">
+            <img
+              src="./assets/Img/CartSVG.svg"
+              alt="BOBO"
+              class="header-logo"
+            />
+          </a>
+        </div>
+        <div class="deliver-to">
+          <span class="small-text">Deliver to</span>
+          <span class="bold-text">Azerbaijan</span>
+        </div>
+        <div class="search-bar">
+          <input type="text" placeholder="Search BOBO" />
+          <button class="search-button">🔍</button>
+        </div>
+        <div class="line"></div>
+        <div class="right-section">
+          <div class="language">
+            <img src="https://flagcdn.com/us.svg" width="20" alt="EN" /> EN
+          </div>
+          <div class="account">
+            <a href="./signIn.html" class="small-text">Hello, sign in</a><br />
+            <!-- <span class="bold-text">Account & Lists ▼</span> -->
+          </div>
+          <div class="orders">
+            <a href="returnAndOrders.html" class="small-text">Returns</a><br />
+            <a href="returnAndOrders.html" class="bold-text">& Orders</a>
+          </div>
+          <a class="cart" id="cartLink" href="#">
+            <img src="./assets/Img/CartSVG.svg" alt="" />
+            <span class="cart-count">0</span>
+          </a>
+        </div>
+        <!-- Mobile NavBar -->
+        <button class="burger-btn" onclick="toggleMenu()">☰</button>
+
+        <div class="overlay" onclick="toggleMenu()" id="overlay"></div>
+
+        <div class="sidebar" id="sidebar">
+          <div class="sidebar-header">
+            <a class="sidebar-header-link" href="./account.html">
+              <img src="./assets/Img/User.png" alt="" />
+            </a>
+            <a class="sidebar-header-link" id="cartLink" href="./cart.html">
+              <img src="./assets/Img/CartSVG.svg" alt="" />
+            </a>
+            <div class="sidebar-line"></div>
+          </div>
+
+          <div class="mobile-search-bar">
+            <input type="text" placeholder="Search BOBO" />
+            <button class="mobile-search-button">🔍</button>
+          </div>
+          <div class="mobile-nav-items">
+            <div class="mobile-nav-item">
+              <a class="mobile-nav-item-link" href="./shop.html">Products</a>
+            </div>
+            <div class="mobile-nav-item">
+              <a class="mobile-nav-item-link" href="./costumerServis.html"
+                >Costumer Servis</a
+              >
+            </div>
+            <div class="mobile-nav-item">
+              <a class="mobile-nav-item-link" href="./ourStores.html"
+                >Our Stores</a
+              >
+            </div>
+            <div class="mobile-nav-item">
+              <a class="mobile-nav-item-link" href="./aboutUs.html">
+                About Us</a
+              >
+            </div>
+          </div>
+
+          <div class="nav-bar-language">
+            <img src="https://flagcdn.com/us.svg" width="20" alt="EN" />
+            <select name="language" id="language-select">
+              <option class="navbar-language" value="EN">EN</option>
+              <option class="navbar-language" value="AZ">AZ</option>
+              <option class="navbar-language" value="RU">RU</option>
+            </select>
+          </div>
+          <!-- Add to the menu -->
+        </div>
+      </div>
+
+      <nav class="nav-bar">
+        <div class="nav-item">
+          <a class="nav-item" href="./shop.html">Products</a>
+        </div>
+        <div class="nav-item">
+          <a class="nav-item" href="./costumerServis.html">Costumer Servis</a>
+        </div>
+        <div class="nav-item">
+          <a class="nav-item" href="./ourStores.html">Our Stores</a>
+        </div>
+        <div class="nav-item">
+          <a class="nav-item" href="./aboutUs.html"> About Us</a>
+        </div>
+      </nav>
+    </header>
+    <main class="your-payments-main">
+      <div class="payment-container">
+        <h2 class="payment-title">Add a credit or debit card</h2>
+
+        <div class="form-group">
+          <label class="form-label">Card number</label>
+          <input type="text" class="form-input card-number" maxlength="19" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Name on card</label>
+          <input type="text" class="form-input card-name" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Expiration date</label>
+          <div class="exp-date-wrapper">
+            <select class="form-select exp-month"></select>
+            <select class="form-select exp-year"></select>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-cancel">Cancel</button>
+          <button class="btn btn-submit">Add your card</button>
+        </div>
+
+        <div class="card-list"></div>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="footer-columns">
+        <div class="column">
+          <h3>Get to Know Us</h3>
+          <ul>
+            <li><a href="./careers.html">Careers</a></li>
+            <li><a href="./aboutUs.html">About Us</a></li>
+            <li class="returns-footer-item">
+              <a href="returnAndOrders.html">Returns &amp; Orders</a>
+            </li>
+          </ul>
+        </div>
+        <div class="column">
+          <h3>Make Money with Us</h3>
+          <ul>
+            <li><a href="./sellProducts.html">Sell products on BOBO</a></li>
+            <li>
+              <a href="../dashboard/store-login.html">Open your shop on BOBO</a>
+            </li>
+            <!-- <li><a href="#">Sell apps on BOBO</a></li> -->
+          </ul>
+        </div>
+        <!-- <div class="column">
+          <h3>BOBO Payment Products</h3>
+          <ul>
+            <li><a href="#">BOBO Business Card</a></li>
+            <li><a href="#">Shop with Points</a></li>
+            <li><a href="#">Reload Your Balance</a></li>
+            <li><a href="#">BOBO Currency Converter</a></li>
+          </ul>
+        </div> -->
+        <div class="column">
+          <h3>Let Us Help You</h3>
+          <ul>
+            <li><a href="account.html">Your Account</a></li>
+            <li><a href="#">Your Orders</a></li>
+            <li><a href="#">Login For Sellers</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <img src="./assets/Img/CartSVG.svg" alt="BOBO logo" class="logo" />
+        <div class="selectors">
+          <select>
+            <option>AZN - AZ. Manat</option>
+            <option>USD - U.S. Dollar</option>
+          </select>
+          <select>
+            <option>Azerbaijan</option>
+            <option>United States</option>
+          </select>
+        </div>
+      </div>
+    </footer>
+    <script src="./assets/js/header.js"></script>
+    <script src="./assets/js/navBar.js"></script>
+    <script src="./assets/js/modal.js"></script>
+    <script src="./assets/js/yourPayments.js"></script>
+  </body>
+</html>
