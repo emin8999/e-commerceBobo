@@ -1,0 +1,130 @@
+.security-main {
+  margin-top: 200px;
+}
+.container {
+  max-width: 500px;
+  margin: 50px auto;
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 25px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #cbd5e0;
+  border-radius: 5px;
+  transition: border-color 0.3s ease;
+  padding-right: 40px; /* место для иконки */
+}
+
+.input:focus {
+  border-color: #2563eb;
+  outline: none;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 16px;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+.toggle-password:hover {
+  opacity: 1;
+}
+
+.button-save {
+  padding: 12px;
+  background-color: #2563eb;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.button-save:hover {
+  background-color: #1e40af;
+}
+
+.message {
+  margin-top: 20px;
+  text-align: center;
+  font-weight: bold;
+  color: #16a34a;
+}
+input {
+  width: 100%;
+  padding: 10px 40px 10px 10px; /* справа место под иконку */
+  font-size: 14px;
+  border: 1px solid #cbd5e0;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+input:focus {
+  border-color: #2563eb;
+  outline: none;
+}
+
+.toggle-password {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  stroke: #555;
+  stroke-width: 2;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-eye-closed,
+.icon-eye-open {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}

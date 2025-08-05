@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./assets/css/style.css" />
+    <link rel="stylesheet" href="./assets/css/loginAndSecurity.css" />
+
+    <title>Document</title>
+  </head>
+  <body>
+    <header>
+      <div class="top-header">
+        <div class="left-section">
+          <a class="header-logo-link" href="./index.html">
+            <img
+              src="./assets/Img/CartSVG.svg"
+              alt="BOBO"
+              class="header-logo"
+            />
+          </a>
+        </div>
+        <div class="deliver-to">
+          <span class="small-text">Deliver to</span>
+          <span class="bold-text">Azerbaijan</span>
+        </div>
+        <div class="search-bar">
+          <input type="text" placeholder="Search BOBO" />
+          <button class="search-button">🔍</button>
+        </div>
+        <div class="line"></div>
+        <div class="right-section">
+          <div class="language">
+            <img src="https://flagcdn.com/us.svg" width="20" alt="EN" /> EN
+          </div>
+          <div class="account">
+            <a href="./signIn.html" class="small-text">Hello, sign in</a><br />
+            <!-- <span class="bold-text">Account & Lists ▼</span> -->
+          </div>
+          <div class="orders">
+            <a href="returnAndOrders.html" class="small-text">Returns</a><br />
+            <a href="returnAndOrders.html" class="bold-text">& Orders</a>
+          </div>
+          <a class="cart" id="cartLink" href="#">
+            <img src="./assets/Img/CartSVG.svg" alt="" />
+            <span class="cart-count">0</span>
+          </a>
+        </div>
+        <!-- Mobile NavBar -->
+        <button class="burger-btn" onclick="toggleMenu()">☰</button>
+
+        <div class="overlay" onclick="toggleMenu()" id="overlay"></div>
+
+        <div class="sidebar" id="sidebar">
+          <div class="sidebar-header">
+            <a class="sidebar-header-link" href="./account.html">
+              <img src="./assets/Img/User.png" alt="" />
+            </a>
+            <a class="sidebar-header-link" id="cartLink" href="./cart.html">
+              <img src="./assets/Img/CartSVG.svg" alt="" />
+            </a>
+            <div class="sidebar-line"></div>
+          </div>
+
+          <div class="mobile-search-bar">
+            <input type="text" placeholder="Search BOBO" />
+            <button class="mobile-search-button">🔍</button>
+          </div>
+          <div class="mobile-nav-items">
+            <div class="mobile-nav-item">
+              <a class="mobile-nav-item-link" href="./shop.html">Products</a>
+            </div>
+            <div class="mobile-nav-item">
+              <a class="mobile-nav-item-link" href="./costumerServis.html"
+                >Costumer Servis</a
+              >
+            </div>
+            <div class="mobile-nav-item">
+              <a class="mobile-nav-item-link" href="./ourStores.html"
+                >Our Stores</a
+              >
+            </div>
+            <div class="mobile-nav-item">
+              <a class="mobile-nav-item-link" href="./aboutUs.html">
+                About Us</a
+              >
+            </div>
+          </div>
+
+          <div class="nav-bar-language">
+            <img src="https://flagcdn.com/us.svg" width="20" alt="EN" />
+            <select name="language" id="language-select">
+              <option class="navbar-language" value="EN">EN</option>
+              <option class="navbar-language" value="AZ">AZ</option>
+              <option class="navbar-language" value="RU">RU</option>
+            </select>
+          </div>
+          <!-- Add to the menu -->
+        </div>
+      </div>
+
+      <nav class="nav-bar">
+        <div class="nav-item">
+          <a class="nav-item" href="./shop.html">Products</a>
+        </div>
+        <div class="nav-item">
+          <a class="nav-item" href="./costumerServis.html">Costumer Servis</a>
+        </div>
+        <div class="nav-item">
+          <a class="nav-item" href="./ourStores.html">Our Stores</a>
+        </div>
+        <div class="nav-item">
+          <a class="nav-item" href="./aboutUs.html"> About Us</a>
+        </div>
+      </nav>
+    </header>
+    <main class="security-main">
+      <div class="container">
+        <h1 class="title">Login and Security</h1>
+
+        <form id="securityForm" class="form">
+          <div class="form-group">
+            <label for="username" class="label">Username</label>
+            <input
+              type="text"
+              id="username"
+              class="input input-username"
+              placeholder="Enter new username (optional)"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="email" class="label">Email</label>
+            <input
+              type="email"
+              id="email"
+              class="input input-email"
+              placeholder="Enter new email (optional)"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="phone" class="label">Phone Number</label>
+            <input
+              type="tel"
+              id="phone"
+              class="input input-phone"
+              placeholder="Enter new phone number (optional)"
+            />
+          </div>
+
+          <div class="form-group password-group">
+            <label for="password" class="label">New Password</label>
+            <div class="input-wrapper">
+              <input
+                type="password"
+                id="password"
+                class="input input-password"
+                placeholder="Enter new password (optional)"
+              />
+              <span
+                class="toggle-password"
+                data-target="password"
+                role="button"
+                tabindex="0"
+                aria-label="Toggle password visibility"
+              >
+                <!-- Закрытый глаз — скрыт -->
+                <svg
+                  class="icon-eye-closed"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  stroke="#555"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  viewBox="0 0 24 24"
+                  style="display: none"
+                >
+                  <path
+                    d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-4.97 0-9.27-3.11-11-7 1.02-2.07 2.5-3.87 4.3-5.12"
+                  />
+                  <path d="M1 1l22 22" />
+                  <path d="M9.53 9.53a3.5 3.5 0 0 0 4.94 4.94" />
+                  <path d="M14.12 14.12L17 17" />
+                </svg>
+
+                <!-- Открытый глаз — виден -->
+                <svg
+                  class="icon-eye-open"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  stroke="#555"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                  />
+                </svg>
+              </span>
+            </div>
+          </div>
+
+          <div class="form-group password-group" style="margin-top: 20px">
+            <label for="confirm-password" class="label">Confirm Password</label>
+            <div class="input-wrapper">
+              <input
+                type="password"
+                id="confirm-password"
+                class="input input-password"
+                placeholder="Confirm your password"
+              />
+              <span
+                class="toggle-password"
+                data-target="confirm-password"
+                role="button"
+                tabindex="0"
+                aria-label="Toggle password visibility"
+              >
+                <svg
+                  class="icon-eye-closed"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  stroke="#555"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  viewBox="0 0 24 24"
+                  style="display: none"
+                >
+                  <path
+                    d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-4.97 0-9.27-3.11-11-7 1.02-2.07 2.5-3.87 4.3-5.12"
+                  />
+                  <path d="M1 1l22 22" />
+                  <path d="M9.53 9.53a3.5 3.5 0 0 0 4.94 4.94" />
+                  <path d="M14.12 14.12L17 17" />
+                </svg>
+
+                <svg
+                  class="icon-eye-open"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  stroke="#555"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                  />
+                </svg>
+              </span>
+            </div>
+          </div>
+
+          <button type="submit" class="button-save">Save Changes</button>
+        </form>
+
+        <div id="message" class="message"></div>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="footer-columns">
+        <div class="column">
+          <h3>Get to Know Us</h3>
+          <ul>
+            <li><a href="./careers.html">Careers</a></li>
+            <li><a href="./aboutUs.html">About Us</a></li>
+            <li class="returns-footer-item">
+              <a href="returnAndOrders.html">Returns &amp; Orders</a>
+            </li>
+          </ul>
+        </div>
+        <div class="column">
+          <h3>Make Money with Us</h3>
+          <ul>
+            <li><a href="./sellProducts.html">Sell products on BOBO</a></li>
+            <li>
+              <a href="../dashboard/store-login.html">Open your shop on BOBO</a>
+            </li>
+            <!-- <li><a href="#">Sell apps on BOBO</a></li> -->
+          </ul>
+        </div>
+        <!-- <div class="column">
+          <h3>BOBO Payment Products</h3>
+          <ul>
+            <li><a href="#">BOBO Business Card</a></li>
+            <li><a href="#">Shop with Points</a></li>
+            <li><a href="#">Reload Your Balance</a></li>
+            <li><a href="#">BOBO Currency Converter</a></li>
+          </ul>
+        </div> -->
+        <div class="column">
+          <h3>Let Us Help You</h3>
+          <ul>
+            <li><a href="account.html">Your Account</a></li>
+            <li><a href="#">Your Orders</a></li>
+            <li><a href="#">Login For Sellers</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <img src="./assets/Img/CartSVG.svg" alt="BOBO logo" class="logo" />
+        <div class="selectors">
+          <select>
+            <option>AZN - AZ. Manat</option>
+            <option>USD - U.S. Dollar</option>
+          </select>
+          <select>
+            <option>Azerbaijan</option>
+            <option>United States</option>
+          </select>
+        </div>
+      </div>
+    </footer>
+    <script src="./assets/js/header.js"></script>
+    <script src="./assets/js/loginAndSecurity.js"></script>
+    <script src="./assets/js/navBar.js"></script>
+    <script src="./assets/js/modal.js"></script>
+  </body>
+</html>
