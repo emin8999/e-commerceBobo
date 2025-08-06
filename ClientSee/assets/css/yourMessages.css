@@ -146,4 +146,17 @@
   .messages-main {
     margin-top: 110px;
   }
+  .conversations-list {
+    font-size: 13px;
+    width: 90%;
+  }
+  .conversations-title {
+    font-size: 13px;
+  }
+  .conversations-container {
+    flex-direction: column;
+  }
+  .message-chat-box {
+    width: 95%;
+  }
 }
