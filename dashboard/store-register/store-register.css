@@ -96,3 +96,16 @@ textarea {
 .login-redirect a:hover {
   text-decoration: underline;
 }
+@media (min-width: 600px) {
+  .nav-links {
+    display: none;
+  }
+}
+@media (max-width: 600px) {
+  .nav-links {
+    display: block;
+  }
+  .register-container {
+    margin: 40px 20px;
+  }
+}

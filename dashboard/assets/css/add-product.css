@@ -109,3 +109,8 @@ button:hover {
   font-weight: bold;
   color: green;
 }
+@media (max-width: 600px) {
+  .product-form-container {
+    margin: 40px 20px;
+  }
+}

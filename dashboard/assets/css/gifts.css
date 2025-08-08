@@ -183,7 +183,9 @@ form button[type="submit"]:hover {
     font-size: 13px;
     padding: 10px;
   }
-
+  .gifts-main {
+    margin: 40px 20px;
+  }
   .modal-content {
     padding: 20px;
   }

@@ -116,3 +116,13 @@ input[type="text"] {
   font-size: 0.9rem;
   text-align: center;
 }
+@media (min-width: 600px) {
+  .nav-links {
+    display: none;
+  }
+}
+@media (max-width: 600px) {
+  .login-container {
+    margin: 40px 20px;
+  }
+}

@@ -11,6 +11,7 @@ body {
   margin: 0 auto;
   background: #fff;
   padding: 40px 30px;
+  overflow: auto;
   border-radius: 10px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
   height: 100vh;
@@ -69,4 +70,9 @@ tr:hover {
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+}
+@media (max-width: 600px) {
+  .checkout-price-container {
+    margin: 40px 20px;
+  }
 }

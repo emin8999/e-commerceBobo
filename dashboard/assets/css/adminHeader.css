@@ -51,7 +51,12 @@ body {
   gap: 24px;
   font-size: 16px;
 }
-
+.dashboard-admin-user {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  font-size: 16px;
+}
 .admin-user span {
   display: flex;
   align-items: center;
@@ -88,11 +93,14 @@ body {
   stroke: currentColor;
 }
 
-@media (max-width: 880px) {
+@media (max-width: 600px) {
   .admin-header {
+    display: flex;
     flex-direction: column;
     text-align: center;
+    height: 92px;
     padding: 12px 20px;
+    justify-content: center;
   }
 
   .logo span {
@@ -106,12 +114,15 @@ body {
     width: 100%;
     padding: 0;
   }
-
+  .logo {
+    display: none;
+  }
   .nav-links a {
     font-size: 16px;
   }
 
   .admin-user {
+    display: none;
     flex-direction: column;
     text-align: center;
     gap: 10px;
@@ -134,7 +145,7 @@ body {
   width: 280px;
   background-color: #003366;
   color: white;
-  overflow-y: auto;
+
   height: 100vh;
   padding-top: 20px;
 }

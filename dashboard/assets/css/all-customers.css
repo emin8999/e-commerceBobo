@@ -7,6 +7,7 @@ body {
 }
 .all-customers-wrapper {
   display: flex;
+  overflow: auto;
   flex-direction: column;
   max-width: 100%;
   margin: 40px auto;
@@ -88,4 +89,9 @@ body {
   margin-top: 0;
   font-size: 20px;
   color: #333;
+}
+@media (max-width: 600px) {
+  .all-customers-main {
+    margin: 40px 15px;
+  }
 }

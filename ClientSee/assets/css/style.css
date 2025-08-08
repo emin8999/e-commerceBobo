@@ -370,9 +370,7 @@ a {
   background: inherit;
   border: none;
 }
-.siebar-header-link img {
-  width: 35px;
-}
+
 .sidebar-header {
   display: flex;
   justify-content: space-between;

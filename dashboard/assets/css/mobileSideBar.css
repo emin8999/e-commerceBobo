@@ -1,0 +1,144 @@
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  margin-top: 7px;
+}
+.sidebar-header-link img {
+  width: 35px;
+}
+.dashboard-mobile-burger-btn {
+  position: fixed;
+  display: none;
+  top: 20px;
+  right: 15px;
+  z-index: 1001;
+  background-color: #333;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  font-size: 20px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+.dashboard-mobile-admin-user {
+  display: block;
+  flex-direction: column;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  font-size: 16px;
+  margin-top: 55px;
+  width: 100%;
+}
+/* Сайдбар */
+.dashboard-mobile-sidebar {
+  position: fixed;
+  top: 0;
+  right: -500px;
+  width: 300px;
+  height: 100%;
+  background-color: #f4f4f4;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  transition: right 0.3s ease;
+  z-index: 1000;
+}
+
+.dashboard-mobile-sidebar.open {
+  right: 0;
+  background: linear-gradient(90deg, #002b5c, #0053a6);
+}
+
+.dashboard-mobile-sidebar h2 {
+  margin-top: 0;
+}
+
+/* Фон затемнения */
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 999;
+}
+/* .returns-footer-item {
+  display: none;
+} */
+.overlay.active {
+  display: block;
+}
+
+.menu-item {
+  margin: 10px 0;
+}
+.dashboard-mobile-panel {
+  width: 280px;
+  color: white;
+  overflow-y: auto;
+  height: 100vh;
+  padding-top: 20px;
+}
+
+.accordion-item {
+  border-bottom: 1px solid #004080;
+}
+
+.accordion-header {
+  background: none;
+  border: none;
+  outline: none;
+  width: 100%;
+  text-align: left;
+  padding: 15px 20px;
+  font-size: 16px;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border-radius: 8px;
+}
+
+.accordion-header:hover {
+  background-color: #004080;
+}
+
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  background-color: #002244;
+  transition: max-height 0.4s ease;
+}
+
+.accordion-content a {
+  display: block;
+  padding: 12px 30px;
+  color: #cce0ff;
+  text-decoration: none;
+  font-size: 15px;
+}
+
+.accordion-content a:hover {
+  background-color: #003366;
+}
+
+.icon {
+  font-weight: bold;
+  font-size: 16px;
+}
+@media (max-width: 600px) {
+  .dashboard-mobile-burger-btn {
+    display: block;
+  }
+  .sidebar {
+    display: none;
+  }
+}

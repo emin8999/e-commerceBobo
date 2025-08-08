@@ -17,6 +17,7 @@ body {
   max-width: 100%;
   overflow: auto;
   flex: 1;
+  margin: 40px 0;
   width: 800px;
   padding: 30px;
   background: #ffffff;
@@ -116,4 +117,9 @@ textarea {
 
 .permissions-table td {
   background-color: #fafbff;
+}
+@media (max-width: 600px) {
+  .container {
+    margin: 40px 20px;
+  }
 }
