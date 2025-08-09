@@ -11,6 +11,11 @@
         <module name="e-commerce-backend.main" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="com.e-commerce-backend" target="17" />
+      <module name="com.e-commerce-backend.main" target="17" />
+      <module name="com.e-commerce-backend.test" target="17" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">

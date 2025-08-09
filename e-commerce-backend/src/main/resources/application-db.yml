@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://dpg-d2aad8juibrs73c2pmr0-a:5432/bobo_project
-    username: bobo_project_user
-    password: oAjySRQkJ5EOH2dadBE275vMMkk1nWuA
+    url: jdbc:postgresql://localhost:5432/myservicedb
+    username: myservice
+    password: AEmin_899_@!
     driver-class-name: org.postgresql.Driver
 
   jpa:
