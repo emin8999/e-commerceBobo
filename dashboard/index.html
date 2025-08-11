@@ -3,16 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <title>Dashboard</title>
-    <!-- styles -->
-
     <link rel="stylesheet" href="./assets/css/adminHeader.css" />
-    <link rel="stylesheet" href="./assets/css/summary.css" />
-    <link rel="stylesheet" href="./assets/css/mobileSideBar.css">
+    <link rel="stylesheet" href="./assets/css/admin-login.css" />
+    <link rel="stylesheet" href="./assets/css/mobileSideBar.css" />
+
+    <title>Document</title>
   </head>
   <body>
-    <!-- Header -->
     <header class="admin-header">
       <div class="logo">
         <span>AdminPanel</span>
@@ -21,10 +18,6 @@
       <nav class="nav-links">
         <ul>
           <li><a href="summary.html">Dashboard</a></li>
-          <!-- <li> <a href="users.html">Users</a> </li>
-        <li> <a href="products.html">Products</a> </li>
-        <li> <a href="products.html">Products</a> </li>
-        <li> <a href="orders.html">Orders</a> </li> -->
         </ul>
       </nav>
 
@@ -210,142 +203,86 @@
             <a href="add-product.html">Add to Product</a>
           </div>
         </div>
-        <!-- Message -->
         <div class="accordion-item">
           <button class="accordion-header">
             Message <span class="icon">➕</span>
           </button>
           <div class="accordion-content">
             <a href="message.html">Message</a>
-            <!-- <a href="message-admin.html">Message Admin</a> -->
           </div>
         </div>
       </div>
     </header>
+    <main class="admin-log-main">
+     
+      <div class="login-container">
+        <h2>Admin Sign In</h2>
+        <form id="storeLoginForm">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" required="" />
 
-    <main class="main-content">
-      <!-- Nav bar Left Side -->
-      <div class="sidebar">
-        <div class="accordion-item">
-          <button class="accordion-header">
-            Dashboard <span class="icon">➕</span>
-          </button>
-          <div class="accordion-content">
-            <a href="./index.html">All summary</a>
-            <a href="stores-checkout-price.html">Stores Checkout price</a>
-          </div>
-        </div>
+          <label for="password">Password</label>
+          <div class="password-wrapper">
+            <input type="password" id="password" required />
+            <span id="togglePassword">
+              <svg
+                id="eyeIcon"
+                xmlns="http://www.w3.org/2000/svg"
+                class="icon eye-icon"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                />
+              </svg>
 
-        <div class="accordion-item">
-          <button class="accordion-header">
-            Products <span class="icon">➕</span>
-          </button>
-          <div class="accordion-content">
-            <a href="category.html">Category</a>
-            <a href="all-product-list.html">All Product list</a>
-            <a href="gifts.html">Gifts</a>
+              <svg
+                id="eyeSlashIcon"
+                xmlns="http://www.w3.org/2000/svg"
+                class="icon hidden eye-icon"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a9.978 9.978 0 012.293-3.95m3.591-2.54A9.953 9.953 0 0112 5c4.477 0 8.268 2.943 9.542 7a9.976 9.976 0 01-4.293 5.35M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M3 3l18 18"
+                />
+              </svg>
+            </span>
           </div>
-        </div>
 
-        <div class="accordion-item">
-          <button class="accordion-header">
-            Customers <span class="icon">➕</span>
-          </button>
-          <div class="accordion-content">
-            <a href="store-owner.html">Store’s Owners</a>
-            <a href="all-customers.html">All Customers</a>
+          <div class="checkbox-wrapper">
+            <input type="checkbox" id="rememberMe" />
+            <label for="rememberMe">Remember Me</label>
           </div>
-        </div>
 
-        <div class="accordion-item">
-          <button class="accordion-header">
-            Admin <span class="icon">➕</span>
-          </button>
-          <div class="accordion-content">
-            <a href="permission-stores.html">Permission for stores</a>
-            <a href="permission-sales.html">Permission for sales</a>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button class="accordion-header">
-            Order <span class="icon">➕</span>
-          </button>
-          <div class="accordion-content">
-            <a href="checkout.html">Check out</a>
-            <a href="orders-shipping.html">Order and Shipping</a>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button class="accordion-header">
-            Stores <span class="icon">➕</span>
-          </button>
-          <div class="accordion-content">
-            <a href="store-page.html">Page of Store</a>
-            <a href="store-dashboard.html">Dashboard for stores</a>
-            <a href="store-products.html">Stores Products</a>
-            <!-- <a href="base-product.html">Base of Product</a> -->
-            <a href="manage-page.html">Manage store (Edit Page)</a>
-            <a href="manage-products.html">Manage products (Edit Page)</a>
-            <a href="store-sales.html">Stores Sales</a>
-            <a href="add-product.html">Add to Product</a>
-          </div>
-        </div>
-        <!-- Message -->
-        <div class="accordion-item">
-          <button class="accordion-header">
-            Message <span class="icon">➕</span>
-          </button>
-          <div class="accordion-content">
-            <a href="message.html">Message</a>
-            <!-- <a href="message-admin.html">Message Admin</a> -->
-          </div>
-        </div>
-      </div>
-
-      <!-- summary -->
-
-      <div class="summary-container">
-        <h1>Platform Summary</h1>
-        <div class="kpi-cards">
-          <div class="kpi" id="totalOrders">
-            <h3>Total Orders</h3>
-            <p class="kpi-value">0</p>
-          </div>
-          <div class="kpi" id="totalRevenue">
-            <h3>Total Revenue ($)</h3>
-            <p class="kpi-value">$0.00</p>
-          </div>
-          <div class="kpi" id="totalCustomers">
-            <h3>Registered Customers</h3>
-            <p class="kpi-value">0</p>
-          </div>
-          <div class="kpi" id="totalStores">
-            <h3>Active Stores</h3>
-            <p class="kpi-value">0</p>
-          </div>
-          <div class="kpi" id="totalProducts">
-            <h3>Products Available</h3>
-            <p class="kpi-value">0</p>
-          </div>
-          <div class="kpi" id="todayRevenue">
-            <h3>Today's Revenue</h3>
-            <p class="kpi-value">$0.00</p>
-          </div>
-        </div>
-
-        <div class="charts">
-          <canvas id="ordersByCategory"></canvas>
-          <canvas id="revenueOverTime"></canvas>
-        </div>
+          <button class="button-login" type="submit">Login</button>
+        </form>
       </div>
     </main>
 
-    <!-- scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="./assets/js/summary.js"></script>
     <script src="./assets/js/DashNavBar.js"></script>
+    <script src="./assets/js/admin-login.js"></script>
     <script src="./assets/js/dashboardNavBar.js"></script>
   </body>
 </html>
