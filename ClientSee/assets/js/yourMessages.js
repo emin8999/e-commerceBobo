@@ -8,12 +8,14 @@ const chatHeader = document.getElementById("chatHeader");
 let currentRecipient = recipientSelect.value;
 let conversations = JSON.parse(localStorage.getItem("conversations")) || {
   admin: [],
-  store: [],
+  // store: [],
 };
 
 function renderConversationList() {
   conversationList.innerHTML = "";
-  ["admin", "store"].forEach((type) => {
+  // ["admin", "store"].forEach((type) => {
+  ["admin"].forEach((type) => {
+    // оставили только admin
     const li = document.createElement("li");
     li.className =
       "conversation-item" + (type === currentRecipient ? " active" : "");
@@ -60,6 +62,22 @@ recipientSelect.addEventListener("change", (e) => {
   renderConversationList();
   renderMessages();
 });
+async function setCountryName() {
+  try {
+    const res = await fetch("https://ipapi.co/json/");
+    const data = await res.json();
+
+    if (data && data.country_name) {
+      document.getElementById("countryName").textContent = data.country_name;
+    } else {
+      document.getElementById("countryName").textContent = "Unknown";
+    }
+  } catch (err) {
+    console.error("Ошибка определения страны:", err);
+    document.getElementById("countryName").textContent = "Unknown";
+  }
+}
 
 renderConversationList();
 renderMessages();
+setCountryName();

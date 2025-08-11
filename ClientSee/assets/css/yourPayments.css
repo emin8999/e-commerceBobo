@@ -19,7 +19,21 @@
 .form-group {
   margin-bottom: 15px;
 }
+.btn-delete {
+  background-color: #e74c3c;
+  border: none;
+  color: white;
+  padding: 6px 12px;
+  margin-top: 10px;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
 
+.btn-delete:hover {
+  background-color: #c0392b;
+}
 .form-label {
   display: block;
   margin-bottom: 6px;
