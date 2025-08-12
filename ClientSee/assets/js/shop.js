@@ -1,16 +1,37 @@
-// Получаем элемент контейнера товаров на странице
-const shop = document.getElementById("shop");
+const container = document.getElementById("shop");
 
-// Загружаем массив товаров и корзины из localStorage или создаем пустой массив
-let products = JSON.parse(localStorage.getItem("products") || "[]");
-let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+fetch("http://116.203.51.133:8080/home/product/public")
+  .then((res) => res.json())
+  .then((data) => {
+    container.innerHTML = "";
 
-// Сохраняем текущее состояние корзины в localStorage
-function saveCart(cart) {
-  localStorage.setItem("cart", JSON.stringify(cart));
-}
+    if (data.length > 0) {
+      data.forEach((product) => {
+        const productEl = document.createElement("div");
+        productEl.classList.add("product-card");
 
-// Обновляем количество товаров в корзине и сохраняем в localStorage
+        productEl.innerHTML = `
+          <h3>${product.name}</h3>
+          <img src="${product.imageUrls}" />
+          <p>${product.description}</p>
+          <p>Price: ${product.price}</p>
+          <p> ${product.color}</p>
+          <p> ${product.status}</p>
+          <p> ${product.storeName}</p>
+          <p> ${product.sizeQuantities}</p>
+        `;
+
+        container.appendChild(productEl);
+      });
+    } else {
+      container.innerHTML = "<p>No Products</p>";
+    }
+  })
+  .catch((err) => {
+    console.error("Error:", err);
+    container.innerHTML = "<p>Error</p>";
+  });
+
 function updateCartCountDisplay() {
   const count = cart.reduce((sum, item) => sum + item.quantity, 0);
   localStorage.setItem("cartCount", count);
