@@ -83,6 +83,32 @@ a {
   height: 33.5px;
   border-radius: 5px;
 }
+.logout-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  /* background: linear-gradient(135deg, #0b3c77, #082b57); */
+  color: white;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.logout-btn:hover {
+  background: linear-gradient(135deg, #ff8a00, #ff6a00);
+}
+
+.logout-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.logout-text {
+  font-weight: 600;
+}
+
 .mobile-search-bar {
   display: flex;
   flex: 1;
