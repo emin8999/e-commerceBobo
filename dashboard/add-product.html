@@ -10,7 +10,7 @@
   </head>
 
   <body>
-    <header class="admin-header">
+   <header class="admin-header">
       <div class="logo">
         <span>AdminPanel</span>
       </div>
@@ -18,6 +18,10 @@
       <nav class="nav-links">
         <ul>
           <li><a href="summary.html">Dashboard</a></li>
+          <!-- <li> <a href="users.html">Users</a> </li>
+        <li> <a href="products.html">Products</a> </li>
+        <li> <a href="products.html">Products</a> </li>
+        <li> <a href="orders.html">Orders</a> </li> -->
         </ul>
       </nav>
 
@@ -76,7 +80,7 @@
           >Logout
         </button>
       </div>
-              <button class="dashboard-mobile-burger-btn" onclick="toggleMenu()">☰</button>
+       <button class="dashboard-mobile-burger-btn" onclick="toggleMenu()">☰</button>
 
         <div class="overlay" onclick="toggleMenu()" id="overlay"></div>
 
@@ -141,7 +145,7 @@
             Dashboard <span class="icon">➕</span>
           </button>
           <div class="accordion-content">
-            <a href="./summary.html">All summary</a>
+             <a href="./summary.html">All summary</a>
             <a href="stores-checkout-price.html">Stores Checkout price</a>
           </div>
         </div>
@@ -152,7 +156,7 @@
           </button>
           <div class="accordion-content">
             <a href="category.html">Category</a>
-            <!-- <a href="base-product.html">Base of Product</a> -->
+                 <a href="all-product-list.html">All Product list</a>
             <a href="gifts.html">Gifts</a>
           </div>
         </div>
@@ -196,7 +200,7 @@
             <a href="store-page.html">Page of Store</a>
             <a href="store-dashboard.html">Dashboard for stores</a>
             <a href="store-products.html">Stores Products</a>
-            <!-- <a href="base-product.html">Base of Product</a> -->
+                        <!-- <a href="base-product.html">Base of Product</a> 
             <a href="manage-page.html">Manage store (Edit Page)</a>
             <a href="manage-products.html">Manage products (Edit Page)</a>
             <a href="store-sales.html">Stores Sales</a>
@@ -214,9 +218,7 @@
           </div>
         </div>
       </div>
-      </div>
     </header>
-
     <main class="main-content">
       <!-- Nav bar Left Side -->
       <div class="sidebar">
@@ -236,7 +238,7 @@
           </button>
           <div class="accordion-content">
             <a href="category.html">Category</a>
-            <!-- <a href="base-product.html">Base of Product</a> -->
+                   <a href="all-product-list.html">All Product list</a>
             <a href="gifts.html">Gifts</a>
           </div>
         </div>
@@ -280,7 +282,6 @@
             <a href="store-page.html">Page of Store</a>
             <a href="store-dashboard.html">Dashboard for stores</a>
             <a href="store-products.html">Stores Products</a>
-            <!-- <a href="base-product.html">Base of Product</a> -->
             <a href="manage-page.html">Manage store (Edit Page)</a>
             <a href="manage-products.html">Manage products (Edit Page)</a>
             <a href="store-sales.html">Stores Sales</a>
@@ -319,12 +320,210 @@
             placeholder="Price ($)"
             required
           />
-          <input
-            type="text"
-            id="productCategory"
-            placeholder="Category"
-            required
-          />
+ <label for="productCategory">Category:</label>
+<select id="productCategory" required>
+  <option value="" disabled selected>Choose categories</option>
+
+  <optgroup label="Clothing 👗">
+    <option value="clothing_men">Men's Clothing</option>
+    <option value="clothing_women">Women's Clothing</option>
+    <option value="clothing_kids">Kids' Clothing</option>
+    <option value="clothing_outerwear">Outerwear</option>
+    <option value="clothing_activewear">Activewear</option>
+  </optgroup>
+
+  <optgroup label="Footwear 👟">
+    <option value="footwear_men">Men's Footwear</option>
+    <option value="footwear_women">Women's Footwear</option>
+    <option value="footwear_sports">Sports Shoes</option>
+    <option value="footwear_boots">Boots</option>
+    <option value="footwear_sandals">Sandals</option>
+  </optgroup>
+
+  <optgroup label="Electronics 📱">
+    <option value="electronics_phones">Mobile Phones</option>
+    <option value="electronics_computers">Computers</option>
+    <option value="electronics_audio">Audio Equipment</option>
+    <option value="electronics_cameras">Cameras</option>
+    <option value="electronics_smartwatches">Smartwatches</option>
+  </optgroup>
+
+  <optgroup label="Groceries 🛒">
+    <option value="groceries_fruits">Fruits & Vegetables</option>
+    <option value="groceries_dairy">Dairy Products</option>
+    <option value="groceries_beverages">Beverages</option>
+    <option value="groceries_bakery">Bakery</option>
+    <option value="groceries_snacks">Snacks</option>
+  </optgroup>
+
+  <optgroup label="Books 📚">
+    <option value="books_fiction">Fiction</option>
+    <option value="books_nonfiction">Non-fiction</option>
+    <option value="books_comics">Comics</option>
+    <option value="books_children">Children's Books</option>
+    <option value="books_textbooks">Textbooks</option>
+  </optgroup>
+
+  <optgroup label="Toys 🧸">
+    <option value="toys_educational">Educational Toys</option>
+    <option value="toys_actionfigures">Action Figures</option>
+    <option value="toys_puzzles">Puzzles</option>
+    <option value="toys_dolls">Dolls</option>
+    <option value="toys_rc">Remote Control Toys</option>
+  </optgroup>
+
+  <optgroup label="Jewelry 💍">
+    <option value="jewelry_rings">Rings</option>
+    <option value="jewelry_necklaces">Necklaces</option>
+    <option value="jewelry_earrings">Earrings</option>
+    <option value="jewelry_bracelets">Bracelets</option>
+    <option value="jewelry_watches">Watches</option>
+  </optgroup>
+
+  <optgroup label="Tech 💻">
+    <option value="tech_laptops">Laptops</option>
+    <option value="tech_accessories">Accessories</option>
+    <option value="tech_gadgets">Gadgets</option>
+    <option value="tech_tablets">Tablets</option>
+    <option value="tech_monitors">Monitors</option>
+  </optgroup>
+
+  <optgroup label="Cosmetics 💄">
+    <option value="cosmetics_makeup">Makeup</option>
+    <option value="cosmetics_skincare">Skincare</option>
+    <option value="cosmetics_perfume">Perfumes</option>
+    <option value="cosmetics_haircare">Hair Care</option>
+    <option value="cosmetics_nailcare">Nail Care</option>
+  </optgroup>
+
+  <optgroup label="Furniture 🛋️">
+    <option value="furniture_livingroom">Living Room</option>
+    <option value="furniture_bedroom">Bedroom</option>
+    <option value="furniture_office">Office</option>
+    <option value="furniture_kitchen">Kitchen</option>
+    <option value="furniture_outdoor">Outdoor</option>
+  </optgroup>
+
+  <optgroup label="Auto Products 🚗">
+    <option value="auto_oil">Oils & Fluids</option>
+    <option value="auto_accessories">Accessories</option>
+    <option value="auto_tires">Tires</option>
+    <option value="auto_batteries">Batteries</option>
+    <option value="auto_tools">Tools</option>
+  </optgroup>
+
+  <optgroup label="Home & Garden 🏡">
+    <option value="home_garden_tools">Garden Tools</option>
+    <option value="home_decor">Decor</option>
+    <option value="home_appliances">Appliances</option>
+    <option value="home_lighting">Lighting</option>
+    <option value="home_cleaning">Cleaning Supplies</option>
+  </optgroup>
+
+  <optgroup label="Sports 🏀">
+    <option value="sports_football">Football</option>
+    <option value="sports_gym">Gym Equipment</option>
+    <option value="sports_outdoor">Outdoor Sports</option>
+    <option value="sports_swimming">Swimming</option>
+    <option value="sports_cycling">Cycling</option>
+  </optgroup>
+
+  <optgroup label="Health 🩺">
+    <option value="health_supplements">Supplements</option>
+    <option value="health_medical">Medical Supplies</option>
+    <option value="health_personalcare">Personal Care</option>
+    <option value="health_fitness">Fitness Equipment</option>
+    <option value="health_therapy">Therapy Devices</option>
+  </optgroup>
+
+  <optgroup label="Music 🎧">
+    <option value="music_instruments">Instruments</option>
+    <option value="music_accessories">Accessories</option>
+    <option value="music_records">Records & CDs</option>
+    <option value="music_speakers">Speakers</option>
+    <option value="music_headphones">Headphones</option>
+  </optgroup>
+
+  <optgroup label="Movies 🎬">
+    <option value="movies_dvds">DVDs & Blu-rays</option>
+    <option value="movies_merch">Merchandise</option>
+    <option value="movies_streaming">Streaming Services</option>
+    <option value="movies_posters">Posters</option>
+    <option value="movies_collectibles">Collectibles</option>
+  </optgroup>
+
+  <optgroup label="Photography 📷">
+    <option value="photography_cameras">Cameras</option>
+    <option value="photography_lenses">Lenses</option>
+    <option value="photography_accessories">Accessories</option>
+    <option value="photography_tripods">Tripods</option>
+    <option value="photography_lighting">Lighting</option>
+  </optgroup>
+
+  <optgroup label="Gifts 🎁">
+    <option value="gifts_forher">For Her</option>
+    <option value="gifts_forhim">For Him</option>
+    <option value="gifts_custom">Custom Gifts</option>
+    <option value="gifts_wedding">Wedding</option>
+    <option value="gifts_birthday">Birthday</option>
+  </optgroup>
+
+  <optgroup label="Pets 🐶">
+    <option value="pets_food">Food</option>
+    <option value="pets_accessories">Accessories</option>
+    <option value="pets_toys">Toys</option>
+    <option value="pets_grooming">Grooming</option>
+    <option value="pets_beds">Beds & Houses</option>
+  </optgroup>
+
+  <optgroup label="Baby 🍼">
+    <option value="baby_clothing">Clothing</option>
+    <option value="baby_toys">Toys</option>
+    <option value="baby_feeding">Feeding</option>
+    <option value="baby_diapers">Diapers</option>
+    <option value="baby_furniture">Furniture</option>
+  </optgroup>
+
+  <optgroup label="Tourism 🏕️">
+    <option value="tourism_camping">Camping</option>
+    <option value="tourism_gear">Gear</option>
+    <option value="tourism_guides">Guides</option>
+    <option value="tourism_backpacks">Backpacks</option>
+    <option value="tourism_clothing">Clothing</option>
+  </optgroup>
+
+  <optgroup label="Stationery ✏️">
+    <option value="stationery_office">Office Supplies</option>
+    <option value="stationery_art">Art Supplies</option>
+    <option value="stationery_school">School Supplies</option>
+    <option value="stationery_notebooks">Notebooks</option>
+    <option value="stationery_writingtools">Writing Tools</option>
+  </optgroup>
+
+  <optgroup label="Tools 🛠️">
+    <option value="tools_handtools">Hand Tools</option>
+    <option value="tools_powertools">Power Tools</option>
+    <option value="tools_accessories">Accessories</option>
+    <option value="tools_gardening">Gardening Tools</option>
+    <option value="tools_measuring">Measuring Tools</option>
+  </optgroup>
+
+  <optgroup label="Games 🎮">
+    <option value="games_console">Console Games</option>
+    <option value="games_pc">PC Games</option>
+    <option value="games_board">Board Games</option>
+    <option value="games_card">Card Games</option>
+    <option value="games_rpg">RPG Games</option>
+  </optgroup>
+
+  <optgroup label="Accessories 🧢">
+    <option value="accessories_bags">Bags</option>
+    <option value="accessories_hats">Hats</option>
+    <option value="accessories_jewelry">Jewelry</option>
+    <option value="accessories_scarves">Scarves</option>
+    <option value="accessories_glasses">Glasses</option>
+  </optgroup>
+</select>
 
           <!-- SIZE + QUANTITY SECTION -->
           <!-- SIZE + QUANTITY SECTION -->

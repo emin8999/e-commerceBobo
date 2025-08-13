@@ -1,68 +1,125 @@
-document
-  .getElementById("securityForm")
-  .addEventListener("submit", function (e) {
-    e.preventDefault();
+const API_BASE = "http://116.203.51.133:8080";
+const UPDATE_PATH = "/api/user/update"; // поменяй, если другой маршрут
+const UPDATE_METHOD = "POST"; // можешь сменить на "PATCH", если так на бэке
 
-    const username = document.getElementById("username").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const phone = document.getElementById("phone").value.trim();
-    const password = document.getElementById("password").value;
-    const confirmPassword = document.getElementById("confirmPassword").value;
+const form = document.getElementById("securityForm");
+const messageDiv = document.getElementById("message");
+const submitBtn = form?.querySelector('button[type="submit"]');
 
-    const messageDiv = document.getElementById("message");
-    messageDiv.textContent = "";
-    messageDiv.style.color = "";
+const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const phoneRe = /^[+()\-.\s\d]{6,20}$/; // простая проверка формата
 
-    if ((password || confirmPassword) && password !== confirmPassword) {
-      messageDiv.textContent = "Passwords do not match!";
-      messageDiv.style.color = "red";
-      return;
-    }
+function setMessage(text, color) {
+  if (!messageDiv) return;
+  messageDiv.textContent = text || "";
+  messageDiv.style.color = color || "";
+}
 
-    // const payload = {};
-    // if (username) payload.username = username;
-    // if (email) payload.email = email;
-    // if (phone) payload.phone = phone;
-    // if (password) {
-    //   payload.newPassword = password;
-    //   payload.confirmPassword = confirmPassword;
-    // }
+function toggleBusy(on) {
+  if (!submitBtn) return;
+  if (on) {
+    submitBtn.dataset.originalText = submitBtn.textContent;
+    submitBtn.textContent = "Saving…";
+    submitBtn.disabled = true;
+  } else {
+    submitBtn.textContent = submitBtn.dataset.originalText || "Save";
+    submitBtn.disabled = false;
+  }
+}
 
-    // if (Object.keys(payload).length === 0) {
-    //   messageDiv.textContent = "No changes to update.";
-    //   messageDiv.style.color = "gray";
-    //   return;
-    // }
-
-    // fetch("http://localhost:8080/api/user/update", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     Authorization: "Bearer " + localStorage.getItem("token"),
-    //   },
-    //   body: JSON.stringify(payload),
-    // })
-    //   .then((res) => {
-    //     if (!res.ok) {
-    //       return res.text().then((text) => {
-    //         throw new Error(text || "Update failed");
-    //       });
-    //     }
-    //     return res.text();
-    //   })
-    //   .then((data) => {
-    //     messageDiv.textContent = data || "Changes saved successfully.";
-    //     messageDiv.style.color = "green";
-
-    //     document.getElementById("password").value = "";
-    //     document.getElementById("confirmPassword").value = "";
-    //   })
-    //   .catch((err) => {
-    //     console.error("Error:", err);
-    //     messageDiv.textContent = err.message || "Failed to update data.";
-    //     messageDiv.style.color = "red";
-    //   });
+async function apiUpdate(payload) {
+  const token = localStorage.getItem("token") || ""; // если используешь cookie-сессии — убери заголовок Authorization и добавь credentials: 'include'
+  const res = await fetch(`${API_BASE}${UPDATE_PATH}`, {
+    method: UPDATE_METHOD,
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    // credentials: "include", // раскомментируй, если сессия через cookie
+    body: JSON.stringify(payload),
   });
+
+  // Поддержим и JSON, и текстовые ответы
+  const contentType = res.headers.get("content-type") || "";
+  if (!res.ok) {
+    const errText = contentType.includes("application/json")
+      ? JSON.stringify(await res.json()).slice(0, 300)
+      : (await res.text()).slice(0, 300);
+    throw new Error(errText || `Update failed (${res.status})`);
+  }
+
+  return contentType.includes("application/json")
+    ? await res.json()
+    : await res.text();
+}
+
+form?.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const username = document.getElementById("username")?.value.trim();
+  const email = document.getElementById("email")?.value.trim();
+  const phone = document.getElementById("phone")?.value.trim();
+  const password = document.getElementById("password")?.value || "";
+  const confirmPassword =
+    document.getElementById("confirmPassword")?.value || "";
+
+  setMessage("", "");
+
+  // базовые проверки
+  if (email && !emailRe.test(email)) {
+    setMessage("Please enter a valid email.", "red");
+    return;
+  }
+  if (phone && !phoneRe.test(phone)) {
+    setMessage("Please enter a valid phone number.", "red");
+    return;
+  }
+  if ((password || confirmPassword) && password !== confirmPassword) {
+    setMessage("Passwords do not match!", "red");
+    return;
+  }
+
+  // Собираем только заполненные поля
+  const payload = {};
+  if (username) payload.username = username;
+  if (email) payload.email = email;
+  if (phone) payload.phone = phone;
+  if (password) {
+    payload.newPassword = password;
+    payload.confirmPassword = confirmPassword;
+  }
+
+  if (Object.keys(payload).length === 0) {
+    setMessage("No changes to update.", "gray");
+    return;
+  }
+
+  try {
+    toggleBusy(true);
+    const result = await apiUpdate(payload);
+
+    // Успех: поддержим и текст, и JSON
+    setMessage(
+      typeof result === "string"
+        ? result || "Changes saved successfully."
+        : result?.message || "Changes saved successfully.",
+      "green"
+    );
+
+    // очистим поля пароля
+    const pwdEl = document.getElementById("password");
+    const cpwdEl = document.getElementById("confirmPassword");
+    if (pwdEl) pwdEl.value = "";
+    if (cpwdEl) cpwdEl.value = "";
+  } catch (err) {
+    console.error(err);
+    setMessage(err?.message || "Failed to update data.", "red");
+  } finally {
+    toggleBusy(false);
+  }
+});
+
+/* ========= показать/скрыть пароли (оставил твою логику, чуть укрепил) ========= */
 document.querySelectorAll(".toggle-password").forEach((toggle) => {
   const targetId = toggle.getAttribute("data-target");
   const input = document.getElementById(targetId);

@@ -60,10 +60,6 @@ td {
   border-bottom: 1px solid #eee;
 }
 
-tr:hover {
-  background-color: #f0f8ff;
-}
-
 .chart-area {
   margin-top: 40px;
   background-color: #fff;

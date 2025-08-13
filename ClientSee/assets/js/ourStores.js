@@ -1,3 +1,32 @@
+const API_BASE = "http://116.203.51.133:8080";
+const PRODUCTS_ENDPOINT = `${API_BASE}/products`;
+
+/* ----------------- helpers ----------------- */
+async function fetchProducts() {
+  const res = await fetch(PRODUCTS_ENDPOINT, {
+    headers: { "Content-Type": "application/json" },
+  });
+  if (!res.ok) throw new Error(`Products fetch failed: ${res.status}`);
+  const data = await res.json();
+  if (!Array.isArray(data)) throw new Error("Products must be an array");
+  // кеш на случай офлайна
+  localStorage.setItem("products", JSON.stringify(data));
+  return data;
+}
+
+function getLocalProducts() {
+  try {
+    return JSON.parse(localStorage.getItem("products") || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function firstImageOf(p) {
+  return Array.isArray(p.images) ? p.images[0] : p.image || "";
+}
+
+/* ----------------- render ----------------- */
 function renderStores(products) {
   const container = document.getElementById("shopContainer");
   container.innerHTML = "";
@@ -7,7 +36,7 @@ function renderStores(products) {
     return;
   }
 
-  // Группируем товары по магазинам
+  // группируем по магазину
   const grouped = {};
   products.forEach((p) => {
     const storeName = p.store || p.shop || "Unknown Store";
@@ -42,18 +71,18 @@ function renderStores(products) {
       const productCard = document.createElement("div");
       productCard.className = "product-card";
 
-      const firstImage = Array.isArray(product.images)
-        ? product.images[0]
-        : product.image || "";
-
       productCard.innerHTML = `
-        <img src="${firstImage}" alt="${product.name || "Product"}" />
+        <img src="${firstImageOf(product)}" alt="${
+        product.name || "Product"
+      }" />
         <p>${product.name || "Unnamed"}</p>
         <strong>${product.price} ₼</strong>
       `;
 
+      // клик по товару — не открывать магазин
       productCard.addEventListener("click", (e) => {
-        e.stopPropagation(); // не запускаем переход на store при клике на товар
+        e.stopPropagation();
+        // сохраняем выбранный товар (можно заменить на переход по id)
         localStorage.setItem("selectedProduct", JSON.stringify(product));
         window.location.href = "productVision.html";
       });
@@ -67,13 +96,13 @@ function renderStores(products) {
     storeBox.appendChild(sliderWrapper);
     container.appendChild(storeBox);
 
-    // 👉 Переход на storePage.html по клику на блок
+    // клик по магазину — переход на страницу магазина
     storeBox.addEventListener("click", () => {
       localStorage.setItem("selectedStore", store);
       window.location.href = "storePage.html";
     });
 
-    // 👉 Прокрутка товаров
+    // прокрутка товаров
     const scrollAmount = 250;
     rightButton.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -85,5 +114,15 @@ function renderStores(products) {
     });
   }
 }
-const products = JSON.parse(localStorage.getItem("products") || "[]");
-renderStores(products);
+
+/* ----------------- init (backend → fallback) ----------------- */
+(async function bootstrapStores() {
+  let products = [];
+  try {
+    products = await fetchProducts(); // с бэкенда
+  } catch (e) {
+    console.warn("Backend unavailable, using localStorage products.", e);
+    products = getLocalProducts(); // fallback
+  }
+  renderStores(products);
+})();

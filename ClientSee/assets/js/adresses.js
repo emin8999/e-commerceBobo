@@ -1,23 +1,82 @@
+const Adresses_API_BASE = "http://116.203.51.133:8080/home/user"; // Убрал /addresses из базового URL
 const addressListEl = document.querySelector(".list-addresses");
 const addForm = document.querySelector(".form-address-add");
 const inputs = addForm.querySelectorAll(".form-address-add__input");
-
 let addresses = [];
 
-function loadAddresses() {
-  const stored = localStorage.getItem("addresses");
-  addresses = stored ? JSON.parse(stored) : [];
-  renderAddresses();
+// Загрузка адресов с сервера
+async function loadAddresses() {
+  try {
+    const res = await fetch(`${Adresses_API_BASE}/addresses`);
+    if (!res.ok)
+      throw new Error(
+        `Ошибка загрузки адресов: ${res.status} ${res.statusText}`
+      );
+    addresses = await res.json();
+    renderAddresses();
+  } catch (err) {
+    console.error("Ошибка загрузки адресов:", err);
+    addresses = [];
+    renderAddresses();
+  }
 }
 
-function saveAddresses() {
-  localStorage.setItem("addresses", JSON.stringify(addresses));
+// Сохранение адреса на сервер
+async function addAddress(address) {
+  try {
+    const res = await fetch(`${Adresses_API_BASE}/addresses`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(address),
+    });
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error(`Ошибка добавления адреса: ${res.status} ${errText}`);
+    }
+    await loadAddresses();
+  } catch (err) {
+    console.error("Ошибка добавления адреса:", err);
+  }
 }
 
-function generateId() {
-  return "_" + Math.random().toString(36).substr(2, 9);
+// Обновление адреса на сервере
+async function updateAddress(updated, editBtn, inputElements) {
+  try {
+    const res = await fetch(`${Adresses_API_BASE}/addresses/${updated.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updated),
+    });
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error(`Ошибка обновления адреса: ${res.status} ${errText}`);
+    }
+    await loadAddresses();
+    // После обновления блокируем поля и меняем кнопку обратно
+    inputElements.forEach((i) => (i.disabled = true));
+    editBtn.textContent = "Edit";
+  } catch (err) {
+    console.error("Ошибка обновления адреса:", err);
+  }
 }
 
+// Удаление адреса на сервере
+async function deleteAddress(id) {
+  try {
+    const res = await fetch(`${Adresses_API_BASE}/addresses/${id}`, {
+      method: "DELETE",
+    });
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error(`Ошибка удаления адреса: ${res.status} ${errText}`);
+    }
+    await loadAddresses();
+  } catch (err) {
+    console.error("Ошибка удаления адреса:", err);
+  }
+}
+
+// Создание input для отображения
 function createInput(value) {
   const input = document.createElement("input");
   input.type = "text";
@@ -27,9 +86,9 @@ function createInput(value) {
   return input;
 }
 
+// Отрисовка адресов
 function renderAddresses() {
   addressListEl.innerHTML = "";
-
   addresses.forEach(({ id, country, street, city, state, zip }) => {
     const li = document.createElement("li");
     li.classList.add("list-addresses__item");
@@ -83,32 +142,25 @@ function renderAddresses() {
           state: inputState.value.trim(),
           zip: inputZip.value.trim(),
         };
-
-        if (
-          !updated.country ||
-          !updated.street ||
-          !updated.city ||
-          !updated.state ||
-          !updated.zip
-        ) {
+        if (Object.values(updated).some((v) => !v)) {
           alert("All fields are required!");
           return;
         }
-
-        const index = addresses.findIndex((a) => a.id === id);
-        if (index !== -1) {
-          addresses[index] = updated;
-          saveAddresses();
-          renderAddresses();
-        }
+        // Передаем элементы и кнопку в updateAddress, чтобы заблокировать после сохранения
+        updateAddress(updated, editBtn, [
+          inputCountry,
+          inputStreet,
+          inputCity,
+          inputState,
+          inputZip,
+        ]);
+        isEditing = false;
       }
     });
 
     deleteBtn.addEventListener("click", () => {
       if (confirm("Are you sure you want to delete this address?")) {
-        addresses = addresses.filter((a) => a.id !== id);
-        saveAddresses();
-        renderAddresses();
+        deleteAddress(id);
       }
     });
 
@@ -118,32 +170,17 @@ function renderAddresses() {
   });
 }
 
+// Добавление нового адреса
 addForm.addEventListener("submit", (e) => {
   e.preventDefault();
-  const country = inputs[0].value.trim();
-  const street = inputs[1].value.trim();
-  const city = inputs[2].value.trim();
-  const state = inputs[3].value.trim();
-  const zip = inputs[4].value.trim();
-
+  const [country, street, city, state, zip] = Array.from(inputs).map((i) =>
+    i.value.trim()
+  );
   if (!country || !street || !city || !state || !zip) {
     alert("Please fill in all fields");
     return;
   }
-
-  const newAddress = {
-    id: generateId(),
-    country,
-    street,
-    city,
-    state,
-    zip,
-  };
-
-  addresses.push(newAddress);
-  saveAddresses();
-  renderAddresses();
-
+  addAddress({ country, street, city, state, zip });
   inputs.forEach((i) => (i.value = ""));
   inputs[0].focus();
 });

@@ -109,3 +109,17 @@ textarea {
     margin: 40px 20px;
   }
 }
+.password-match {
+  font-size: 14px;
+  margin-top: 4px;
+}
+.match {
+  color: green;
+}
+.mismatch {
+  color: red;
+}
+.button-register:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}

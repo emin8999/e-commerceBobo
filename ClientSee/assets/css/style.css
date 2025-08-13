@@ -122,6 +122,77 @@ a {
   margin: 0;
   border-radius: 0 5px 5px 0;
 }
+.search-bar {
+  position: relative;
+}
+.bobo-search-dropdown {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  margin-top: 6px;
+  overflow: hidden;
+  z-index: 1000;
+  display: none;
+}
+.bobo-search-item {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.bobo-search-item:hover,
+.bobo-search-item.is-active {
+  background: #f5f7fb;
+}
+.bobo-search-thumb {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: #f0f0f0;
+}
+.bobo-search-main {
+  flex: 1;
+  min-width: 0;
+}
+.bobo-search-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.bobo-search-meta {
+  font-size: 12px;
+  color: #6b7280;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.bobo-search-price {
+  font-weight: 700;
+  color: #111827;
+  margin-left: auto;
+}
+.bobo-search-empty {
+  padding: 12px;
+  color: #6b7280;
+  font-size: 14px;
+}
+.bobo-search-highlight {
+  background: #fff3b0;
+  border-radius: 4px;
+  padding: 0 2px;
+}
+
 .right-section {
   display: flex;
   align-items: center;
@@ -438,6 +509,7 @@ a {
 .menu-item {
   margin: 10px 0;
 }
+
 @media (max-width: 600px) {
   .burger-btn {
     display: block;

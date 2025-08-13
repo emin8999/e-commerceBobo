@@ -28,6 +28,7 @@
           <input type="text" placeholder="Search BOBO" />
           <button class="search-button">🔍</button>
         </div>
+        <div id="boboSearchDropdown" class="bobo-search-dropdown"></div>
         <div class="line"></div>
         <div class="right-section">
           <div class="language">
@@ -41,7 +42,7 @@
             <a href="returnAndOrders.html" class="small-text">Returns</a><br />
             <a href="returnAndOrders.html" class="bold-text">& Orders</a>
           </div>
-          <a class="cart" id="cartLink" href="#">
+          <a class="cart" id="cartLink" href="./cart.html">
             <img src="./assets/Img/CartSVG.svg" alt="" />
             <span class="cart-count">0</span>
           </a>
@@ -127,7 +128,7 @@
       </section>
 
       <section class="category-slider-section">
-        <h2 class="section-title">Категории</h2>
+        <h2 class="section-title">Categories</h2>
         <div class="category-slider-wrapper">
           <div class="swiper category-swiper">
             <div class="swiper-wrapper" id="categorySlider">
@@ -138,16 +139,16 @@
       </section>
 
       <section class="featured-products-section">
-        <h2 class="section-title">Рекомендуемые товары</h2>
+        <h2 class="section-title">Recommended products</h2>
         <div class="featured-slider-wrapper">
           <div class="featured-slider" id="featuredSlider"></div>
         </div>
       </section>
       <section class="discounts-section">
-        <h2>🔥 Товары по акции</h2>
+        <h2>🔥 Featured products</h2>
 
         <p class="countdown-timer">
-          До конца акции осталось: <span id="countdown"></span>
+          End of promotion: <span id="countdown"></span>
         </p>
 
         <div class="discounts-slider" id="discountsSlider"></div>
@@ -212,6 +213,6 @@
     <script src="./assets/js/header.js"></script>
     <script src="./assets/js/index.js"></script>
 
-    <script src="./assets/js/navBar.js"></script>
+    <script src="./assets/js/navBar.js" defer></script>
   </body>
 </html>

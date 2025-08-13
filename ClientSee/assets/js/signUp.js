@@ -1,22 +1,46 @@
-document
-  .getElementById("registerForm")
-  .addEventListener("submit", function (e) {
-    e.preventDefault();
+getElementById("registerForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
 
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
+  const formData = {
+    name: form.name.value.trim(),
+    surname: form.surname.value.trim(),
+    phone: form.phone.value.trim(),
+    address: form.address.value.trim(),
+    email: form.email.value.trim(),
+    password: form.password.value,
+    gender: form.gender.value,
+    consent: form.consent.checked,
+  };
 
-    if (!validatePassword(password)) {
-      alert("Пароль не соответствует требованиям безопасности.");
-      return;
+  try {
+    const response = await fetch(
+      "http://116.203.51.133:8080/home/auth/register",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      }
+    );
+
+    const text = await response.text();
+
+    if (response.ok) {
+      const data = text ? JSON.parse(text) : null;
+      console.log("Успех:", data);
+      alert("Регистрация прошла успешно!");
+      form.reset();
+    } else {
+      const errorData = text ? JSON.parse(text) : null;
+      console.error("Ошибка сервера:", errorData);
+      alert(
+        "Ошибка при регистрации: " + (errorData?.message || response.statusText)
+      );
     }
-
-    localStorage.setItem("userEmail", email);
-    localStorage.setItem("userPassword", password);
-
-    alert("Регистрация прошла успешно!");
-    document.getElementById("registerForm").reset();
-  });
+  } catch (error) {
+    console.error("Ошибка сети:", error);
+    alert("Ошибка сети. Попробуйте еще раз.");
+  }
+});
 
 function validatePassword(password) {
   const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{10,}$/;
@@ -36,55 +60,3 @@ togglePassword.addEventListener("click", () => {
   togglePassword.classList.toggle("fa-eye", isVisible);
   togglePassword.classList.toggle("fa-eye-slash", !isVisible);
 });
-
-document
-  .getElementById("registerForm")
-  .addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const name = document.getElementById("name").value.trim();
-    const surname = document.getElementById("surname").value.trim();
-    const phone = document.getElementById("phone").value.trim();
-    const address = document.getElementById("address").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value.trim();
-    const gender = document.getElementById("gender").value;
-    const consentChecked = document.getElementById("consent").checked;
-
-    const allFilled = name && surname && phone && address && email && password;
-
-    if (allFilled && !consentChecked) {
-      document.getElementById("consentModal").style.display = "block";
-      return;
-    }
-
-    const formData = {
-      name,
-      surname,
-      phone,
-      address,
-      email,
-      password,
-      gender,
-    };
-
-    try {
-      const response = await fetch("https://your-backend-api.com/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        alert("Successfully registered!");
-        e.target.reset();
-      } else {
-        const error = await response.json();
-        alert("Error: " + error.message);
-      }
-    } catch (err) {
-      alert("Network error: " + err.message);
-    }
-  });

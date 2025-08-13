@@ -1,128 +1,130 @@
-localStorage.setItem(
-  "address",
-  JSON.stringify({
-    name: "Рустам Керимли",
-    address: "Баку,Азербайджан,AZ1029, ул. Низами, 45",
-    number: "+994 50 123 45 67",
-  })
-);
-localStorage.setItem(
-  "product",
-  JSON.stringify([
-    {
-      describe: "Apple iPhone 15 Pro — 128GB, Titanium",
-      price: 1199.99,
-      img: "https://letsenhance.io/static/73136da51c245e80edc6ccfe44888a99/396e9/MainBefore.jpg",
-      quantity: 1,
-      shipping: 15,
-      tax: 8.5,
-    },
-    {
-      describe: "Sony WH-1000XM5 Noise Cancelling Headphones",
-      price: 349.99,
-      img: "https://letsenhance.io/static/73136da51c245e80edc6ccfe44888a99/396e9/MainBefore.jpg",
-      quantity: 1,
-      shipping: 10,
-      tax: 5,
-    },
-    {
-      describe: 'Samsung 49" Curved Ultrawide Monitor',
-      price: 999.99,
-      img: "https://www.bigfootdigital.co.uk/wp-content/uploads/2020/07/image-optimisation-scaled.jpg",
-      quantity: 1,
-      shipping: 25,
-      tax: 12,
-    },
-    {
-      describe: "Mechanical Keyboard — Keychron K8 RGB Wireless",
-      price: 89.99,
-      img: "https://www.bigfootdigital.co.uk/wp-content/uploads/2020/07/image-optimisation-scaled.jpg",
-      quantity: 2,
-      shipping: 8,
-      tax: 2,
-    },
-    {
-      describe: "Amazon Echo Dot (5th Gen) Smart Speaker",
-      price: 49.99,
-      img: "https://www.bigfootdigital.co.uk/wp-content/uploads/2020/07/image-optimisation-scaled.jpg",
-      quantity: 3,
-      shipping: 5,
-      tax: 1.5,
-    },
-    {
-      describe: "Amazon Echo Dot (5th Gen) Smart Speaker",
-      price: 49.99,
-      img: "https://www.bigfootdigital.co.uk/wp-content/uploads/2020/07/image-optimisation-scaled.jpg",
-      quantity: 3,
-      shipping: 5,
-      tax: 1.5,
-    },
-    {
-      describe: "Amazon Echo Dot (5th Gen) Smart Speaker",
-      price: 49.99,
-      img: "https://www.bigfootdigital.co.uk/wp-content/uploads/2020/07/image-optimisation-scaled.jpg",
-      quantity: 3,
-      shipping: 5,
-      tax: 1.5,
-    },
-  ])
-);
-
-const productJSON = localStorage.getItem("product");
-const addressJSON = localStorage.getItem("address");
-const products = JSON.parse(productJSON);
-const address = JSON.parse(addressJSON);
-
+// ==== НАСТРОЙКА API (поменяй при необходимости) ==============================
+const Checkout_API_BASE = "http://116.203.51.133:8080";
+const ADDRESS_ENDPOINT = `${Checkout_API_BASE}/checkout/address`;
+const PRODUCTS_ENDPOINT = `${Checkout_API_BASE}/checkout/items`;
+// ==== DOM-элементы ===========================================================
 const addressDiv = document.querySelector(".address-details");
-if (address) {
-  addressDiv.innerHTML = `
-    <strong>${address.name}</strong><br />
-    ${address.address}<br />
-    Phone number: ${address.number} 
-  `;
-} else {
-  addressDiv.textContent = "Адрес не найден.";
-}
-
 const productDiv = document.querySelector(".order-item");
-if (products && Array.isArray(products)) {
-  productDiv.innerHTML = products
-    .map(
-      (product) => `
-      <div class="single-product">
-        <img src="${product.img}" width="100" />
-        <div class="order-item-details">
-          <p> ${product.price} $</p>
-        </div>
-      </div>
-    `
-    )
-    .join("");
-} else {
-  productDiv.textContent = "Информация о товарах не найдена.";
-}
-
 const summaryDiv = document.querySelector(".summary-details");
-if (products && Array.isArray(products)) {
+// ==== Вспомогательные: безопасный fetch и формат денег =======================
+async function safeFetchJSON(url, options = {}) {
+  const res = await fetch(url, {
+    headers: { "Content-Type": "application/json" },
+    ...options,
+  });
+  if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+  return res.json();
+}
+const usd = (n) => Number(n || 0).toFixed(2);
+// ==== Fallback localStorage (как у тебя было) ================================
+function getLocalAddress() {
+  try {
+    const addressJSON = localStorage.getItem("address");
+    return addressJSON ? JSON.parse(addressJSON) : null;
+  } catch {
+    return null;
+  }
+}
+function getLocalProducts() {
+  try {
+    const productJSON = localStorage.getItem("product");
+    const products = productJSON ? JSON.parse(productJSON) : null;
+    return Array.isArray(products) ? products : [];
+  } catch {
+    return [];
+  }
+}
+// ==== Загрузка с сервера с fallback на localStorage ==========================
+async function loadAddress() {
+  try {
+    const addr = await safeFetchJSON(ADDRESS_ENDPOINT);
+    return addr && addr.name ? addr : getLocalAddress();
+  } catch {
+    return getLocalAddress();
+  }
+}
+async function loadProducts() {
+  try {
+    const items = await safeFetchJSON(PRODUCTS_ENDPOINT);
+    return Array.isArray(items) ? items : getLocalProducts();
+  } catch {
+    return getLocalProducts();
+  }
+}
+// ==== Рендеры ================================================================
+function renderAddress(address) {
+  if (address && address.name) {
+    addressDiv.innerHTML = `
+      <strong>${address.name}</strong><br />
+      ${address.address}<br />
+      Phone number: ${address.number}
+    `;
+  } else {
+    addressDiv.textContent = "Адрес не найден.";
+  }
+}
+function renderProducts(products) {
+  if (products && products.length) {
+    productDiv.innerHTML = products
+      .map(
+        (p) => `
+        <div class="single-product">
+          <img src="${p.img}" width="100" />
+          <div class="order-item-details">
+            <p>${usd(p.price)} $</p>
+          </div>
+        </div>
+      `
+      )
+      .join("");
+  } else {
+    productDiv.textContent = "Информация о товарах не найдена.";
+  }
+}
+function renderSummary(products) {
+  if (!products || !products.length) {
+    summaryDiv.innerHTML = `
+      <p>Items: <span>USD 0.00</span></p>
+      <p>Shipping & handling: <span>USD 0.00</span></p>
+      <p>Estimated tax to be collected: <span>USD 0.00</span></p>
+      <h3>Order total: <span>USD 0.00</span></h3>
+    `;
+    return;
+  }
   let totalItems = 0;
   let totalShipping = 0;
   let totalTax = 0;
-  let totalCost = 0;
-
-  products.forEach((product) => {
-    totalItems += product.price * product.quantity;
-    totalShipping += product.shipping;
-    totalTax += product.tax;
+  products.forEach((p) => {
+    totalItems += Number(p.price || 0) * Number(p.quantity || 0);
+    totalShipping += Number(p.shipping || 0);
+    totalTax += Number(p.tax || 0);
   });
-
-  totalCost = totalItems + totalShipping + totalTax;
-
+  const totalCost = totalItems + totalShipping + totalTax;
   summaryDiv.innerHTML = `
-    <p>Items: <span>USD ${totalItems.toFixed(2)}</span></p>
-    <p>Shipping & handling: <span>USD ${totalShipping.toFixed(2)}</span></p>
-    <p>Estimated tax to be collected: <span>USD ${totalTax.toFixed(
-      2
-    )}</span></p>
-    <h3>Order total: <span>USD ${totalCost.toFixed(2)}</span></h3>
+    <p>Items: <span>USD ${usd(totalItems)}</span></p>
+    <p>Shipping & handling: <span>USD ${usd(totalShipping)}</span></p>
+    <p>Estimated tax to be collected: <span>USD ${usd(totalTax)}</span></p>
+    <h3>Order total: <span>USD ${usd(totalCost)}</span></h3>
   `;
 }
+// ==== Инициализация ==========================================================
+(async function initCheckout() {
+  try {
+    // 1) грузим с сервера; 2) если не вышло — используем localStorage
+    const [address, products] = await Promise.all([
+      loadAddress(),
+      loadProducts(),
+    ]);
+    renderAddress(address);
+    renderProducts(products);
+    renderSummary(products);
+  } catch (e) {
+    console.error("Checkout init error:", e);
+    // жёсткий fallback на локальные данные
+    const address = getLocalAddress();
+    const products = getLocalProducts();
+    renderAddress(address);
+    renderProducts(products);
+    renderSummary(products);
+  }
+})();

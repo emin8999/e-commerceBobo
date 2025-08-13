@@ -1,34 +1,56 @@
-// Load categories from localStorage
-function loadCategories() {
-  const categories = JSON.parse(localStorage.getItem("categories")) || [];
-  const tbody = document.getElementById("categoryTableBody");
-  tbody.innerHTML = "";
+const API_BASE = "http://116.203.51.133:8080";
+const ENDPOINTS = {
+  list: `${API_BASE}/admin/categories`,
+  create: `${API_BASE}/admin/categories`,
+  update: (id) => `${API_BASE}/admin/categories/${encodeURIComponent(id)}`,
+  remove: (id) => `${API_BASE}/admin/categories/${encodeURIComponent(id)}`,
+};
+// Если нужен JWT:
+// const AUTH = localStorage.getItem("token") || "";
 
-  categories.forEach((cat, index) => {
-    const tr = document.createElement("tr");
+const tbody = document.getElementById("categoryTableBody");
 
-    tr.innerHTML = `
-      <td>${index + 1}</td>
-      <td>${cat.name}</td>
-      <td>${cat.description || "-"}</td>
-      <td>${cat.productCount || 0}</td>
-      <td>
-        <button class="action-btn edit" onclick="openEditModal('${
-          cat.id
-        }')">Edit</button>
-        <button class="action-btn delete" onclick="confirmDelete('${
-          cat.id
-        }')">Delete</button>
-      </td>
-    `;
+const categoryForm = document.getElementById("categoryForm");
+const addCategoryBtn = document.getElementById("addCategoryBtn");
+const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
 
-    tbody.appendChild(tr);
+const categoryModal = document.getElementById("categoryModal");
+const confirmModal = document.getElementById("confirmModal");
+
+const inputId = document.getElementById("categoryId");
+const inputName = document.getElementById("categoryName");
+const inputDesc = document.getElementById("categoryDescription");
+const inputDeleteId = document.getElementById("deleteCategoryId");
+
+/* ========== helpers ========== */
+async function apiJSON(url, options = {}) {
+  const res = await fetch(url, {
+    headers: {
+      "Content-Type": "application/json",
+      // ...(AUTH ? { Authorization: `Bearer ${AUTH}` } : {}),
+      ...(options.headers || {}),
+    },
+    ...options,
   });
-
-  updateStats(categories);
+  if (!res.ok) {
+    const t = await res.text().catch(() => "");
+    throw new Error(`${res.status} ${res.statusText} ${t}`);
+  }
+  const ct = res.headers.get("content-type") || "";
+  return ct.includes("application/json") ? res.json() : {};
 }
 
-// Update analytics block
+function getLocalCategories() {
+  try {
+    return JSON.parse(localStorage.getItem("categories") || "[]");
+  } catch {
+    return [];
+  }
+}
+function setLocalCategories(arr) {
+  localStorage.setItem("categories", JSON.stringify(arr || []));
+}
+
 function updateStats(categories) {
   const total = categories.length;
   const totalProducts = categories.reduce(
@@ -39,96 +61,195 @@ function updateStats(categories) {
   document.getElementById("totalProducts").textContent = totalProducts;
 }
 
-// Save new or edited category
-function saveCategory(e) {
-  e.preventDefault();
-  const name = document.getElementById("categoryName").value.trim();
-  const desc = document.getElementById("categoryDescription").value.trim();
-  const id = document.getElementById("categoryId").value;
-
-  if (!name) return alert("Category name is required");
-
-  let categories = JSON.parse(localStorage.getItem("categories")) || [];
-
-  if (id) {
-    // Update existing
-    const index = categories.findIndex((c) => c.id === id);
-    if (index >= 0) {
-      categories[index].name = name;
-      categories[index].description = desc;
-    }
-  } else {
-    // Add new
-    categories.push({
-      id: "cat-" + Date.now(),
-      name,
-      description: desc,
-      productCount: 0,
-    });
-  }
-
-  localStorage.setItem("categories", JSON.stringify(categories));
-  closeModal("categoryModal");
-  loadCategories();
+function openModal(el) {
+  el.style.display = "flex";
 }
-
-// Open modal to add new category
-function openAddModal() {
-  document.getElementById("categoryForm").reset();
-  document.getElementById("categoryId").value = "";
-  document.getElementById("categoryModal").style.display = "flex";
-}
-
-// Open modal to edit category
-function openEditModal(id) {
-  const categories = JSON.parse(localStorage.getItem("categories")) || [];
-  const category = categories.find((c) => c.id === id);
-  if (!category) return;
-
-  document.getElementById("categoryId").value = category.id;
-  document.getElementById("categoryName").value = category.name;
-  document.getElementById("categoryDescription").value =
-    category.description || "";
-
-  document.getElementById("categoryModal").style.display = "flex";
-}
-
-// Open confirm modal
-function confirmDelete(id) {
-  document.getElementById("deleteCategoryId").value = id;
-  document.getElementById("confirmModal").style.display = "flex";
-}
-
-// Perform delete
-function deleteCategory() {
-  const id = document.getElementById("deleteCategoryId").value;
-  let categories = JSON.parse(localStorage.getItem("categories")) || [];
-  categories = categories.filter((c) => c.id !== id);
-  localStorage.setItem("categories", JSON.stringify(categories));
-  closeModal("confirmModal");
-  loadCategories();
-}
-
-// Close modal
 function closeModal(id) {
   document.getElementById(id).style.display = "none";
 }
 
-// Event Listeners
-document
-  .getElementById("addCategoryBtn")
-  .addEventListener("click", openAddModal);
-document
-  .getElementById("categoryForm")
-  .addEventListener("submit", saveCategory);
-document
-  .getElementById("confirmDeleteBtn")
-  .addEventListener("click", deleteCategory);
-document
-  .querySelectorAll(".close")
-  .forEach((btn) =>
-    btn.addEventListener("click", () => closeModal(btn.dataset.close))
-  );
+/* ========== load & render ========== */
+let categories = [];
 
-// Initial load
+async function loadCategories() {
+  try {
+    const data = await apiJSON(ENDPOINTS.list);
+    if (!Array.isArray(data)) throw new Error("Bad categories payload");
+    categories = data;
+    setLocalCategories(categories); // кэш на случай офлайна
+  } catch (e) {
+    console.warn("Backend unavailable, using local cache.", e);
+    categories = getLocalCategories();
+  }
+  renderTable(categories);
+  updateStats(categories);
+}
+
+function renderTable(list) {
+  tbody.innerHTML = "";
+  if (!list.length) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:16px;">No categories</td></tr>`;
+    return;
+  }
+
+  for (let i = 0; i < list.length; i++) {
+    const cat = list[i];
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${i + 1}</td>
+      <td>${cat.name}</td>
+      <td>${cat.description || "-"}</td>
+      <td>${cat.productCount || 0}</td>
+      <td>
+        <button class="action-btn edit" data-action="edit" data-id="${
+          cat.id
+        }">Edit</button>
+        <button class="action-btn delete" data-action="delete" data-id="${
+          cat.id
+        }">Delete</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  }
+}
+
+/* ========== actions ========== */
+function openAddModal() {
+  categoryForm.reset();
+  inputId.value = "";
+  openModal(categoryModal);
+}
+
+function openEditModal(id) {
+  const cat = categories.find((c) => String(c.id) === String(id));
+  if (!cat) return;
+
+  inputId.value = cat.id;
+  inputName.value = cat.name || "";
+  inputDesc.value = cat.description || "";
+  openModal(categoryModal);
+}
+
+function confirmDelete(id) {
+  inputDeleteId.value = id;
+  openModal(confirmModal);
+}
+
+async function deleteCategory() {
+  const id = inputDeleteId.value;
+  if (!id) return;
+
+  // optimistic UI
+  const backup = [...categories];
+  categories = categories.filter((c) => String(c.id) !== String(id));
+  setLocalCategories(categories);
+  renderTable(categories);
+  updateStats(categories);
+  closeModal("confirmModal");
+
+  try {
+    await apiJSON(ENDPOINTS.remove(id), { method: "DELETE" });
+  } catch (e) {
+    alert("Delete failed. Reverting.");
+    categories = backup;
+    setLocalCategories(categories);
+    renderTable(categories);
+    updateStats(categories);
+  }
+}
+
+async function saveCategory(e) {
+  e.preventDefault();
+  const id = inputId.value.trim();
+  const name = inputName.value.trim();
+  const description = inputDesc.value.trim();
+
+  if (!name) {
+    alert("Category name is required");
+    return;
+  }
+
+  if (id) {
+    // UPDATE
+    const idx = categories.findIndex((c) => String(c.id) === String(id));
+    if (idx < 0) return;
+
+    const patch = { name, description };
+    const backup = { ...categories[idx] };
+    const updated = { ...backup, ...patch };
+
+    // optimistic UI
+    categories[idx] = updated;
+    setLocalCategories(categories);
+    renderTable(categories);
+    updateStats(categories);
+    closeModal("categoryModal");
+
+    try {
+      await apiJSON(ENDPOINTS.update(id), {
+        method: "PATCH",
+        body: JSON.stringify(patch),
+      });
+    } catch (e) {
+      alert("Update failed. Reverting.");
+      categories[idx] = backup;
+      setLocalCategories(categories);
+      renderTable(categories);
+      updateStats(categories);
+    }
+  } else {
+    // CREATE
+    const tmpId = "cat-" + Date.now();
+    const newCat = { id: tmpId, name, description, productCount: 0 };
+
+    // optimistic UI
+    categories.push(newCat);
+    setLocalCategories(categories);
+    renderTable(categories);
+    updateStats(categories);
+    closeModal("categoryModal");
+
+    try {
+      const created = await apiJSON(ENDPOINTS.create, {
+        method: "POST",
+        body: JSON.stringify({ name, description }),
+      });
+      // заменим временный id на реальный, если вернулся
+      const i = categories.findIndex((c) => c.id === tmpId);
+      if (i >= 0) {
+        categories[i] = { ...newCat, ...(created || {}) };
+        setLocalCategories(categories);
+        renderTable(categories);
+        updateStats(categories);
+      }
+    } catch (e) {
+      alert("Create failed. Removing local draft.");
+      categories = categories.filter((c) => c.id !== tmpId);
+      setLocalCategories(categories);
+      renderTable(categories);
+      updateStats(categories);
+    }
+  }
+}
+
+/* ========== events ========== */
+addCategoryBtn.addEventListener("click", openAddModal);
+categoryForm.addEventListener("submit", saveCategory);
+confirmDeleteBtn.addEventListener("click", deleteCategory);
+
+// закрытие модалок
+document.querySelectorAll(".close").forEach((btn) => {
+  btn.addEventListener("click", () => closeModal(btn.dataset.close));
+});
+
+// делегирование кликов по таблице (Edit/Delete)
+tbody.addEventListener("click", (e) => {
+  const btn = e.target.closest("button[data-action]");
+  if (!btn) return;
+  const { action, id } = btn.dataset;
+  if (action === "edit") openEditModal(id);
+  if (action === "delete") confirmDelete(id);
+});
+
+/* ========== init ========== */
 loadCategories();

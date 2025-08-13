@@ -1,85 +1,179 @@
 document.addEventListener("DOMContentLoaded", () => {
   const storeId = new URLSearchParams(window.location.search).get("storeId");
-  const products = JSON.parse(localStorage.getItem("products")) || [];
-  const orders = JSON.parse(localStorage.getItem("orders")) || [];
 
-  const storeOrders = orders.filter((order) =>
-    order.products.some((p) => p.storeId === storeId)
-  );
+  /* ============== CONFIG ============== */
+  const API_BASE = "http://116.203.51.133:8080";
+  const ENDPOINTS = {
+    analytics: (id) =>
+      `${API_BASE}/admin/stores/${encodeURIComponent(id)}/analytics`,
+    ordersByStore: (id) =>
+      `${API_BASE}/admin/orders?storeId=${encodeURIComponent(id)}`,
+    productsByStore: (id) =>
+      `${API_BASE}/admin/products?storeId=${encodeURIComponent(id)}`,
+  };
+  // Если используешь JWT:
+  // const AUTH = localStorage.getItem("token") || "";
 
-  const storeProducts = products.filter((p) => p.storeId === storeId);
-
-  const totalRevenue = storeOrders.reduce((sum, order) => sum + order.total, 0);
-  const totalOrders = storeOrders.length;
-  const avgOrderValue =
-    totalOrders > 0 ? (totalRevenue / totalOrders).toFixed(2) : 0;
-
-  document.getElementById(
-    "totalRevenue"
-  ).textContent = `$${totalRevenue.toLocaleString()}`;
-  document.getElementById("totalOrders").textContent = totalOrders;
-  document.getElementById("avgOrderValue").textContent = `$${avgOrderValue}`;
-
-  const productCounts = {};
-  storeOrders.forEach((order) => {
-    order.products.forEach((p) => {
-      if (p.storeId === storeId) {
-        productCounts[p.name] = (productCounts[p.name] || 0) + 1;
-      }
-    });
-  });
-
-  const sortedProducts = Object.entries(productCounts).sort(
-    (a, b) => b[1] - a[1]
-  );
-  document.getElementById("popularProduct").textContent =
-    sortedProducts[0]?.[0] || "—";
-
-  const soldProductIds = new Set();
-  storeOrders.forEach((order) => {
-    order.products.forEach((p) => {
-      if (p.storeId === storeId) {
-        soldProductIds.add(p.id);
-      }
-    });
-  });
-
-  const unsold = storeProducts.filter((p) => !soldProductIds.has(p.id));
-  const unsoldList = document.getElementById("unsoldProducts");
-  unsold.forEach((p) => {
-    const li = document.createElement("li");
-    li.textContent = p.name;
-    unsoldList.appendChild(li);
-  });
-
-  const dailySales = {};
-  storeOrders.forEach((order) => {
-    const date = new Date(order.date).toLocaleDateString();
-    dailySales[date] = (dailySales[date] || 0) + order.total;
-  });
-
-  const chartLabels = Object.keys(dailySales);
-  const chartData = Object.values(dailySales);
-
-  new Chart(document.getElementById("salesChart"), {
-    type: "line",
-    data: {
-      labels: chartLabels,
-      datasets: [
-        {
-          label: "Daily Revenue",
-          data: chartData,
-          fill: true,
-          borderColor: "#007acc",
-          backgroundColor: "rgba(0,122,204,0.1)",
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      scales: {
-        y: { beginAtZero: true },
+  /* ============== HELPERS ============== */
+  async function apiJSON(url) {
+    const res = await fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+        // ...(AUTH ? { Authorization: `Bearer ${AUTH}` } : {}),
       },
-    },
-  });
+    });
+    if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+    return res.json();
+  }
+
+  function getLocal(key) {
+    try {
+      return JSON.parse(localStorage.getItem(key) || "[]");
+    } catch {
+      return [];
+    }
+  }
+
+  function computeAnalyticsFromRaw({ orders, products }) {
+    // Фильтруем по storeId
+    const storeOrders = (orders || []).filter(
+      (o) =>
+        Array.isArray(o.products) &&
+        o.products.some((p) => String(p.storeId) === String(storeId))
+    );
+    const storeProducts = (products || []).filter(
+      (p) => String(p.storeId) === String(storeId)
+    );
+
+    // Revenue / orders / AOV
+    const totalRevenue = storeOrders.reduce(
+      (sum, o) => sum + Number(o.total || 0),
+      0
+    );
+    const totalOrders = storeOrders.length;
+    const avgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
+
+    // Popular product
+    const counts = {};
+    storeOrders.forEach((o) => {
+      o.products.forEach((p) => {
+        if (String(p.storeId) === String(storeId)) {
+          counts[p.name] = (counts[p.name] || 0) + 1;
+        }
+      });
+    });
+    const popularProduct =
+      Object.entries(counts).sort((a, b) => b[1] - a[1])[0]?.[0] || "—";
+
+    // Unsold products
+    const soldIds = new Set();
+    storeOrders.forEach((o) => {
+      o.products.forEach((p) => {
+        if (String(p.storeId) === String(storeId)) soldIds.add(String(p.id));
+      });
+    });
+    const unsoldProducts = storeProducts.filter(
+      (p) => !soldIds.has(String(p.id))
+    );
+
+    // Daily sales aggregate
+    const dailyMap = {};
+    storeOrders.forEach((o) => {
+      const label = new Date(o.date).toLocaleDateString();
+      dailyMap[label] = (dailyMap[label] || 0) + Number(o.total || 0);
+    });
+    const dailySales = Object.entries(dailyMap).map(([date, total]) => ({
+      date,
+      total,
+    }));
+
+    return {
+      totalRevenue,
+      totalOrders,
+      avgOrderValue,
+      popularProduct,
+      unsoldProducts,
+      dailySales,
+    };
+  }
+
+  function renderAnalytics({
+    totalRevenue,
+    totalOrders,
+    avgOrderValue,
+    popularProduct,
+    unsoldProducts,
+    dailySales,
+  }) {
+    document.getElementById("totalRevenue").textContent = `$${Number(
+      totalRevenue || 0
+    ).toLocaleString()}`;
+    document.getElementById("totalOrders").textContent = Number(
+      totalOrders || 0
+    );
+    document.getElementById("avgOrderValue").textContent = `$${Number(
+      avgOrderValue || 0
+    ).toFixed(2)}`;
+    document.getElementById("popularProduct").textContent =
+      popularProduct || "—";
+
+    const unsoldList = document.getElementById("unsoldProducts");
+    unsoldList.innerHTML = "";
+    (unsoldProducts || []).forEach((p) => {
+      const li = document.createElement("li");
+      li.textContent = p.name || "(no name)";
+      unsoldList.appendChild(li);
+    });
+
+    // Chart.js
+    const labels = (dailySales || []).map((d) => d.date);
+    const values = (dailySales || []).map((d) => Number(d.total || 0));
+    new Chart(document.getElementById("salesChart"), {
+      type: "line",
+      data: {
+        labels,
+        datasets: [
+          {
+            label: "Daily Revenue",
+            data: values,
+            fill: true,
+            borderColor: "#007acc",
+            backgroundColor: "rgba(0,122,204,0.1)",
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        scales: { y: { beginAtZero: true } },
+      },
+    });
+  }
+
+  /* ============== LOAD (backend → fallback) ============== */
+  (async function init() {
+    try {
+      // Вариант A: готовая аналитика на сервере
+      const a = await apiJSON(ENDPOINTS.analytics(storeId));
+      renderAnalytics(a);
+    } catch {
+      // Вариант B: собираем из заказов и товаров
+      try {
+        const [orders, products] = await Promise.all([
+          apiJSON(ENDPOINTS.ordersByStore(storeId)),
+          apiJSON(ENDPOINTS.productsByStore(storeId)),
+        ]);
+        const a = computeAnalyticsFromRaw({ orders, products });
+        renderAnalytics(a);
+      } catch {
+        // Fallback: полностью локальные данные
+        const localOrders = getLocal("orders");
+        const localProducts = getLocal("products");
+        const a = computeAnalyticsFromRaw({
+          orders: localOrders,
+          products: localProducts,
+        });
+        renderAnalytics(a);
+      }
+    }
+  })();
 });

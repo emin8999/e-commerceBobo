@@ -88,61 +88,61 @@ function addToCart(product) {
 }
 
 // Отображение товаров на странице
-function renderProducts(products) {
-  shop.innerHTML = ""; // Очищаем контейнер перед отрисовкой
+// function renderProducts(products) {
+//   shop.innerHTML = ""; // Очищаем контейнер перед отрисовкой
 
-  if (products.length === 0) {
-    // Если товаров нет — отображаем сообщение
-    shop.innerHTML = "<p>No products available.</p>";
-    return;
-  }
+//   if (products.length === 0) {
+//     // Если товаров нет — отображаем сообщение
+//     shop.innerHTML = "<p>No products available.</p>";
+//     return;
+//   }
 
-  // Перебираем каждый товар и создаём карточку
-  products.forEach((p) => {
-    const card = document.createElement("div");
-    card.className = "product-card";
+//   // Перебираем каждый товар и создаём карточку
+//   products.forEach((p) => {
+//     const card = document.createElement("div");
+//     card.className = "product-card";
 
-    // Берем первую картинку из массива или пустую строку
-    const firstImage = Array.isArray(p.images) ? p.images[0] : p.image || "";
+//     // Берем первую картинку из массива или пустую строку
+//     const firstImage = Array.isArray(p.images) ? p.images[0] : p.image || "";
 
-    // Если изображение есть — показываем, иначе текст "No Image"
-    const imageElement = firstImage
-      ? `<img src="${firstImage}" alt="${p.name}">`
-      : "<div class='no-image'>No Image</div>";
+//     // Если изображение есть — показываем, иначе текст "No Image"
+//     const imageElement = firstImage
+//       ? `<img src="${firstImage}" alt="${p.name}">`
+//       : "<div class='no-image'>No Image</div>";
 
-    // HTML-разметка карточки товара
-    card.innerHTML = `
-      ${imageElement}
-      <h3>${p.name || "Unnamed"}</h3>
-      <p>Store: ${p.store || p.shop || ""}</p>
-      <p>Price: ₼${p.price || 0}</p>
-    `;
+//     // HTML-разметка карточки товара
+//     card.innerHTML = `
+//       ${imageElement}
+//       <h3>${p.name || "Unnamed"}</h3>
+//       <p>Store: ${p.store || p.shop || ""}</p>
+//       <p>Price: ₼${p.price || 0}</p>
+//     `;
 
-    // Кнопка "Add to Cart"
-    const button = document.createElement("button");
-    button.textContent = "Add to Cart";
+//     // Кнопка "Add to Cart"
+//     const button = document.createElement("button");
+//     button.textContent = "Add to Cart";
 
-    // При клике добавляем товар в корзину
-    button.addEventListener("click", (e) => {
-      e.stopPropagation(); // Чтобы не сработал переход по карточке
-      addToCart(p);
-    });
+//     // При клике добавляем товар в корзину
+//     button.addEventListener("click", (e) => {
+//       e.stopPropagation(); // Чтобы не сработал переход по карточке
+//       addToCart(p);
+//     });
 
-    card.appendChild(button);
+//     card.appendChild(button);
 
-    // Клик по карточке товара — переход на страницу просмотра
-    card.addEventListener("click", () => {
-      localStorage.setItem("selectedProduct", JSON.stringify(p));
-      window.location.href = "productVision.html";
-    });
+//     // Клик по карточке товара — переход на страницу просмотра
+//     card.addEventListener("click", () => {
+//       localStorage.setItem("selectedProduct", JSON.stringify(p));
+//       window.location.href = "productVision.html";
+//     });
 
-    // Добавляем карточку в контейнер
-    shop.appendChild(card);
-  });
-}
+//     // Добавляем карточку в контейнер
+//     shop.appendChild(card);
+//   });
+// }
 
 // Рендерим все товары при загрузке страницы
-renderProducts(products);
+// renderProducts(products);
 
 // Обновляем товары, если localStorage изменился (например, через другую вкладку)
 window.addEventListener("storage", (event) => {
@@ -175,4 +175,4 @@ if (store) {
 }
 
 // Отрисовать
-renderProducts(filteredProducts);
+// renderProducts(filteredProducts);

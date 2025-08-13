@@ -1,89 +1,238 @@
-localStorage.removeItem("isRegistered");
+const header_API_BASE = "http://116.203.51.133:8080";
+const PUBLIC_PRODUCTS_URL = `${header_API_BASE}/home/product/public`;
 
-const email = localStorage.getItem("userEmail");
-const password = localStorage.getItem("userPassword");
+const inputEl = document.getElementById("boboSearch");
+const dropdownEl = document.getElementById("boboSearchDropdown");
 
-if (email && password) {
-  localStorage.setItem("isRegistered", "true");
-} else {
-  localStorage.setItem("isRegistered", "false");
+// Куда переходить по клику (подставь свой роут, если нужен другой)
+function openProduct(product) {
+  // пример: сохраняем в localStorage и идём на страницу товара
+  localStorage.setItem("selectedProduct", JSON.stringify(product));
+  window.location.href = "productVision.html";
 }
 
-const cartLinks = document.querySelectorAll('[id="cartLink"]');
+let ALL_PRODUCTS = [];
+let activeIndex = -1; // для клавиатурной навигации
 
-cartLinks.forEach((link) => {
-  link.addEventListener("click", function (e) {
-    e.preventDefault();
+function loadCache() {
+  try {
+    return JSON.parse(localStorage.getItem("products") || "[]");
+  } catch {
+    return [];
+  }
+}
+function saveCache(list) {
+  localStorage.setItem("products", JSON.stringify(list || []));
+}
 
-    const isUserRegistered = localStorage.getItem("isRegistered") === "true";
-
-    if (isUserRegistered) {
-      window.location.href = "cart.html";
-    } else {
-      window.location.href = "signIn.html";
+// Тянем продукты один раз
+async function fetchAllProducts() {
+  try {
+    const res = await fetch(PUBLIC_PRODUCTS_URL);
+    if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
+    const data = await res.json();
+    if (Array.isArray(data)) {
+      saveCache(data);
+      return data;
     }
+    return loadCache();
+  } catch (e) {
+    console.warn("Backend unavailable, using local cache.", e);
+    return loadCache();
+  }
+}
+
+// Утилиты сопоставления
+function norm(v) {
+  return String(v ?? "").toLowerCase();
+}
+function safeNum(v) {
+  const n = Number(v);
+  return isFinite(n) ? n : NaN;
+}
+
+// Подсветка совпадений
+function highlight(text, q) {
+  if (!q) return escapeHtml(text);
+  const esc = escapeRegExp(q);
+  return escapeHtml(text).replace(
+    new RegExp(`(${esc})`, "ig"),
+    "<span class='bobo-search-highlight'>$1</span>"
+  );
+}
+function escapeRegExp(s) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+function escapeHtml(s) {
+  return String(s)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+// Основная фильтрация
+function filterProducts(products, query, limit = 4) {
+  const q = norm(query);
+  if (!q) return [];
+
+  // Числовой поиск по цене
+  const qNum = safeNum(q);
+  const isPriceSearch = !isNaN(qNum);
+
+  const results = [];
+  for (const p of products) {
+    const name = norm(p.name);
+    const desc = norm(p.description);
+    const color = norm(p.color);
+    const status = norm(p.status);
+    const storeName = norm(p.storeName || p.store || p.shop);
+    const priceStr = String(p.price ?? "");
+    const priceMatch = isPriceSearch
+      ? Number(p.price) == qNum
+      : priceStr.includes(q);
+
+    const matches =
+      name.includes(q) ||
+      desc.includes(q) ||
+      color.includes(q) ||
+      status.includes(q) ||
+      storeName.includes(q) ||
+      priceMatch;
+
+    if (matches) results.push(p);
+    if (results.length >= limit) break;
+  }
+  return results;
+}
+
+// Рендер списка
+function firstImage(p) {
+  if (Array.isArray(p.imageUrls) && p.imageUrls.length) return p.imageUrls[0];
+  if (Array.isArray(p.images) && p.images.length) return p.images[0];
+  if (typeof p.imageUrls === "string" && p.imageUrls) return p.imageUrls;
+  return p.image || "";
+}
+function renderDropdown(items, query) {
+  dropdownEl.innerHTML = "";
+  activeIndex = -1;
+
+  if (!items.length) {
+    dropdownEl.innerHTML = `<div class="bobo-search-empty">Ничего не найдено</div>`;
+    dropdownEl.style.display = "block";
+    return;
+  }
+
+  const frag = document.createDocumentFragment();
+  items.forEach((p, idx) => {
+    const el = document.createElement("div");
+    el.className = "bobo-search-item";
+    el.dataset.index = String(idx);
+
+    const img = firstImage(p);
+    const price = Number(p.price || 0);
+
+    el.innerHTML = `
+      <img class="bobo-search-thumb" src="${escapeHtml(
+        img
+      )}" alt="product" onerror="this.style.display='none'"/>
+      <div class="bobo-search-main">
+        <div class="bobo-search-title">${highlight(p.name || "-", query)}</div>
+        <div class="bobo-search-meta">
+          ${highlight(p.storeName || p.store || p.shop || "-", query)} •
+          ${highlight(p.status || "-", query)} •
+          ${highlight(p.color || "-", query)}
+        </div>
+      </div>
+      <div class="bobo-search-price">$${price.toFixed(2)}</div>
+    `;
+
+    el.addEventListener("mousedown", (e) => {
+      // mousedown, чтобы не терять фокус до клика
+      e.preventDefault();
+      openProduct(p);
+      hideDropdown();
+    });
+
+    frag.appendChild(el);
   });
-});
 
-function updateCartCountFromStorage() {
-  const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-  const total = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
-  document.querySelector(".cart-count").textContent = total;
+  dropdownEl.appendChild(frag);
+  dropdownEl.style.display = "block";
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  updateCartCountFromStorage();
-});
+function hideDropdown() {
+  dropdownEl.style.display = "none";
+  dropdownEl.innerHTML = "";
+  activeIndex = -1;
+}
 
-// Чтобы обновлять в реальном времени при переходах — можно добавить:
-window.addEventListener("storage", () => {
-  updateCartCountFromStorage();
-});
-// Обновлять корзину при загрузке страницы
-document.addEventListener("DOMContentLoaded", renderCart);
+// Навигация стрелками
+function moveActive(delta) {
+  const items = Array.from(dropdownEl.querySelectorAll(".bobo-search-item"));
+  if (!items.length) return;
+  activeIndex = (activeIndex + delta + items.length) % items.length;
+  items.forEach((it, i) => it.classList.toggle("is-active", i === activeIndex));
+}
 
-// Обновлять корзину при любом изменении (например, из другой вкладки или из shop.js)
-window.addEventListener("storage", renderCart);
+function selectActive() {
+  const items = Array.from(dropdownEl.querySelectorAll(".bobo-search-item"));
+  if (!items.length || activeIndex < 0) return;
+  const idx = Number(items[activeIndex].dataset.index);
+  const results = filterProducts(ALL_PRODUCTS, inputEl.value, 4);
+  const p = results[idx];
+  if (p) {
+    openProduct(p);
+    hideDropdown();
+  }
+}
 
-// Добавление категорий в селект
-document.addEventListener("DOMContentLoaded", function () {
-  const select = document.getElementById("categorySelect");
-
-  // Получаем товары из localStorage
-  const storedProducts = localStorage.getItem("products");
-
-  if (storedProducts) {
-    try {
-      const products = JSON.parse(storedProducts);
-
-      // Получаем уникальные категории
-      const categoriesSet = new Set();
-      products.forEach((product) => {
-        if (product.category) {
-          categoriesSet.add(product.category.trim());
-        }
-      });
-
-      const uniqueCategories = Array.from(categoriesSet);
-
-      // Добавляем в select
-      uniqueCategories.forEach((category) => {
-        const option = document.createElement("option");
-        option.value = category;
-        option.textContent = category;
-        select.appendChild(option);
-      });
-
-      // При выборе категории — фильтровать товары или переходить (можно настроить)
-      select.addEventListener("change", function () {
-        const selectedCategory = this.value;
-        alert(`Вы выбрали категорию: ${selectedCategory}`);
-        // Можно также сделать window.location.href = `category.html?cat=${selectedCategory}`;
-      });
-    } catch (err) {
-      console.error("Ошибка при разборе товаров:", err);
+// Debounce ввода
+let typTimer;
+function onType() {
+  clearTimeout(typTimer);
+  typTimer = setTimeout(() => {
+    const q = inputEl.value.trim();
+    if (!q) {
+      hideDropdown();
+      return;
     }
-  } else {
-    console.warn("Продукты не найдены в localStorage.");
+    const results = filterProducts(ALL_PRODUCTS, q, 4);
+    renderDropdown(results, q);
+  }, 120);
+}
+
+// События
+inputEl.addEventListener("input", onType);
+inputEl.addEventListener("focus", onType);
+inputEl.addEventListener("keydown", (e) => {
+  if (dropdownEl.style.display !== "block") return;
+  if (e.key === "ArrowDown") {
+    e.preventDefault();
+    moveActive(1);
+  }
+  if (e.key === "ArrowUp") {
+    e.preventDefault();
+    moveActive(-1);
+  }
+  if (e.key === "Enter") {
+    e.preventDefault();
+    selectActive();
+  }
+  if (e.key === "Escape") {
+    hideDropdown();
   }
 });
+
+// Закрытие при клике вне
+document.addEventListener("click", (e) => {
+  const within =
+    e.target.closest(".search-bar") || e.target.closest("#boboSearchDropdown");
+  if (!within) hideDropdown();
+});
+
+// Инициализация
+(async function initBoboSearch() {
+  ALL_PRODUCTS = await fetchAllProducts();
+})();
