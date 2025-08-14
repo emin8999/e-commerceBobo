@@ -1,42 +1,70 @@
-// Key for storing sales permissions
 const SALES_PERMISSIONS_KEY = "salesPermissions";
+
+// Backend URL
+const BACKEND_URL = "https://your-backend-url.com/api/save-permissions";
 
 // Load existing data on page load
 document.addEventListener("DOMContentLoaded", () => {
   loadPermissions();
-  document.getElementById("saveBtn").addEventListener("click", savePermissions);
+  document
+    .getElementById("salesPermissionForm")
+    .addEventListener("submit", handleFormSubmit);
 });
 
-// Save permissions to LocalStorage
+// Handle form submit
+function handleFormSubmit(e) {
+  e.preventDefault(); // prevent default form submission
+  savePermissions();
+}
+
+// Save permissions to LocalStorage and send to backend
 function savePermissions() {
   const email = document.getElementById("userEmail").value.trim();
   if (!email) return alert("Please enter user email");
 
   const permissionObj = {
     email,
-    canViewSales: document.getElementById("canViewSales").checked,
-    canCreatePromos: document.getElementById("canCreatePromos").checked,
-    canRefund: document.getElementById("canRefund").checked,
-    canExport: document.getElementById("canExport").checked,
-    canAffiliate: document.getElementById("canAffiliate").checked,
+    canViewSales: document.getElementById("viewSales").checked,
+    canCreatePromos: document.getElementById("createDiscounts").checked,
+    canRefund: document.getElementById("approveRefunds").checked,
+    canExport: document.getElementById("exportFinancials").checked,
+    canAffiliate: document.getElementById("affiliateAccess").checked,
     assignedStores: Array.from(
       document.getElementById("assignedStores").selectedOptions
     ).map((opt) => opt.value),
+    dashboardAccess: document.getElementById("dashboardAccess").value,
   };
 
+  // Save locally
   let data = JSON.parse(localStorage.getItem(SALES_PERMISSIONS_KEY)) || [];
-
-  // If already exists — update
   const index = data.findIndex((p) => p.email === email);
   if (index !== -1) {
     data[index] = permissionObj;
   } else {
     data.push(permissionObj);
   }
-
   localStorage.setItem(SALES_PERMISSIONS_KEY, JSON.stringify(data));
-  alert("Permissions saved successfully.");
   renderTable();
+
+  // Send to backend
+  fetch(BACKEND_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(permissionObj),
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error("Network response was not ok");
+      return res.json();
+    })
+    .then((response) => {
+      alert("Permissions saved successfully on backend!");
+    })
+    .catch((error) => {
+      console.error("Error sending data to backend:", error);
+      alert("Permissions saved locally, but failed to send to backend.");
+    });
 }
 
 // Load and render permissions
@@ -48,6 +76,7 @@ function loadPermissions() {
 function renderTable() {
   const data = JSON.parse(localStorage.getItem(SALES_PERMISSIONS_KEY)) || [];
   const tbody = document.querySelector("#permissionsTable tbody");
+  if (!tbody) return;
   tbody.innerHTML = "";
 
   data.forEach((entry, i) => {
@@ -62,6 +91,13 @@ function renderTable() {
       <td>${entry.canRefund ? "✅" : "❌"}</td>
       <td>${entry.canExport ? "✅" : "❌"}</td>
       <td>${entry.canAffiliate ? "✅" : "❌"}</td>
+      <td>${
+        entry.dashboardAccess === "full"
+          ? "📊"
+          : entry.dashboardAccess === "store"
+          ? "📈"
+          : "❌"
+      }</td>
       <td>
         <button class="edit-btn" onclick="editPermission('${
           entry.email
@@ -83,11 +119,12 @@ function editPermission(email) {
   if (!user) return;
 
   document.getElementById("userEmail").value = user.email;
-  document.getElementById("canViewSales").checked = user.canViewSales;
-  document.getElementById("canCreatePromos").checked = user.canCreatePromos;
-  document.getElementById("canRefund").checked = user.canRefund;
-  document.getElementById("canExport").checked = user.canExport;
-  document.getElementById("canAffiliate").checked = user.canAffiliate;
+  document.getElementById("viewSales").checked = user.canViewSales;
+  document.getElementById("createDiscounts").checked = user.canCreatePromos;
+  document.getElementById("approveRefunds").checked = user.canRefund;
+  document.getElementById("exportFinancials").checked = user.canExport;
+  document.getElementById("affiliateAccess").checked = user.canAffiliate;
+  document.getElementById("dashboardAccess").value = user.dashboardAccess;
 
   const storeSelect = document.getElementById("assignedStores");
   Array.from(storeSelect.options).forEach((opt) => {

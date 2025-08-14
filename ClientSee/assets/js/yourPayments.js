@@ -1,12 +1,10 @@
-const container = document.querySelector(".payment-container");
-const cardNumberInput = container.querySelector(".card-number");
-const cardNameInput = container.querySelector(".card-name");
-const cardCvvInput = container.querySelector(".card-cvv");
-const expMonthSelect = container.querySelector(".exp-month");
-const expYearSelect = container.querySelector(".exp-year");
-const cancelBtn = container.querySelector(".btn-cancel");
-const submitBtn = container.querySelector(".btn-submit");
-const cardListDiv = container.querySelector(".card-list");
+const form = document.querySelector(".payment-container");
+const cardNumberInput = form.querySelector(".card-number");
+const cardCvvInput = form.querySelector(".card-cvv");
+const expMonthSelect = form.querySelector(".exp-month");
+const expYearSelect = form.querySelector(".exp-year");
+const cancelBtn = form.querySelector(".btn-cancel");
+const cardListDiv = form.querySelector(".card-list");
 
 function populateSelects() {
   for (let i = 1; i <= 12; i++) {
@@ -27,35 +25,34 @@ function populateSelects() {
 }
 
 function resetForm() {
-  cardNumberInput.value = "";
-  cardNameInput.value = "";
-  cardCvvInput.value = "";
-  expMonthSelect.selectedIndex = 0;
-  expYearSelect.selectedIndex = 0;
+  form.reset();
 }
 
-async function addCard() {
-  const number = cardNumberInput.value.replace(/\s/g, "").trim();
-  const name = cardNameInput.value.trim();
-  const cvv = cardCvvInput.value.trim();
-  const month = expMonthSelect.value;
-  const year = expYearSelect.value;
+async function addCard(e) {
+  e.preventDefault(); // предотвращаем перезагрузку страницы
 
+  const formData = new FormData(form);
+  const number = formData.get("cardNumber").replace(/\s/g, "").trim();
+  const name = formData.get("cardName").trim();
+  const cvv = formData.get("cardCvv").trim();
+  const month = formData.get("expMonth");
+  const year = formData.get("expYear");
+
+  // Валидация
   if (!number || !name || !cvv) {
     alert("Please fill all fields.");
     return;
   }
-
   if (number.length < 13 || number.length > 16 || !/^\d+$/.test(number)) {
     alert("Card number must be 13–16 digits.");
     return;
   }
-
   if (cvv.length !== 3 || !/^\d{3}$/.test(cvv)) {
     alert("CVV must be exactly 3 digits.");
     return;
   }
 
+  // Сохраняем в localStorage
   const card = {
     id: Date.now(),
     number: "**** **** **** " + number.slice(-4),
@@ -63,23 +60,27 @@ async function addCard() {
     exp: `${month}/${year}`,
     cvv: "***",
   };
-
   const cards = JSON.parse(localStorage.getItem("cards")) || [];
   cards.push(card);
   localStorage.setItem("cards", JSON.stringify(cards));
 
+  // Отправка на бэк
   try {
-    await fetch("/api/add-card", {
+    const response = await fetch("/api/add-card", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        number,
-        name,
+        cardNumber: number,
+        cardName: name,
         expMonth: month,
         expYear: year,
         cvv,
       }),
     });
+
+    if (!response.ok) {
+      throw new Error(`Server error: ${response.status}`);
+    }
   } catch (err) {
     console.error("Error sending card data:", err);
   }
@@ -122,6 +123,7 @@ function renderCards() {
   });
 }
 
+// Форматирование номера карты
 cardNumberInput.addEventListener("input", () => {
   let value = cardNumberInput.value.replace(/\D/g, "");
   value = value.slice(0, 16);
@@ -129,11 +131,13 @@ cardNumberInput.addEventListener("input", () => {
   cardNumberInput.value = formatted;
 });
 
+// Форматирование CVV
 cardCvvInput.addEventListener("input", () => {
   cardCvvInput.value = cardCvvInput.value.replace(/\D/g, "").slice(0, 3);
 });
 
-submitBtn.addEventListener("click", addCard);
+// Обработчики
+form.addEventListener("submit", addCard);
 cancelBtn.addEventListener("click", resetForm);
 
 populateSelects();

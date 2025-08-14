@@ -9,18 +9,35 @@ const ENDPOINTS = {
 const FALLBACK_LANG = "EN";
 
 /* ================== MENU (как у тебя) ================== */
-function toggleMenu() {
-  document.getElementById("sidebar").classList.toggle("open");
-  document.getElementById("overlay").classList.toggle("active");
-}
+document.addEventListener("DOMContentLoaded", () => {
+  const sidebar = document.getElementById("sidebar");
+  const overlay = document.getElementById("overlay");
+  const burgerBtn = document.querySelector(".burger-btn");
 
-window.toggleMenu = toggleMenu;
-// Автоматическое закрытие меню при ширине > 600px
-window.addEventListener("resize", function () {
-  if (window.innerWidth > 600) {
-    document.getElementById("sidebar").classList.remove("open");
-    document.getElementById("overlay").classList.remove("active");
+  if (!sidebar || !overlay || !burgerBtn) return;
+
+  function toggleMenu() {
+    sidebar.classList.toggle("open");
+    overlay.classList.toggle("active");
   }
+
+  function closeMenu() {
+    sidebar.classList.remove("open");
+    overlay.classList.remove("active");
+  }
+
+  // Кнопка бургера
+  burgerBtn.addEventListener("click", toggleMenu);
+
+  // Клик на затемнение — закрывает
+  overlay.addEventListener("click", closeMenu);
+
+  // Авто-закрытие при большой ширине
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 600) {
+      closeMenu();
+    }
+  });
 });
 
 /* ================== LANG / FLAGS ================== */

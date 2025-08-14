@@ -6,16 +6,17 @@ const sendButton = document.getElementById("sendMessageBtn");
 const chatHeader = document.getElementById("chatHeader");
 
 let currentRecipient = recipientSelect.value;
+
 let conversations = JSON.parse(localStorage.getItem("conversations")) || {
   admin: [],
-  // store: [],
+  // store: [], // можно добавить позже
 };
 
+// Рендер списка разговоров
 function renderConversationList() {
   conversationList.innerHTML = "";
-  // ["admin", "store"].forEach((type) => {
+
   ["admin"].forEach((type) => {
-    // оставили только admin
     const li = document.createElement("li");
     li.className =
       "conversation-item" + (type === currentRecipient ? " active" : "");
@@ -30,6 +31,7 @@ function renderConversationList() {
   });
 }
 
+// Рендер сообщений
 function renderMessages() {
   chatMessages.innerHTML = "";
   const msgs = conversations[currentRecipient];
@@ -46,12 +48,36 @@ function renderMessages() {
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-sendButton.addEventListener("click", () => {
+sendButton.addEventListener("click", async () => {
   const text = messageInput.value.trim();
   if (!text) return;
 
-  conversations[currentRecipient].push({ from: "user", text });
+  const message = { from: "user", text };
+
+  conversations[currentRecipient].push(message);
   localStorage.setItem("conversations", JSON.stringify(conversations));
+
+  try {
+    const response = await fetch("http://127.0.0.1:5500/api/send-message", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        recipient: currentRecipient,
+        ...message,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Ошибка сервера: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log("Сообщение успешно отправлено:", data);
+  } catch (err) {
+    console.error("Ошибка при отправке сообщения:", err);
+  }
 
   messageInput.value = "";
   renderMessages();
@@ -62,11 +88,11 @@ recipientSelect.addEventListener("change", (e) => {
   renderConversationList();
   renderMessages();
 });
+
 async function setCountryName() {
   try {
     const res = await fetch("https://ipapi.co/json/");
     const data = await res.json();
-
     if (data && data.country_name) {
       document.getElementById("countryName").textContent = data.country_name;
     } else {

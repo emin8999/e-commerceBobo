@@ -48,9 +48,8 @@
           </a>
         </div>
         <!-- Mobile NavBar -->
-        <button class="burger-btn" onclick="toggleMenu()">☰</button>
-
-        <div class="overlay" onclick="toggleMenu()" id="overlay"></div>
+        <button class="burger-btn">☰</button>
+        <div class="overlay" id="overlay"></div>
 
         <div class="sidebar" id="sidebar">
           <div class="sidebar-header">
@@ -212,7 +211,30 @@
 
     <script src="./assets/js/header.js"></script>
     <script src="./assets/js/index.js"></script>
-
     <script src="./assets/js/navBar.js" defer></script>
+    <script>
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("overlay");
+      const burgerBtn = document.querySelector(".burger-btn");
+
+      function toggleMenu() {
+        sidebar.classList.toggle("open");
+        overlay.classList.toggle("active");
+      }
+
+      function closeMenu() {
+        sidebar.classList.remove("open");
+        overlay.classList.remove("active");
+      }
+
+      burgerBtn.addEventListener("click", toggleMenu);
+      overlay.addEventListener("click", closeMenu);
+
+      window.addEventListener("resize", () => {
+        if (window.innerWidth > 600) {
+          closeMenu();
+        }
+      });
+    </script>
   </body>
 </html>
