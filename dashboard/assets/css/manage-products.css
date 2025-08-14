@@ -110,6 +110,38 @@ button:hover {
   gap: 10px;
   margin-top: 20px;
 }
+.discount-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.discountInput {
+  width: 50px;
+  padding: 3px 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  text-align: right;
+}
+
+.percent-sign {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.saveDiscountBtn {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 3px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.saveDiscountBtn:hover {
+  background-color: #45a049;
+}
 @media (max-width: 600px) {
   .container {
     margin: 40px 20px;
