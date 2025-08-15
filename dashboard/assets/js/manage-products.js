@@ -1,89 +1,110 @@
-let products = JSON.parse(localStorage.getItem("products") || "[]");
+let products = [];
 let currentStoreId = localStorage.getItem("storeId") || "store123";
 let editingProductId = null;
 
-if (products.length === 0) {
-  products = [
-    {
-      id: "p1",
-      storeId: currentStoreId,
-      name: "T-Shirt",
-      description: "Cotton T-Shirt",
-      price: 20,
-      category: "Clothing",
-      quantity: 50,
-      sizes: ["S", "M", "L"],
-      colors: ["Red", "Blue"],
-      status: "Available",
-      discount: 0,
-    },
-    {
-      id: "p2",
-      storeId: currentStoreId,
-      name: "Jeans",
-      description: "Blue Jeans",
-      price: 40,
-      category: "Clothing",
-      quantity: 30,
-      sizes: ["M", "L", "XL"],
-      colors: ["Blue"],
-      status: "Available",
-      discount: 0,
-    },
-    {
-      id: "p3",
-      storeId: currentStoreId,
-      name: "Sneakers",
-      description: "Running Shoes",
-      price: 60,
-      category: "Footwear",
-      quantity: 20,
-      sizes: ["40", "41", "42"],
-      colors: ["White", "Black"],
-      status: "Hidden",
-      discount: 0,
-    },
-    {
-      id: "p4",
-      storeId: currentStoreId,
-      name: "Hoodie",
-      description: "Warm hoodie",
-      price: 35,
-      category: "Clothing",
-      quantity: 25,
-      sizes: ["S", "M", "L", "XL"],
-      colors: ["Gray", "Black"],
-      status: "Available",
-      discount: 0,
-    },
-    {
-      id: "p5",
-      storeId: currentStoreId,
-      name: "Cap",
-      description: "Baseball cap",
-      price: 15,
-      category: "Accessories",
-      quantity: 100,
-      sizes: ["One Size"],
-      colors: ["Red", "Blue", "Black"],
-      status: "Available",
-      discount: 0,
-    },
-    {
-      id: "p6",
-      storeId: currentStoreId,
-      name: "Socks",
-      description: "Cotton socks",
-      price: 5,
-      category: "Clothing",
-      quantity: 200,
-      sizes: ["S", "M", "L"],
-      colors: ["White", "Black"],
-      status: "Available",
-      discount: 0,
-    },
-  ];
-  localStorage.setItem("products", JSON.stringify(products));
+// ===== ДЕФОЛТНЫЕ ПРОДУКТЫ =====
+const defaultProducts = [
+  {
+    id: "p1",
+    storeId: currentStoreId,
+    name: "T-Shirt",
+    description: "Cotton T-Shirt",
+    price: 20,
+    category: "Clothing",
+    quantity: 50,
+    sizes: ["S", "M", "L"],
+    colors: ["Red", "Blue"],
+    status: "Available",
+    discount: 0,
+  },
+  {
+    id: "p2",
+    storeId: currentStoreId,
+    name: "Jeans",
+    description: "Blue Jeans",
+    price: 40,
+    category: "Clothing",
+    quantity: 30,
+    sizes: ["M", "L", "XL"],
+    colors: ["Blue"],
+    status: "Available",
+    discount: 0,
+  },
+  {
+    id: "p3",
+    storeId: currentStoreId,
+    name: "Sneakers",
+    description: "Running Shoes",
+    price: 60,
+    category: "Footwear",
+    quantity: 20,
+    sizes: ["40", "41", "42"],
+    colors: ["White", "Black"],
+    status: "Hidden",
+    discount: 0,
+  },
+  {
+    id: "p4",
+    storeId: currentStoreId,
+    name: "Hoodie",
+    description: "Warm hoodie",
+    price: 35,
+    category: "Clothing",
+    quantity: 25,
+    sizes: ["S", "M", "L", "XL"],
+    colors: ["Gray", "Black"],
+    status: "Available",
+    discount: 0,
+  },
+  {
+    id: "p5",
+    storeId: currentStoreId,
+    name: "Cap",
+    description: "Baseball cap",
+    price: 15,
+    category: "Accessories",
+    quantity: 100,
+    sizes: ["One Size"],
+    colors: ["Red", "Blue", "Black"],
+    status: "Available",
+    discount: 0,
+  },
+  {
+    id: "p6",
+    storeId: currentStoreId,
+    name: "Socks",
+    description: "Cotton socks",
+    price: 5,
+    category: "Clothing",
+    quantity: 200,
+    sizes: ["S", "M", "L"],
+    colors: ["White", "Black"],
+    status: "Available",
+    discount: 0,
+  },
+];
+
+// ===== ПРОБА ЗАГРУЗКИ ДАННЫХ С БЭКЕНДА =====
+async function loadProducts() {
+  try {
+    const res = await fetch("http://116.203.51.133:8080/home/product/public");
+    if (!res.ok) throw new Error("Ошибка сети");
+    const data = await res.json();
+
+    if (Array.isArray(data) && data.length > 0) {
+      products = data;
+      localStorage.setItem("products", JSON.stringify(products));
+    } else {
+      console.warn("Бэкенд вернул пустой массив — используем дефолтные данные");
+      products = defaultProducts;
+      localStorage.setItem("products", JSON.stringify(products));
+    }
+  } catch (err) {
+    console.error("Ошибка при загрузке данных с бэкенда:", err);
+    products = defaultProducts;
+    localStorage.setItem("products", JSON.stringify(products));
+  }
+  renderProducts();
 }
 
 const tableBody = document.querySelector("#productTable tbody");
@@ -132,7 +153,6 @@ function renderProducts(filter = {}) {
     `;
     tableBody.appendChild(row);
 
-    // ===== Привязка кнопок =====
     const editButton = row.querySelector(".editBtn");
     editButton.addEventListener("click", () => editProduct(product.id));
 
@@ -152,7 +172,6 @@ function renderProducts(filter = {}) {
       ).toFixed(2)}`;
 
       localStorage.setItem("products", JSON.stringify(products));
-
       discountInput.value = discountValue;
     });
   });
@@ -221,4 +240,4 @@ document.getElementById("applyFilter").onclick = () => {
   renderProducts({ name, category, status });
 };
 
-window.onload = () => renderProducts();
+window.onload = () => loadProducts();
