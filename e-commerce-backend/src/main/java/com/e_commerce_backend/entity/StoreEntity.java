@@ -21,7 +21,7 @@ public class StoreEntity {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String name;
+    private String storeName;
 
     @Column(nullable = false)
     private String ownerName;
