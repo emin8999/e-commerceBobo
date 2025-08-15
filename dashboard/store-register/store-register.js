@@ -105,23 +105,48 @@ form.addEventListener("submit", async (e) => {
     return;
   }
 
-  const data = {
-    storeName: form.storeName.value.trim(),
-    ownerName: form.ownerName.value.trim(),
-    email: form.email.value.trim(),
-    password: passwordInput.value.trim(),
-  };
-
   try {
+    const formData = new FormData();
+    formData.append(
+      "storeName",
+      document.getElementById("storeName").value.trim()
+    );
+    formData.append(
+      "ownerName",
+      document.getElementById("ownerName").value.trim()
+    );
+    formData.append("email", document.getElementById("email").value.trim());
+    formData.append("password", passwordInput.value.trim());
+    formData.append("phone", document.getElementById("phone").value.trim());
+    formData.append(
+      "description",
+      document.getElementById("description").value.trim()
+    );
+    formData.append(
+      "category",
+      document.getElementById("category").value.trim()
+    );
+    formData.append(
+      "location",
+      document.getElementById("location").value.trim()
+    );
+
+    const logoFile = document.getElementById("logo").files[0];
+    if (logoFile) formData.append("logo", logoFile);
+
+    const bannerFile = document.getElementById("banner").files[0];
+    if (bannerFile) formData.append("banner", bannerFile);
+
+    console.log("📤 Данные которые отправляются:");
+    for (let [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
+
     const response = await fetch(
       "http://116.203.51.133:8080/home/store/register",
       {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer YOUR_TOKEN_HERE",
-        },
-        body: JSON.stringify(data),
+        body: formData,
       }
     );
 
@@ -129,15 +154,16 @@ form.addEventListener("submit", async (e) => {
       throw new Error(`Server error: ${response.status}`);
     }
 
-    const result = await response.json();
-    console.log("Server response:", result);
+    const result = await response.json().catch(() => ({}));
+    console.log("✅ Ответ от сервера:", result);
 
     alert("Store registered successfully!");
     form.reset();
     matchMessage.textContent = "";
     registerButton.disabled = true;
   } catch (err) {
-    console.error(err);
-    errorMsg.textContent = "Failed to register store. Please try again.";
+    console.error("❌ Ошибка при регистрации:", err);
+    errorMsg.textContent =
+      err.message || "Failed to register store. Please try again.";
   }
 });
