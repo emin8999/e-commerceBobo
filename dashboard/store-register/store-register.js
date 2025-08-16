@@ -137,16 +137,23 @@ form.addEventListener("submit", async (e) => {
     const bannerFile = document.getElementById("banner").files[0];
     if (bannerFile) formData.append("banner", bannerFile);
 
-    console.log("📤 Данные которые отправляются:");
+    // 🔹 Выводим данные в читаемом виде, включая файлы
+    const entries = {};
     for (let [key, value] of formData.entries()) {
-      console.log(key, value);
+      if (value instanceof File) {
+        entries[key] = { name: value.name, type: value.type, size: value.size };
+      } else {
+        entries[key] = value;
+      }
     }
+    console.log("📤 FormData отправляется:", entries);
 
     const response = await fetch(
       "http://116.203.51.133:8080/home/store/register",
       {
         method: "POST",
         body: formData,
+        // без токена
       }
     );
 

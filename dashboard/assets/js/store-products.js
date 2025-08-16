@@ -1,4 +1,3 @@
-// ====== CONFIG ======
 const BACKEND_BASE_URL = "http://116.203.51.133:8080"; // IP сервера
 const PRODUCTS_URL = `${BACKEND_BASE_URL}/home/product/my-store`;
 const LS_KEY = "myStoreProductsCache"; // локальный кэш на случай офлайна
@@ -42,10 +41,21 @@ async function fetchProducts() {
     });
 
     if (res.status === 401 || res.status === 403) {
-      localStorage.removeItem("jwtToken");
-      renderMessage("Session expired. Please log in again.");
+      const isLocal =
+        window.location.hostname === "127.0.0.1" ||
+        window.location.hostname === "localhost";
+
+      if (!isLocal) {
+        localStorage.removeItem("jwtToken");
+        renderMessage("Session expired. Please log in again.");
+      } else {
+        console.warn(
+          "401/403 received, but running locally. Using cached products."
+        );
+      }
       return loadCache();
     }
+
     if (!res.ok) throw new Error(`Failed to fetch products (${res.status})`);
 
     const data = await res.json();
@@ -53,7 +63,7 @@ async function fetchProducts() {
     saveCache(data);
     return data;
   } catch (err) {
-    console.warn("Backend unavailable, using local cache.", err);
+    console.warn("Backend unavailable or error, using local cache.", err);
     return loadCache();
   }
 }
