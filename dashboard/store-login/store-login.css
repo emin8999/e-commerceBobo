@@ -21,6 +21,11 @@ h2 {
   text-align: center;
   color: #003366;
 }
+.admin-user-link {
+  font-size: 16px;
+  text-decoration: none;
+  color: white;
+}
 
 label {
   display: block;
