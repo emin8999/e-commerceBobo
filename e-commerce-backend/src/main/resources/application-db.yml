@@ -8,7 +8,8 @@ spring:
   jpa:
     properties:
       hibernate:
-        format_sql= true:
+        format_sql: true
+        default_schema: public
     show-sql: true
     open-in-view: false
     hibernate:
@@ -19,3 +20,4 @@ spring:
     change-log: classpath:/liquibase/changelog-master.yml
     database-change-log-table: DATABASECHANGELOG
     database-change-log-lock-table: DATABASECHANGELOGLOCK
+    default-schema: public
