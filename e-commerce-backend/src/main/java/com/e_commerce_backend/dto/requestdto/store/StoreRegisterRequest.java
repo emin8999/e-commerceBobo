@@ -13,7 +13,7 @@ public class StoreRegisterRequest {
 
     @NotBlank(message = "Store name is required")
     @Size(min = 3, max = 100, message = "Name must be at least 3 characters")
-    private String name;
+    private String storeName;
 
     @NotBlank(message = "Owner name is required")
     @Size(min = 6, max = 100, message = "Name must be at least 6 characters")

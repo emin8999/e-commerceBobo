@@ -15,7 +15,7 @@ databaseChangeLog:
                     nullable: false
 
               - column:
-                  name: name
+                  name: storeName
                   type: VARCHAR(100)
                   constraints:
                     nullable: false

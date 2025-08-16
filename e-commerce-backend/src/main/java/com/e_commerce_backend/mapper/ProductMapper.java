@@ -29,7 +29,7 @@ public interface ProductMapper {
     ProductEntity mapToProductEntity(ProductRequestDto dto);
 
     @Mapping(target = "imageUrls", expression = "java(mapImages(entity.getImages()))")
-    @Mapping(target = "storeName", source = "entity.store.name")
+    @Mapping(target = "storeName", source = "entity.store.storeName")
     @Mapping(target = "sizeQuantities", source = "sizeQuantities")
     ProductResponseDto mapToProductResponseDto(ProductEntity entity);
 

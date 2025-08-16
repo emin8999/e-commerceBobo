@@ -10,7 +10,7 @@ import lombok.*;
 public class StoreResponseDto {
 
     private Long id;
-    private String name;
+    private String storeName;
     private String ownerName;
     private String email;
     private String phone;

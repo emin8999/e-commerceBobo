@@ -15,6 +15,7 @@ public interface StoreMapper {
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "logo", ignore = true)
     @Mapping(target = "banner", ignore = true)
+    @Mapping(target = "storeName",source = "storeName")
     StoreEntity mapToStoreEntity(StoreRegisterRequest storeRegisterRequest);
 
 
