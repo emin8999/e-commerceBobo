@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: 12-rename-store-column
+      author: Yunis
+      changes:
+        - renameColumn:
+            tableName: store_entity
+            oldColumnName: name
+            newColumnName: store_name
+            columnDataType: varchar(100)
