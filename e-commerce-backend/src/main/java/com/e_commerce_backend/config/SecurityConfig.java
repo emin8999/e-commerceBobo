@@ -39,25 +39,7 @@ public class SecurityConfig {
                 .logout(AbstractHttpConfigurer::disable)
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(request -> request.requestMatchers("/store/register").permitAll())
-                .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers(
-                                "/swagger-ui/**",
-                                "/v3/api-docs/**",
-                                "/swagger-resources/**",
-                                "/swagger-ui.html",
-                                "/webjars/**"
-                        ).permitAll()
-                        .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/admin/login").permitAll()
-                        .requestMatchers("/store/register").permitAll()
-                        .requestMatchers("/store/login").permitAll()
-                        .requestMatchers("/product/public/**").permitAll()
-                        .requestMatchers("/cart/**").authenticated()
-                        .requestMatchers("/orders/**").authenticated()
-                        .anyRequest().authenticated()
-                )
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .authorizeHttpRequests(request -> request.anyRequest().permitAll())
                 .build();
     }
 
