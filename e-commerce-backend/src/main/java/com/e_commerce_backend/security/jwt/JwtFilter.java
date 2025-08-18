@@ -29,20 +29,11 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        String path = request.getServletPath();
-
-        if (path.startsWith("/store/register") ||
-                path.startsWith("/store/login") ||
-                path.startsWith("/auth") ||
-                path.startsWith("/swagger")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
-            filterChain.doFilter(request, response);
-            return;
-        }
+        System.out.println("➡ Incoming request: " + request.getMethod() + " " + request.getRequestURI());
+        System.out.println("➡ Headers:");
+        request.getHeaderNames().asIterator().forEachRemaining(header ->
+                System.out.println("   " + header + ": " + request.getHeader(header))
+        );
 
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String tokenPrefix = "Bearer ";
@@ -54,6 +45,7 @@ public class JwtFilter extends OncePerRequestFilter {
             jwtToken = authHeader.substring(tokenPrefix.length());
 
             if (tokenBlacklistService.isTokenBlacklisted(jwtToken)) {
+                System.out.println("❌ Token blacklisted!");
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token has been invalidated");
                 return;
             }
@@ -61,6 +53,7 @@ public class JwtFilter extends OncePerRequestFilter {
             try {
                 username = jwtService.extractUserName(jwtToken);
             } catch (Exception e) {
+                System.out.println("❌ Invalid token: " + e.getMessage());
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or expired token");
                 return;
             }

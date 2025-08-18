@@ -41,29 +41,42 @@ public class StoreServiceImpl implements StoreService {
     private final TokenBlacklistService tokenBlacklistService;
 
     public void registerStore(StoreRegisterRequest request) {
+        System.out.println("➡ registerStore called with data:");
+        System.out.println("   storeName: " + request.getStoreName());
+        System.out.println("   ownerName: " + request.getOwnerName());
+        System.out.println("   email: " + request.getEmail());
+        System.out.println("   agreedToTerms: " + request.getAgreedToTerms());
+
         if (storeRepository.existsByEmail(request.getEmail())) {
-            throw new EmailAlreadyExistsException("Email already exists");
+            System.out.println("❌ Email already exists: " + request.getEmail());
+            throw new RuntimeException("Email already exists");
         } else if (!request.getPassword().equals(request.getConfirmPassword())) {
-            throw new PasswordMismatchException();
+            System.out.println("❌ Password mismatch");
+            throw new IllegalArgumentException("Password and Confirm Password do not match");
         } else if (Boolean.TRUE.equals(request.getAgreedToTerms())) {
             StoreEntity store = storeMapper.mapToStoreEntity(request);
             store.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
             store = storeRepository.save(store);
+
+            System.out.println("✅ Store saved with id: " + store.getId());
 
             String storeFolder = "image/store_" + store.getId();
 
             if (request.getLogo() != null && !request.getLogo().isEmpty()) {
                 String logoUrl = cloudinaryService.uploadFile(request.getLogo(), storeFolder + "/logo", "logo");
                 store.setLogo(logoUrl);
+                System.out.println("✅ Logo uploaded: " + logoUrl);
             }
 
             if (request.getBanner() != null && !request.getBanner().isEmpty()) {
                 String bannerUrl = cloudinaryService.uploadFile(request.getBanner(), storeFolder + "/banner", "banner");
                 store.setBanner(bannerUrl);
+                System.out.println("✅ Banner uploaded: " + bannerUrl);
             }
 
             storeRepository.save(store);
         } else {
+            System.out.println("❌ Terms not agreed");
             throw new IllegalArgumentException("You must agree to terms");
         }
     }
