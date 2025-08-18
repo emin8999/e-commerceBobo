@@ -6,6 +6,8 @@ import com.e_commerce_backend.dto.responseDto.order.OrderItemResponseDto;
 import com.e_commerce_backend.dto.responseDto.order.OrderResponseDto;
 import com.e_commerce_backend.entity.*;
 import com.e_commerce_backend.enums.OrderStatus;
+import com.e_commerce_backend.exception.OrderNotFoundException;
+import com.e_commerce_backend.exception.UserNotFoundException;
 import com.e_commerce_backend.repository.CartRepository;
 import com.e_commerce_backend.repository.OrderRepository;
 import com.e_commerce_backend.repository.UserRepository;
@@ -99,7 +101,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderResponseDto getOrderById(Long orderId) {
         UserEntity currentUser = getCurrentUser();
         OrderEntity order = orderRepository.findByIdWithOrderItems(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
+                .orElseThrow(() -> new OrderNotFoundException("Order not found"));
 
         if (!order.getUser().getId().equals(currentUser.getId())) {
             throw new RuntimeException("Access denied");
@@ -122,7 +124,7 @@ public class OrderServiceImpl implements OrderService {
         log.info("Updating order {} status to {}", orderId, status);
 
         OrderEntity order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
+                .orElseThrow(() -> new OrderNotFoundException("Order not found"));
 
         try {
             OrderStatus newStatus = OrderStatus.valueOf(status.toUpperCase());
@@ -145,10 +147,10 @@ public class OrderServiceImpl implements OrderService {
 
         UserEntity currentUser = getCurrentUser();
         OrderEntity order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
+                .orElseThrow(() -> new OrderNotFoundException("Order not found"));
 
         if (!order.getUser().getId().equals(currentUser.getId())) {
-            throw new RuntimeException("Access denied");
+            throw new RuntimeException();
         }
 
         if (!order.getStatus().canTransitionTo(OrderStatus.CANCELLED)) {
@@ -162,7 +164,7 @@ public class OrderServiceImpl implements OrderService {
     private UserEntity getCurrentUser() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException());
     }
 
     private OrderResponseDto mapToOrderResponseDto(OrderEntity order) {

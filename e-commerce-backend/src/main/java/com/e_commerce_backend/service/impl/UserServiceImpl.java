@@ -8,6 +8,9 @@ import com.e_commerce_backend.dto.responseDto.user.RegisterResponseDto;
 import com.e_commerce_backend.dto.responseDto.user.UserResponseDto;
 import com.e_commerce_backend.entity.UserEntity;
 import com.e_commerce_backend.enums.Roles;
+import com.e_commerce_backend.exception.EmailAlreadyExistsException;
+import com.e_commerce_backend.exception.PasswordMismatchException;
+import com.e_commerce_backend.exception.UserNotFoundException;
 import com.e_commerce_backend.mapper.UserMapper;
 import com.e_commerce_backend.repository.UserRepository;
 import com.e_commerce_backend.security.jwt.JwtService;
@@ -41,11 +44,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public RegisterResponseDto register(RegisterRequestDto registerRequestDto) {
         if (userRepository.existsByEmail(registerRequestDto.getEmail())) {
-            throw new RuntimeException("email exist");
+            throw new EmailAlreadyExistsException("email exist");
         }
 
         if (!registerRequestDto.getPassword().equals(registerRequestDto.getPasswordConfirm())) {
-            throw new RuntimeException("passwords do not match");
+            throw new PasswordMismatchException();
         }
 
         UserEntity user = userMapper.mapToUser(registerRequestDto);
@@ -70,7 +73,7 @@ public class UserServiceImpl implements UserService {
 
         if (authentication.isAuthenticated()) {
             UserEntity user = userRepository.findByEmail(loginRequestDto.getEmail())
-                    .orElseThrow(() -> new RuntimeException("User not found"));
+                    .orElseThrow(() -> new UserNotFoundException());
 
             UserPrincipal userPrincipal = new UserPrincipal(user);
             String token = jwtService.generateToken(userPrincipal);

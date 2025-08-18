@@ -6,6 +6,8 @@ import com.e_commerce_backend.dto.requestdto.user.LoginRequestDto;
 import com.e_commerce_backend.dto.responseDto.store.StoreResponseDto;
 import com.e_commerce_backend.dto.responseDto.user.LoginResponseDto;
 import com.e_commerce_backend.entity.StoreEntity;
+import com.e_commerce_backend.exception.EmailAlreadyExistsException;
+import com.e_commerce_backend.exception.PasswordMismatchException;
 import com.e_commerce_backend.mapper.StoreMapper;
 import com.e_commerce_backend.repository.StoreRepository;
 import com.e_commerce_backend.security.jwt.JwtService;
@@ -40,9 +42,9 @@ public class StoreServiceImpl implements StoreService {
 
     public void registerStore(StoreRegisterRequest request) {
         if (storeRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already exists");
+            throw new EmailAlreadyExistsException("Email already exists");
         } else if (!request.getPassword().equals(request.getConfirmPassword())) {
-            throw new IllegalArgumentException("Password and Confirm Password do not match");
+            throw new PasswordMismatchException();
         } else if (Boolean.TRUE.equals(request.getAgreedToTerms())) {
             StoreEntity store = storeMapper.mapToStoreEntity(request);
             store.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));

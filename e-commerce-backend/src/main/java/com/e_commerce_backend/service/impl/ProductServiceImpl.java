@@ -7,6 +7,8 @@ import com.e_commerce_backend.entity.ProductImageEntity;
 import com.e_commerce_backend.entity.ProductSizeQuantity;
 import com.e_commerce_backend.entity.StoreEntity;
 import com.e_commerce_backend.enums.ProductStatus;
+import com.e_commerce_backend.exception.ProductNotFoundException;
+import com.e_commerce_backend.exception.ProductUnavailableException;
 import com.e_commerce_backend.mapper.ProductMapper;
 import com.e_commerce_backend.repository.ProductRepository;
 import com.e_commerce_backend.security.util.StoreSecurityUtil;
@@ -105,10 +107,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponseDto getActiveProductById(Long id) {
         ProductEntity product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new ProductNotFoundException("Product not found"));
 
         if (product.getStatus() != ProductStatus.ACTIVE) {
-            throw new RuntimeException("Product is not available");
+            throw new ProductUnavailableException("Product is not available");
         }
 
         return productMapper.mapToProductResponseDto(product);

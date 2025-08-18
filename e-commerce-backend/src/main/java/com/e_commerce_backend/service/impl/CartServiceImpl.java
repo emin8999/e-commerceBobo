@@ -8,6 +8,7 @@ import com.e_commerce_backend.entity.CartEntity;
 import com.e_commerce_backend.entity.ProductEntity;
 import com.e_commerce_backend.entity.UserEntity;
 import com.e_commerce_backend.enums.ProductStatus;
+import com.e_commerce_backend.exception.UserNotFoundException;
 import com.e_commerce_backend.repository.CartRepository;
 import com.e_commerce_backend.repository.ProductRepository;
 import com.e_commerce_backend.repository.UserRepository;
@@ -211,7 +212,7 @@ public class CartServiceImpl implements CartService {
     private UserEntity getCurrentUser() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException());
     }
 
     private UserEntity getCurrentUserOrNull() {
