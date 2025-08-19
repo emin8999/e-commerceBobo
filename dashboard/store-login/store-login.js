@@ -82,7 +82,7 @@ document
 
       if (data.success) {
         alert("Login successful!");
-        window.location.href = "./store-dashboard.html";
+        window.location.href = "../dash-store-panel.html";
       } else {
         errorMsg.textContent = data.message || "Login failed.";
       }
