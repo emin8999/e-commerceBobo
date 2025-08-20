@@ -61,113 +61,117 @@
 // });
 
 const form = document.getElementById("storeRegisterForm");
-const passwordInput = document.getElementById("password");
-const confirmPasswordInput = document.getElementById("confirmPassword");
-const registerButton = document.querySelector(".button-register");
+
+const inputs = {
+  password: document.getElementById("password"),
+  confirmPassword: document.getElementById("confirmPassword"),
+  storeName: document.getElementById("storeName"),
+  ownerName: document.getElementById("ownerName"),
+  email: document.getElementById("email"),
+  phone: document.getElementById("phone"),
+  description: document.getElementById("description"),
+  category: document.getElementById("category"),
+  location: document.getElementById("location"),
+  logo: document.getElementById("logo"),
+  banner: document.getElementById("banner"),
+};
+
+const registerBtn = document.querySelector(".button-register");
 const errorMsg = document.getElementById("errorMsg");
 
 const matchMessage = document.createElement("div");
 matchMessage.classList.add("password-match");
-confirmPasswordInput.insertAdjacentElement("afterend", matchMessage);
+inputs.confirmPassword.insertAdjacentElement("afterend", matchMessage);
 
-function checkPasswordMatch() {
-  const password = passwordInput.value.trim();
-  const confirmPassword = confirmPasswordInput.value.trim();
+function updatePasswordStatus() {
+  const pwd = inputs.password.value.trim();
+  const confirmPwd = inputs.confirmPassword.value.trim();
 
-  if (!password && !confirmPassword) {
+  if (!pwd && !confirmPwd) {
     matchMessage.textContent = "";
-    registerButton.disabled = true;
+    registerBtn.disabled = true;
     return;
   }
 
-  if (password === confirmPassword) {
-    matchMessage.textContent = "Passwords match ✅";
-    matchMessage.className = "password-match match";
-    registerButton.disabled = false;
-  } else {
-    matchMessage.textContent = "Passwords do not match ❌";
-    matchMessage.className = "password-match mismatch";
-    registerButton.disabled = true;
-  }
+  const isMatch = pwd === confirmPwd;
+  matchMessage.textContent = isMatch
+    ? "Passwords match ✅"
+    : "Passwords do not match ❌";
+  matchMessage.className = `password-match ${isMatch ? "match" : "mismatch"}`;
+  registerBtn.disabled = !isMatch;
 }
 
-passwordInput.addEventListener("input", checkPasswordMatch);
-confirmPasswordInput.addEventListener("input", checkPasswordMatch);
+inputs.password.addEventListener("input", updatePasswordStatus);
+inputs.confirmPassword.addEventListener("input", updatePasswordStatus);
+registerBtn.disabled = true;
 
-registerButton.disabled = true;
+function buildFormData() {
+  const data = new FormData();
+  data.append("storeName", inputs.storeName.value.trim());
+  data.append("ownerName", inputs.ownerName.value.trim());
+  data.append("email", inputs.email.value.trim());
+  data.append("password", inputs.password.value.trim());
+  data.append("phone", inputs.phone.value.trim());
+  data.append("description", inputs.description.value.trim());
+  data.append("category", inputs.category.value.trim());
+  data.append("location", inputs.location.value.trim());
+
+  if (inputs.logo.files[0]) data.append("logo", inputs.logo.files[0]);
+  if (inputs.banner.files[0]) data.append("banner", inputs.banner.files[0]);
+
+  return data;
+}
+
+function logFormData(formData) {
+  const entries = {};
+  for (let [key, value] of formData.entries()) {
+    entries[key] =
+      value instanceof File
+        ? { name: value.name, type: value.type, size: value.size }
+        : value;
+  }
+  console.log("📤 FormData отправляется:", entries);
+}
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
   errorMsg.textContent = "";
 
-  if (passwordInput.value.trim() !== confirmPasswordInput.value.trim()) {
+  if (inputs.password.value.trim() !== inputs.confirmPassword.value.trim()) {
     errorMsg.textContent = "Passwords do not match";
     return;
   }
 
   try {
-    const formData = new FormData();
-    formData.append(
-      "storeName",
-      document.getElementById("storeName").value.trim()
-    );
-    formData.append(
-      "ownerName",
-      document.getElementById("ownerName").value.trim()
-    );
-    formData.append("email", document.getElementById("email").value.trim());
-    formData.append("password", passwordInput.value.trim());
-    formData.append("phone", document.getElementById("phone").value.trim());
-    formData.append(
-      "description",
-      document.getElementById("description").value.trim()
-    );
-    formData.append(
-      "category",
-      document.getElementById("category").value.trim()
-    );
-    formData.append(
-      "location",
-      document.getElementById("location").value.trim()
-    );
-
-    const logoFile = document.getElementById("logo").files[0];
-    if (logoFile) formData.append("logo", logoFile);
-
-    const bannerFile = document.getElementById("banner").files[0];
-    if (bannerFile) formData.append("banner", bannerFile);
-
-    // 🔹 Выводим данные в читаемом виде, включая файлы
-    const entries = {};
-    for (let [key, value] of formData.entries()) {
-      if (value instanceof File) {
-        entries[key] = { name: value.name, type: value.type, size: value.size };
-      } else {
-        entries[key] = value;
-      }
-    }
-    console.log("📤 FormData отправляется:", entries);
+    const formData = buildFormData();
+    logFormData(formData);
 
     const response = await fetch(
       "http://116.203.51.133:8080/home/store/register",
-      {
-        method: "POST",
-        body: formData,
-        // без токена
-      }
+      { method: "POST", body: formData }
     );
 
     if (!response.ok) {
       throw new Error(`Server error: ${response.status}`);
     }
 
-    const result = await response.json().catch(() => ({}));
+    let result;
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      result = await response.json();
+    } else {
+      result = await response.text();
+    }
+
     console.log("✅ Ответ от сервера:", result);
 
     alert("Store registered successfully!");
     form.reset();
     matchMessage.textContent = "";
-    registerButton.disabled = true;
+    registerBtn.disabled = true;
+
+    inputs.logo.value = "";
+    inputs.banner.value = "";
   } catch (err) {
     console.error("❌ Ошибка при регистрации:", err);
     errorMsg.textContent =
