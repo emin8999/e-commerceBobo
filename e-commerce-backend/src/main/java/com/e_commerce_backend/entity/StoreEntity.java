@@ -1,11 +1,13 @@
 package com.e_commerce_backend.entity;
 
+import com.e_commerce_backend.enums.Roles;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -57,5 +59,9 @@ public class StoreEntity {
 
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProductEntity> productEntities;
+
+    @ElementCollection(fetch=FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    private Set<Roles> roles = new HashSet<>();
 
 }

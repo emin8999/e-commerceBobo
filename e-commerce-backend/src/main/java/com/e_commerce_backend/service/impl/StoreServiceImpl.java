@@ -1,11 +1,13 @@
 package com.e_commerce_backend.service.impl;
 
+import com.cloudinary.provisioning.Account;
 import com.e_commerce_backend.cloudinary.CloudinaryService;
 import com.e_commerce_backend.dto.requestdto.store.StoreRegisterRequest;
 import com.e_commerce_backend.dto.requestdto.user.LoginRequestDto;
 import com.e_commerce_backend.dto.responseDto.store.StoreResponseDto;
 import com.e_commerce_backend.dto.responseDto.user.LoginResponseDto;
 import com.e_commerce_backend.entity.StoreEntity;
+import com.e_commerce_backend.enums.Roles;
 import com.e_commerce_backend.exception.EmailAlreadyExistsException;
 import com.e_commerce_backend.exception.PasswordMismatchException;
 import com.e_commerce_backend.mapper.StoreMapper;
@@ -25,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import java.nio.file.AccessDeniedException;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,68 +43,66 @@ public class StoreServiceImpl implements StoreService {
     private final CloudinaryService cloudinaryService;
     private final TokenBlacklistService tokenBlacklistService;
 
+    @Override
     public void registerStore(StoreRegisterRequest request) {
-        System.out.println("➡ registerStore called with data:");
-        System.out.println("   storeName: " + request.getStoreName());
-        System.out.println("   ownerName: " + request.getOwnerName());
-        System.out.println("   email: " + request.getEmail());
-        System.out.println("   agreedToTerms: " + request.getAgreedToTerms());
 
         if (storeRepository.existsByEmail(request.getEmail())) {
-            System.out.println("❌ Email already exists: " + request.getEmail());
-            throw new RuntimeException("Email already exists");
-        } else if (!request.getPassword().equals(request.getConfirmPassword())) {
-            System.out.println("❌ Password mismatch");
-            throw new IllegalArgumentException("Password and Confirm Password do not match");
-        } else if (Boolean.TRUE.equals(request.getAgreedToTerms())) {
-            StoreEntity store = storeMapper.mapToStoreEntity(request);
-            store.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
-            store = storeRepository.save(store);
+            throw new EmailAlreadyExistsException("Email already exists");
+        }
 
-            System.out.println("✅ Store saved with id: " + store.getId());
+        if (!request.getPassword().equals(request.getConfirmPassword())) {
+            throw new PasswordMismatchException();
+        }
 
-            String storeFolder = "image/store_" + store.getId();
-
-            if (request.getLogo() != null && !request.getLogo().isEmpty()) {
-                String logoUrl = cloudinaryService.uploadFile(request.getLogo(), storeFolder + "/logo", "logo");
-                store.setLogo(logoUrl);
-                System.out.println("✅ Logo uploaded: " + logoUrl);
-            }
-
-            if (request.getBanner() != null && !request.getBanner().isEmpty()) {
-                String bannerUrl = cloudinaryService.uploadFile(request.getBanner(), storeFolder + "/banner", "banner");
-                store.setBanner(bannerUrl);
-                System.out.println("✅ Banner uploaded: " + bannerUrl);
-            }
-
-            storeRepository.save(store);
-        } else {
-            System.out.println("❌ Terms not agreed");
+        if (!Boolean.TRUE.equals(request.getAgreedToTerms())) {
             throw new IllegalArgumentException("You must agree to terms");
         }
+
+
+        StoreEntity store = storeMapper.mapToStoreEntity(request);
+        store.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
+        store.setRoles(Set.of(Roles.STORE));
+
+
+        store = storeRepository.save(store);
+
+        String storeFolder = "image/store_" + store.getId();
+
+        if (request.getLogo() != null && !request.getLogo().isEmpty()) {
+            String logoUrl = cloudinaryService.uploadFile(request.getLogo(), storeFolder + "/logo", "logo");
+            store.setLogo(logoUrl);
+        }
+
+
+        if (request.getBanner() != null && !request.getBanner().isEmpty()) {
+            String bannerUrl = cloudinaryService.uploadFile(request.getBanner(), storeFolder + "/banner", "banner");
+            store.setBanner(bannerUrl);
+        }
+
+        storeRepository.save(store);
     }
 
     @Override
     public LoginResponseDto login(LoginRequestDto loginRequestDto) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail(), loginRequestDto.getPassword())
-        );
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail(), loginRequestDto.getPassword())
+            );
 
-        if(authentication.isAuthenticated()){
             StoreEntity store = storeRepository.findStoreEntitiesByEmail(loginRequestDto.getEmail())
                     .orElseThrow(() -> new RuntimeException("Store not found"));
-
 
             StorePrincipal storePrincipal = new StorePrincipal(store);
             String token = jwtService.generateToken(storePrincipal);
 
-            return new LoginResponseDto(token,"Bearer");
+            return new LoginResponseDto(token, "Bearer");
 
+        } catch (Exception e) {
+            throw new RuntimeException("Authentication failed: " + e.getMessage());
         }
-
-        throw new RuntimeException("Authentication failed");
     }
 
+    @Override
     public StoreResponseDto getCurrentStoreInfo() throws AccessDeniedException {
         StoreEntity store = storeSecurityUtil.getCurrentStore();
         return storeMapper.mapToStoreResponse(store);
@@ -109,8 +110,8 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public List<StoreResponseDto> getAllStores() {
-        List<StoreEntity> stores = storeRepository.findAll();
-        return stores.stream()
+        return storeRepository.findAll()
+                .stream()
                 .map(storeMapper::mapToStoreResponse)
                 .collect(Collectors.toList());
     }
