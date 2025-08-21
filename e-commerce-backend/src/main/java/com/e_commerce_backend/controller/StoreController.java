@@ -39,7 +39,6 @@ public class StoreController {
     }
 
     @PostMapping("/login")
-    @PreAuthorize("hasRole('STORE')")
     public ResponseEntity<LoginResponseDto> login(@RequestBody @Valid LoginRequestDto loginRequestDto) {
         LoginResponseDto response = storeService.login(loginRequestDto);
         return ResponseEntity.ok(response);
