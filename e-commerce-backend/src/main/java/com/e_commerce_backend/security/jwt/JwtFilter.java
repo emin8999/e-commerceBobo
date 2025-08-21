@@ -32,9 +32,9 @@ public class JwtFilter extends OncePerRequestFilter {
     private static final List<String> PUBLIC_PATHS = List.of(
             "/store/register",
             "/store/login",
-            "/auth/",
-            "/swagger-ui/",
-            "/v3/api-docs/",
+            "/auth",
+            "/swagger-ui",
+            "/v3/api-docs",
             "/actuator/health",
             "/logout"
     );
@@ -46,8 +46,8 @@ public class JwtFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String path = request.getServletPath();
-        if (path==null){
-            filterChain.doFilter(request,response);
+        if (path == null) {
+            filterChain.doFilter(request, response);
             return;
         }
 
@@ -64,7 +64,7 @@ public class JwtFilter extends OncePerRequestFilter {
         final String tokenPrefix = "Bearer ";
 
         if (authHeader == null || !authHeader.startsWith(tokenPrefix)) {
-            log.warn("Missing or invalid Authorization header");
+            log.warn("Missing or invalid Authorization header for path: {}", path);
             sendErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED,
                     "Missing or invalid Authorization header");
             return;
@@ -89,7 +89,11 @@ public class JwtFilter extends OncePerRequestFilter {
 
                 if (jwtService.validateToken(jwtToken, userDetails)) {
                     UsernamePasswordAuthenticationToken authToken =
-                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                            new UsernamePasswordAuthenticationToken(
+                                    userDetails,
+                                    null,
+                                    userDetails.getAuthorities()
+                            );
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                     log.debug("Authentication set for user: {}", username);
