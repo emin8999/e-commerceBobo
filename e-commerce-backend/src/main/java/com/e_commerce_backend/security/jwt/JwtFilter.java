@@ -35,7 +35,8 @@ public class JwtFilter extends OncePerRequestFilter {
             "/auth/",
             "/swagger-ui/",
             "/v3/api-docs/",
-            "/actuator/health"
+            "/actuator/health",
+            "/logout"
     );
 
     @Override
@@ -45,7 +46,7 @@ public class JwtFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String path = request.getServletPath();
-        log.debug("Processing request for path: {}", path);
+        log.debug("Processing path: {}", path);
 
 
         boolean isPublicPath = PUBLIC_PATHS.stream().anyMatch(path::startsWith);
@@ -55,6 +56,7 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
+
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             log.debug("Skipping JWT filter for OPTIONS request");
             filterChain.doFilter(request, response);
@@ -63,12 +65,17 @@ public class JwtFilter extends OncePerRequestFilter {
 
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String tokenPrefix = "Bearer ";
-        String jwtToken = null;
-        String username = null;
 
 
-        if (authHeader != null && authHeader.startsWith(tokenPrefix)) {
-            jwtToken = authHeader.substring(tokenPrefix.length());
+        if (authHeader == null || !authHeader.startsWith(tokenPrefix)) {
+            log.warn("Missing or invalid Authorization header");
+            sendErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED,
+                    "Missing or invalid Authorization header");
+            return;
+        }
+
+        try {
+            String jwtToken = authHeader.substring(tokenPrefix.length());
             log.debug("JWT token found: {}", jwtToken);
 
 
@@ -79,27 +86,12 @@ public class JwtFilter extends OncePerRequestFilter {
                 return;
             }
 
-            try {
-                username = jwtService.extractUserName(jwtToken);
-                log.debug("Extracted username from token: {}", username);
-            } catch (Exception e) {
-                log.warn("Token extraction failed: {}", e.getMessage());
-                sendErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED,
-                        "Invalid or expired token");
-                return;
-            }
-        } else {
-            log.warn("Missing or invalid Authorization header");
-            sendErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED,
-                    "Missing or invalid Authorization header");
-            return;
-        }
+            String username = jwtService.extractUserName(jwtToken);
+            log.debug("Extracted username from token: {}", username);
 
 
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            try {
+            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = userDetailService.loadUserByUsername(username);
-                log.debug("User details loaded for: {}", username);
 
                 if (jwtService.validateToken(jwtToken, userDetails)) {
                     UsernamePasswordAuthenticationToken authToken =
@@ -112,24 +104,31 @@ public class JwtFilter extends OncePerRequestFilter {
                     sendErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED, "Invalid token");
                     return;
                 }
-            } catch (UsernameNotFoundException e) {
-                log.warn("User not found: {}", username);
-                sendErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED, "User not found");
-                return;
             }
-        }
 
-        filterChain.doFilter(request, response);
+
+            filterChain.doFilter(request, response);
+
+        } catch (Exception e) {
+            log.error("JWT processing failed: {}", e.getMessage(), e);
+            sendErrorResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                    "Authentication processing failed");
+
+        }
     }
 
     private void sendErrorResponse(HttpServletResponse response, int status, String message)
             throws IOException {
-        response.setStatus(status);
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
+        if (!response.isCommitted()) {
+            response.setStatus(status);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
 
-        String errorJson = String.format("{\"error\": \"%s\", \"message\": \"%s\"}",
-                "Authentication Failed", message);
-        response.getWriter().write(errorJson);
+            String errorJson = String.format("{\"error\": \"%s\", \"message\": \"%s\"}",
+                    "Authentication Failed", message);
+            response.getWriter().write(errorJson);
+        } else {
+            log.warn("Response already committed, cannot send error response");
+        }
     }
 }
