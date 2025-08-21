@@ -44,39 +44,21 @@ public class JwtFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
-        log.debug("Request URL: {}, Method: {}",request.getRequestURL(),request.getMethod());
-        log.debug("Response committed: {}, status: {}",response.isCommitted(),response.getStatus());
+
         String path = request.getServletPath();
         log.debug("Processing path: {}", path);
 
+        boolean isPublicPath = PUBLIC_PATHS.stream()
+                .anyMatch(p -> path.equals(p) || path.startsWith(p + "/"));
 
-        boolean isPublicPath = PUBLIC_PATHS.stream().anyMatch(path::startsWith);
-        if (isPublicPath) {
-            log.debug("Public path detected: {}", path);
-
-            if (!response.isCommitted()) {
-                try {
-                    filterChain.doFilter(request, response);
-                    log.debug("Filter chain completed successfully");
-                } catch (Exception e) {
-                    log.error("Filter chain error: {}", e.getMessage(), e);
-                }
-            } else {
-                log.warn("Response already committed, skipping filter chain");
-            }
-            return;
-        }
-
-
-        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
-            log.debug("Skipping JWT filter for OPTIONS request");
+        if (isPublicPath || "OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            log.debug("Public path or OPTIONS request, skipping JWT filter for: {}", path);
             filterChain.doFilter(request, response);
             return;
         }
 
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String tokenPrefix = "Bearer ";
-
 
         if (authHeader == null || !authHeader.startsWith(tokenPrefix)) {
             log.warn("Missing or invalid Authorization header");
@@ -89,7 +71,6 @@ public class JwtFilter extends OncePerRequestFilter {
             String jwtToken = authHeader.substring(tokenPrefix.length());
             log.debug("JWT token found: {}", jwtToken);
 
-
             if (tokenBlacklistService.isTokenBlacklisted(jwtToken)) {
                 log.warn("Blacklisted token attempted: {}", jwtToken);
                 sendErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED,
@@ -99,7 +80,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
             String username = jwtService.extractUserName(jwtToken);
             log.debug("Extracted username from token: {}", username);
-
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = userDetailService.loadUserByUsername(username);
@@ -117,14 +97,12 @@ public class JwtFilter extends OncePerRequestFilter {
                 }
             }
 
-
             filterChain.doFilter(request, response);
 
         } catch (Exception e) {
             log.error("JWT processing failed: {}", e.getMessage(), e);
             sendErrorResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                     "Authentication processing failed");
-
         }
     }
 
