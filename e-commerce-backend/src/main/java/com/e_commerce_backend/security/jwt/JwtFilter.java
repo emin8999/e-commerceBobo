@@ -46,7 +46,10 @@ public class JwtFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String path = request.getServletPath();
-        log.debug("Processing path: {}", path);
+        if (path==null){
+            filterChain.doFilter(request,response);
+            return;
+        }
 
         boolean isPublicPath = PUBLIC_PATHS.stream()
                 .anyMatch(p -> path.equals(p) || path.startsWith(p + "/"));
