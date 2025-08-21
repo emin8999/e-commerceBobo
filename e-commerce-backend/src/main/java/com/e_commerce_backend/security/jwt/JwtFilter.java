@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.core5.http.HttpHeaders;
+import org.springframework.core.Ordered;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -46,19 +47,19 @@ public class JwtFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String path = request.getServletPath();
-        if (path == null) {
+        String method = request.getMethod();
+
+        log.debug("Processing request: {} {}", method, path);
+
+
+        boolean isPublicPath = isPublicPath(path, method);
+
+        if (isPublicPath) {
+            log.debug("Skipping JWT filter for public {} request: {}", method, path);
             filterChain.doFilter(request, response);
             return;
         }
 
-        boolean isPublicPath = PUBLIC_PATHS.stream()
-                .anyMatch(p -> path.equals(p) || path.startsWith(p + "/"));
-
-        if (isPublicPath || "OPTIONS".equalsIgnoreCase(request.getMethod())) {
-            log.debug("Public path or OPTIONS request, skipping JWT filter for: {}", path);
-            filterChain.doFilter(request, response);
-            return;
-        }
 
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String tokenPrefix = "Bearer ";
@@ -72,14 +73,16 @@ public class JwtFilter extends OncePerRequestFilter {
 
         try {
             String jwtToken = authHeader.substring(tokenPrefix.length());
-            log.debug("JWT token found: {}", jwtToken);
+            log.debug("JWT token extracted for path: {}", path);
+
 
             if (tokenBlacklistService.isTokenBlacklisted(jwtToken)) {
-                log.warn("Blacklisted token attempted: {}", jwtToken);
+                log.warn("Blacklisted token attempted for path: {}", path);
                 sendErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED,
                         "Token has been invalidated");
                 return;
             }
+
 
             String username = jwtService.extractUserName(jwtToken);
             log.debug("Extracted username from token: {}", username);
@@ -89,11 +92,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
                 if (jwtService.validateToken(jwtToken, userDetails)) {
                     UsernamePasswordAuthenticationToken authToken =
-                            new UsernamePasswordAuthenticationToken(
-                                    userDetails,
-                                    null,
-                                    userDetails.getAuthorities()
-                            );
+                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                     log.debug("Authentication set for user: {}", username);
@@ -107,10 +106,31 @@ public class JwtFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
 
         } catch (Exception e) {
-            log.error("JWT processing failed: {}", e.getMessage(), e);
+            log.error("JWT processing failed for path {}: {}", path, e.getMessage(), e);
             sendErrorResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                     "Authentication processing failed");
         }
+    }
+
+
+    private boolean isPublicPath(String path, String method) {
+        if (path == null) {
+            return true;
+        }
+
+
+        if ("OPTIONS".equalsIgnoreCase(method)) {
+            return true;
+        }
+
+
+        for (String publicPath : PUBLIC_PATHS) {
+            if (path.equals(publicPath) || path.startsWith(publicPath + "/")) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void sendErrorResponse(HttpServletResponse response, int status, String message)
