@@ -20,7 +20,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.List;
-
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -31,6 +30,8 @@ public class JwtFilter extends OncePerRequestFilter {
     private final TokenBlacklistService tokenBlacklistService;
 
     private static final List<String> PUBLIC_PATHS = List.of(
+            "/home/store/register",
+            "/home/store/login",
             "/store/register",
             "/store/login",
             "/auth/",
@@ -47,16 +48,15 @@ public class JwtFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String path = request.getServletPath();
-        if (path==null){
-            filterChain.doFilter(request,response);
-            return;
-        }
+        String method = request.getMethod();
 
-        boolean isPublicPath = PUBLIC_PATHS.stream()
-                .anyMatch(p -> path.equals(p) || path.startsWith(p + "/"));
+        log.debug("Processing request: {} {}", method, path);
 
-        if (isPublicPath || "OPTIONS".equalsIgnoreCase(request.getMethod())) {
-            log.debug("Public path or OPTIONS request, skipping JWT filter for: {}", path);
+
+        boolean isPublicPath = isPublicPath(path, method);
+
+        if (isPublicPath) {
+            log.debug("Skipping JWT filter for public {} request: {}", method, path);
             filterChain.doFilter(request, response);
             return;
         }
@@ -65,7 +65,7 @@ public class JwtFilter extends OncePerRequestFilter {
         final String tokenPrefix = "Bearer ";
 
         if (authHeader == null || !authHeader.startsWith(tokenPrefix)) {
-            log.warn("Missing or invalid Authorization header");
+            log.warn("Missing or invalid Authorization header for path: {}", path);
             sendErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED,
                     "Missing or invalid Authorization header");
             return;
@@ -73,10 +73,11 @@ public class JwtFilter extends OncePerRequestFilter {
 
         try {
             String jwtToken = authHeader.substring(tokenPrefix.length());
-            log.debug("JWT token found: {}", jwtToken);
+            log.debug("JWT token extracted for path: {}", path);
+
 
             if (tokenBlacklistService.isTokenBlacklisted(jwtToken)) {
-                log.warn("Blacklisted token attempted: {}", jwtToken);
+                log.warn("Blacklisted token attempted for path: {}", path);
                 sendErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED,
                         "Token has been invalidated");
                 return;
@@ -101,13 +102,33 @@ public class JwtFilter extends OncePerRequestFilter {
                 }
             }
 
+
             filterChain.doFilter(request, response);
 
         } catch (Exception e) {
-            log.error("JWT processing failed: {}", e.getMessage(), e);
+            log.error("JWT processing failed for path {}: {}", path, e.getMessage(), e);
             sendErrorResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                     "Authentication processing failed");
         }
+    }
+
+    private boolean isPublicPath(String path, String method) {
+        if (path == null) {
+            return true;
+        }
+
+
+        if ("OPTIONS".equalsIgnoreCase(method)) {
+            return true;
+        }
+
+        for (String publicPath : PUBLIC_PATHS) {
+            if (path.equals(publicPath) || path.startsWith(publicPath + "/")) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void sendErrorResponse(HttpServletResponse response, int status, String message)
