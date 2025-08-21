@@ -44,15 +44,26 @@ public class JwtFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
-
+        log.debug("Request URL: {}, Method: {}",request.getRequestURL(),request.getMethod());
+        log.debug("Response committed: {}, status: {}",response.isCommitted(),response.getStatus());
         String path = request.getServletPath();
         log.debug("Processing path: {}", path);
 
 
         boolean isPublicPath = PUBLIC_PATHS.stream().anyMatch(path::startsWith);
         if (isPublicPath) {
-            log.debug("Skipping JWT filter for public path: {}", path);
-            filterChain.doFilter(request, response);
+            log.debug("Public path detected: {}", path);
+
+            if (!response.isCommitted()) {
+                try {
+                    filterChain.doFilter(request, response);
+                    log.debug("Filter chain completed successfully");
+                } catch (Exception e) {
+                    log.error("Filter chain error: {}", e.getMessage(), e);
+                }
+            } else {
+                log.warn("Response already committed, skipping filter chain");
+            }
             return;
         }
 
