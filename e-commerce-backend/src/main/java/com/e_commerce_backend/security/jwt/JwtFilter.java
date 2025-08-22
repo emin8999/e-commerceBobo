@@ -36,6 +36,12 @@ public class JwtFilter extends OncePerRequestFilter {
 
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String tokenPrefix = "Bearer ";
+        final String requestPath = request.getServletPath();
+
+        if (isPermitAllEndpoint(requestPath)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         String jwtToken = null;
         String username = null;
@@ -44,30 +50,68 @@ public class JwtFilter extends OncePerRequestFilter {
             jwtToken = authHeader.substring(tokenPrefix.length());
 
             if (tokenBlacklistService.isTokenBlacklisted(jwtToken)) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token has been invalidated");
+                sendErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED, "Token has been invalidated");
                 return;
             }
 
             try {
                 username = jwtService.extractUserName(jwtToken);
             } catch (Exception e) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or expired token");
+                sendErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED, "Invalid or expired token");
+                return;
+            }
+        } else {
+
+            if (!isPermitAllEndpoint(requestPath)) {
+                sendErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED, "Authorization header is required");
                 return;
             }
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailService.loadUserByUsername(username);
+            try {
+                UserDetails userDetails = userDetailService.loadUserByUsername(username);
 
-            if (jwtService.validateToken(jwtToken, userDetails)) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                if (jwtService.validateToken(jwtToken, userDetails)) {
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities());
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                } else {
+                    sendErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED, "Invalid token");
+                    return;
+                }
+            } catch (UsernameNotFoundException e) {
+                sendErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED, "User not found");
+                return;
+            } catch (Exception e) {
+                sendErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED, "Authentication failed");
+                return;
             }
         }
 
+
         filterChain.doFilter(request, response);
+    }
+
+    private boolean isPermitAllEndpoint(String path) {
+        return path.startsWith("/auth/") ||
+                path.equals("/admin/login") ||
+                path.equals("/store/register") ||
+                path.equals("/store/login") ||
+                path.startsWith("/product/public/");
+    }
+
+    private void sendErrorResponse(HttpServletResponse response, int status, String message) throws IOException {
+        response.setStatus(status);
+        response.setContentType("application/json");
+        response.getWriter().write("{\"error\": \"" + message + "\"}");
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getServletPath();
+        return isPermitAllEndpoint(path);
     }
 }
