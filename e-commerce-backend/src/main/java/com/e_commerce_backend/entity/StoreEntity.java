@@ -40,7 +40,11 @@ public class StoreEntity {
     @Column(nullable = false)
     private String logo;
 
+    @Column(nullable = false)
     private String banner;
+
+    @Column(nullable = false)
+    private String description;
 
     @Column(nullable = false)
     private String category;
