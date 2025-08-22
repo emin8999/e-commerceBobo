@@ -453,6 +453,111 @@ const defaultFeatured = [
     label: "⭐ Top",
     image: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?w=400",
   },
+  {
+    title: "Headphones",
+    label: "⭐ Top",
+    image: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?w=400",
+  },
+  {
+    title: "Wireless Speaker",
+    label: "💥 Discount",
+    image: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?w=400",
+  },
+  {
+    title: "Fitness Bracelet",
+    label: "🔥 New",
+    image: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?w=400",
+  },
+  {
+    title: "Electric Scooter",
+    label: "⭐ Top",
+    image: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?w=400",
+  },
+  {
+    title: "LED Lamp",
+    label: "💥 Discount",
+    image: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?w=400",
+  },
+  {
+    title: "Coffee Maker",
+    label: "🔥 New",
+    image: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?w=400",
+  },
+  {
+    title: "Gaming Mouse",
+    label: "⭐ Top",
+    image: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?w=400",
+  },
+  {
+    title: "Headphones",
+    label: "⭐ Top",
+    image: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?w=400",
+  },
+  {
+    title: "Wireless Speaker",
+    label: "💥 Discount",
+    image: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?w=400",
+  },
+  {
+    title: "Fitness Bracelet",
+    label: "🔥 New",
+    image: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?w=400",
+  },
+  {
+    title: "Electric Scooter",
+    label: "⭐ Top",
+    image: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?w=400",
+  },
+  {
+    title: "LED Lamp",
+    label: "💥 Discount",
+    image: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?w=400",
+  },
+  {
+    title: "Coffee Maker",
+    label: "🔥 New",
+    image: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?w=400",
+  },
+  {
+    title: "Gaming Mouse",
+    label: "⭐ Top",
+    image: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?w=400",
+  },
+  {
+    title: "Headphones",
+    label: "⭐ Top",
+    image: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?w=400",
+  },
+  {
+    title: "Wireless Speaker",
+    label: "💥 Discount",
+    image: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?w=400",
+  },
+  {
+    title: "Fitness Bracelet",
+    label: "🔥 New",
+    image: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?w=400",
+  },
+  {
+    title: "Electric Scooter",
+    label: "⭐ Top",
+    image: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?w=400",
+  },
+  {
+    title: "LED Lamp",
+    label: "💥 Discount",
+    image: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?w=400",
+  },
+  {
+    title: "Coffee Maker",
+    label: "🔥 New",
+    image: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?w=400",
+  },
+  {
+    title: "Gaming Mouse",
+    label: "⭐ Top",
+    image: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?w=400",
+  },
 ];
 const defaultDiscountProducts = [
   {
@@ -489,6 +594,148 @@ const defaultDiscountProducts = [
     discount: 10,
     oldPrice: 500,
     image: "https://images.unsplash.com/photo-1519183071298-a2962be96c8e?w=400",
+  },
+
+  // 🔽 Новые товары
+  {
+    id: 6,
+    title: "Wireless Keyboard",
+    discount: 18,
+    oldPrice: 70,
+    image: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=400",
+  },
+  {
+    id: 7,
+    title: "Gaming Mouse",
+    discount: 22,
+    oldPrice: 50,
+    image: "https://images.unsplash.com/photo-1589571894960-20bbe2828d0a?w=400",
+  },
+  {
+    id: 8,
+    title: "Tablet",
+    discount: 12,
+    oldPrice: 300,
+    image: "https://images.unsplash.com/photo-1587829741301-c504e3e0f276?w=400",
+  },
+  {
+    id: 9,
+    title: "Bluetooth Speaker",
+    discount: 28,
+    oldPrice: 120,
+    image: "https://images.unsplash.com/photo-1589561084283-930aa7b1ce50?w=400",
+  },
+  {
+    id: 10,
+    title: "Drone",
+    discount: 20,
+    oldPrice: 900,
+    image: "https://images.unsplash.com/photo-1508614589041-895b88991e3e?w=400",
+  },
+  {
+    id: 11,
+    title: "Smart Glasses",
+    discount: 15,
+    oldPrice: 250,
+    image: "https://images.unsplash.com/photo-1581368129689-94a04b7b04a7?w=400",
+  },
+  {
+    id: 12,
+    title: "External Hard Drive",
+    discount: 25,
+    oldPrice: 100,
+    image: "https://images.unsplash.com/photo-1612817159949-195b6eb9a0ab?w=400",
+  },
+  {
+    id: 13,
+    title: "Portable Charger",
+    discount: 30,
+    oldPrice: 60,
+    image: "https://images.unsplash.com/photo-1593011958529-07e5f9df6e28?w=400",
+  },
+  {
+    id: 14,
+    title: "Mechanical Keyboard",
+    discount: 20,
+    oldPrice: 110,
+    image: "https://images.unsplash.com/photo-1585079542156-2755d9c5d5c1?w=400",
+  },
+  {
+    id: 15,
+    title: "VR Headset",
+    discount: 18,
+    oldPrice: 400,
+    image: "https://images.unsplash.com/photo-1626378734322-01b1d69d0b94?w=400",
+  },
+  {
+    id: 16,
+    title: "Fitness Tracker",
+    discount: 22,
+    oldPrice: 90,
+    image: "https://images.unsplash.com/photo-1554475909-682c4a0f1b7c?w=400",
+  },
+  {
+    id: 17,
+    title: "E-Book Reader",
+    discount: 10,
+    oldPrice: 150,
+    image: "https://images.unsplash.com/photo-1589820296156-2454bb8e9e0f?w=400",
+  },
+  {
+    id: 18,
+    title: "Smart Home Hub",
+    discount: 17,
+    oldPrice: 200,
+    image: "https://images.unsplash.com/photo-1587574293445-61a98b19c217?w=400",
+  },
+  {
+    id: 19,
+    title: "Gaming Console",
+    discount: 25,
+    oldPrice: 500,
+    image: "https://images.unsplash.com/photo-1606813907291-d86efa0d0c77?w=400",
+  },
+  {
+    id: 20,
+    title: "Smart Light Bulb",
+    discount: 35,
+    oldPrice: 40,
+    image: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=400",
+  },
+  {
+    id: 21,
+    title: "Coffee Maker",
+    discount: 20,
+    oldPrice: 180,
+    image: "https://images.unsplash.com/photo-1541167760496-1628856ab772?w=400",
+  },
+  {
+    id: 22,
+    title: "Action Camera",
+    discount: 15,
+    oldPrice: 300,
+    image: "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=400",
+  },
+  {
+    id: 23,
+    title: "Electric Scooter",
+    discount: 12,
+    oldPrice: 800,
+    image: "https://images.unsplash.com/photo-1615397349754-2b6e67a3a065?w=400",
+  },
+  {
+    id: 24,
+    title: "Projector",
+    discount: 18,
+    oldPrice: 450,
+    image: "https://images.unsplash.com/photo-1509822929063-6b6cfc9b42f2?w=400",
+  },
+  {
+    id: 25,
+    title: "Air Purifier",
+    discount: 22,
+    oldPrice: 220,
+    image: "https://images.unsplash.com/photo-1606811841689-5d5e9d5b2de3?w=400",
   },
 ];
 
@@ -577,10 +824,14 @@ async function initCategories() {
     `;
     sliderWrapper.appendChild(slide);
   });
-  const emptySlide = document.createElement("div");
-  emptySlide.className = "swiper-slide";
-  emptySlide.style.minWidth = "30px";
-  sliderWrapper.appendChild(emptySlide);
+
+  // добавляем 2 пустых слайда
+  for (let i = 0; i < 3; i++) {
+    const emptySlide = document.createElement("div");
+    emptySlide.className = "swiper-slide";
+    emptySlide.style.minWidth = "30px";
+    sliderWrapper.appendChild(emptySlide);
+  }
 
   catSwiper = new Swiper(".category-swiper", {
     slidesPerView: "auto",
@@ -629,72 +880,52 @@ async function initFeatured() {
       defaultFeatured;
   }
 
-  const featSlider = document.getElementById("featuredSlider");
-  featSlider.innerHTML = "";
+  const featWrapper = document.getElementById("featuredSlider");
+  featWrapper.innerHTML = "";
+
   featured.forEach((item, i) => {
-    const card = document.createElement("div");
-    card.className = "featured-card";
-    card.style.animationDelay = `${i * 0.05}s`;
-    card.innerHTML = `
-      <span class="label">${item.label}</span>
-      <img src="${item.image}" alt="${item.title}" />
-      <h3>${item.title}</h3>
+    const slide = document.createElement("div");
+    slide.className = "swiper-slide";
+    slide.innerHTML = `
+      <div class="featured-card" style="animation-delay:${i * 0.05}s">
+        <span class="label">${item.label}</span>
+        <img src="${item.image}" alt="${item.title}" />
+        <h3>${item.title}</h3>
+      </div>
     `;
-    featSlider.appendChild(card);
+    featWrapper.appendChild(slide);
   });
 
-  // wheel scroll (как было)
-  let wheelTimeoutProd;
-  const debounceWheelProd = (callback, delay = 200) => {
-    if (wheelTimeoutProd) clearTimeout(wheelTimeoutProd);
-    wheelTimeoutProd = setTimeout(callback, delay);
-  };
-  document.querySelector(".featured-slider-wrapper").addEventListener(
-    "wheel",
-    (e) => {
-      e.preventDefault();
-      debounceWheelProd(() => {
-        const featCardsPerPage = getCardsPerPage(4);
-        const maxPage = Math.max(
-          1,
-          Math.ceil(featured.length / featCardsPerPage)
-        );
-        if (e.deltaY > 0 || e.deltaX > 0) {
-          featPage = (featPage + 1) % maxPage;
-        } else {
-          featPage = featPage === 0 ? maxPage - 1 : featPage - 1;
-        }
-        updateFeaturedSlider();
-      }, 200);
-    },
-    { passive: false }
-  );
+  // добавляем 2 пустых слайда в конце (для отступа)
+  for (let i = 0; i < 2; i++) {
+    const emptySlide = document.createElement("div");
+    emptySlide.className = "swiper-slide";
+    emptySlide.style.minWidth = "30px";
+    featWrapper.appendChild(emptySlide);
+  }
 
-  // touch gestures для featured
+  // инициализация Swiper
+  const featSwiper = new Swiper(".featured-swiper", {
+    slidesPerView: "auto",
+    spaceBetween: 20,
+    freeMode: true,
+    mousewheel: true,
+    grabCursor: true,
+    breakpoints: {
+      0: { slidesPerView: 2.2 },
+      480: { slidesPerView: 3 },
+      768: { slidesPerView: 4 },
+      1024: { slidesPerView: 5 },
+      1280: { slidesPerView: 6 },
+    },
+  });
+
+  // свайпы по оболочке
   addSwipeSupport(
     document.querySelector(".featured-slider-wrapper"),
-    () => {
-      const featCardsPerPage = getCardsPerPage(4);
-      const maxPage = Math.max(
-        1,
-        Math.ceil(featured.length / featCardsPerPage)
-      );
-      featPage = (featPage + 1) % maxPage;
-      updateFeaturedSlider();
-    },
-    () => {
-      const featCardsPerPage = getCardsPerPage(4);
-      const maxPage = Math.max(
-        1,
-        Math.ceil(featured.length / featCardsPerPage)
-      );
-      featPage = featPage === 0 ? maxPage - 1 : featPage - 1;
-      updateFeaturedSlider();
-    }
+    () => featSwiper?.slideNext(),
+    () => featSwiper?.slidePrev()
   );
-
-  updateFeaturedSlider();
-  window.addEventListener("resize", updateFeaturedSlider);
 }
 
 /* ================== DISCOUNTS H-SCROLLER ================== */
@@ -714,62 +945,58 @@ async function initDiscounts() {
       defaultDiscountProducts;
   }
 
-  const discountsSlider = document.getElementById("discountsSlider");
-  discountsSlider.innerHTML = "";
-  products.forEach((product) => {
+  const discountsWrapper = document.getElementById("discountsSlider");
+  discountsWrapper.innerHTML = "";
+
+  products.forEach((product, i) => {
     const newPrice =
       Number(product.oldPrice) * (1 - Number(product.discount) / 100);
-    const card = document.createElement("div");
-    card.className = "discount-card";
-    card.innerHTML = `
-      <img src="${product.image}" alt="${product.title}" />
-      <h4>${product.title}</h4>
-      <div class="price-block">
-        <span class="old-price">${formatUSD(product.oldPrice)}</span>
-        <span class="new-price">${formatUSD(newPrice)}</span>
+
+    const slide = document.createElement("div");
+    slide.className = "swiper-slide";
+    slide.innerHTML = `
+      <div class="discount-card" style="animation-delay:${i * 0.05}s">
+        <img src="${product.image}" alt="${product.title}" />
+        <h4>${product.title}</h4>
+        <div class="price-block">
+          <span class="old-price">${formatUSD(product.oldPrice)}</span>
+          <span class="new-price">${formatUSD(newPrice)}</span>
+        </div>
+        <span class="discount-label">Discount: ${product.discount}%</span>
       </div>
-      <span class="discount-label">Скидка: ${product.discount}%</span>
     `;
-    discountsSlider.appendChild(card);
+    discountsWrapper.appendChild(slide);
   });
 
-  discountsSlider.addEventListener("wheel", (e) => {
-    e.preventDefault();
-    const scrollAmount = 270 * 3;
-    const maxScrollLeft =
-      discountsSlider.scrollWidth - discountsSlider.clientWidth;
-    if (e.deltaY > 0) {
-      if (
-        Math.ceil(discountsSlider.scrollLeft + scrollAmount) >= maxScrollLeft
-      ) {
-        discountsSlider.scrollTo({ left: 0, behavior: "smooth" });
-      } else {
-        discountsSlider.scrollLeft += scrollAmount;
-      }
-    } else {
-      discountsSlider.scrollLeft -= scrollAmount;
-    }
-  });
+  // 2 пустых слайда для отступа
+  for (let i = 0; i < 2; i++) {
+    const emptySlide = document.createElement("div");
+    emptySlide.className = "swiper-slide";
+    emptySlide.style.minWidth = "30px";
+    discountsWrapper.appendChild(emptySlide);
+  }
 
-  // touch gestures для discounts
-  addSwipeSupport(
-    discountsSlider,
-    () => {
-      const scrollAmount = 270 * 3;
-      const maxScrollLeft =
-        discountsSlider.scrollWidth - discountsSlider.clientWidth;
-      if (
-        Math.ceil(discountsSlider.scrollLeft + scrollAmount) >= maxScrollLeft
-      ) {
-        discountsSlider.scrollTo({ left: 0, behavior: "smooth" });
-      } else {
-        discountsSlider.scrollBy({ left: scrollAmount, behavior: "smooth" });
-      }
+  // инициализация Swiper
+  const discountsSwiper = new Swiper(".discounts-swiper", {
+    slidesPerView: "auto",
+    spaceBetween: 20,
+    freeMode: true,
+    mousewheel: true,
+    grabCursor: true,
+    breakpoints: {
+      0: { slidesPerView: 1.2 },
+      480: { slidesPerView: 2 },
+      768: { slidesPerView: 3 },
+      1024: { slidesPerView: 4 },
+      1280: { slidesPerView: 5 },
     },
-    () => {
-      const scrollAmount = 270 * 3;
-      discountsSlider.scrollBy({ left: -scrollAmount, behavior: "smooth" });
-    }
+  });
+
+  // свайпы на оболочке
+  addSwipeSupport(
+    document.querySelector(".discounts-slider-wrapper"),
+    () => discountsSwiper?.slideNext(),
+    () => discountsSwiper?.slidePrev()
   );
 }
 

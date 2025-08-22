@@ -140,7 +140,11 @@
       <section class="featured-products-section">
         <h2 class="section-title">Recommended products</h2>
         <div class="featured-slider-wrapper">
-          <div class="featured-slider" id="featuredSlider"></div>
+          <div class="swiper featured-swiper">
+            <div class="swiper-wrapper" id="featuredSlider">
+              <!-- слайды будут добавляться через JS -->
+            </div>
+          </div>
         </div>
       </section>
       <section class="discounts-section">
@@ -150,7 +154,13 @@
           End of promotion: <span id="countdown"></span>
         </p>
 
-        <div class="discounts-slider" id="discountsSlider"></div>
+        <div class="discounts-slider-wrapper">
+          <div class="swiper discounts-swiper">
+            <div class="swiper-wrapper" id="discountsSlider">
+              <!-- карточки скидок будут рендериться JS -->
+            </div>
+          </div>
+        </div>
       </section>
     </main>
     <footer class="footer">
