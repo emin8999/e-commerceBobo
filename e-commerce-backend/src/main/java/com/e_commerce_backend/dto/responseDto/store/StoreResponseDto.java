@@ -16,6 +16,7 @@ public class StoreResponseDto {
     private String phone;
     private String logo;
     private String banner;
+    private String description;
     private String category;
     private String location;
 

@@ -37,6 +37,10 @@ public class StoreRegisterRequest {
 
     private MultipartFile banner;
 
+    @NotBlank(message = "Description is required")
+    @Size(min = 5 , max = 255, message = "Description must be at least 5 characters")
+    private String description;
+
     @NotBlank(message = "Category is required")
     @Size(min = 3, max = 50, message = "Name must be at least 3 characters")
     private String category;
