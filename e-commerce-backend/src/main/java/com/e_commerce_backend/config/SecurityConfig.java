@@ -38,42 +38,49 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
+        return http
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(AbstractHttpConfigurer::disable)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .logout(logout->logout.disable())
-                .formLogin(form->form.disable())
-                .httpBasic(basic->basic.disable())
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers(
-                                "/home/store/register",
-                                "/home/store/login",
-                                "/store/register",
-                                "/store/login",
-                                "/auth/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
-                                "/actuator/health",
-                                "/logout"
+                                "/swagger-resources/**",
+                                "/swagger-ui.html",
+                                "/webjars/**"
                         ).permitAll()
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/admin/login").permitAll()
+                        .requestMatchers("/store/register").permitAll()
+                        .requestMatchers("/store/login").permitAll()
+                        .requestMatchers("/product/public/**").permitAll()
+                        .requestMatchers("/cart/**").authenticated()
+                        .requestMatchers("/orders/**").authenticated()
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .build();
 
-        return http.build();
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
     }
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder(12);
     }
+
+    @Bean
+    public AuthenticationManager authenticationManager(HttpSecurity httpSecurity, UserDetailsService service) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder =
+                httpSecurity.getSharedObject(AuthenticationManagerBuilder.class);
+
+        authenticationManagerBuilder
+                .userDetailsService(service)
+                .passwordEncoder(bCryptPasswordEncoder());
+
+        return authenticationManagerBuilder.build();
+    }
+
 
 //    @Bean
 //    public CorsConfigurationSource corsConfigurationSource() {
