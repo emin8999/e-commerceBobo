@@ -66,6 +66,8 @@ public class StoreEntity {
 
     @ElementCollection(fetch=FetchType.EAGER)
     @Enumerated(EnumType.STRING)
+    @CollectionTable(name="store_entity_roles",schema="myservice_schema",joinColumns =@JoinColumn(name = "store_entity_id"))
+    @Column(name="role")
     private Set<Roles> roles = new HashSet<>();
 
 }

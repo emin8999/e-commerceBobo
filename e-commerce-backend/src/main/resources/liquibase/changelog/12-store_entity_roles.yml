@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 4
+      id: 12-store-entity-roles
       author: Yunis
       changes:
         - createTable:

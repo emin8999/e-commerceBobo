@@ -5,8 +5,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
+
 import java.time.LocalDateTime;
 
 @RestControllerAdvice
@@ -82,17 +84,18 @@ public class GlobalExceptionHandler {
                 .build();
         return new ResponseEntity<>(errorResponse,HttpStatus.UNAUTHORIZED);
     }
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse>handleAllOtherException(Exception exception,HttpServletRequest request){
-        ErrorResponse errorResponse = ErrorResponse.builder()
-                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .message("Something went wrong: " + exception.getMessage())
-                .timestamp(LocalDateTime.now())
-                .path(request.getRequestURI())
-                .build();
-        log.error("ERROR {}",errorResponse);
-        return new ResponseEntity<>(errorResponse,HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+   @ExceptionHandler(Exception.class)
+public ResponseEntity<ErrorResponse> handleAllOtherException(Exception ex,HttpServletRequest request) {
+    ErrorResponse error = ErrorResponse.builder()
+        .statusCode(HttpStatus.BAD_REQUEST.value())
+        .message(ex.getMessage())
+        .timestamp(LocalDateTime.now())
+        .path(request.getRequestURI())
+        .build();
+    return ResponseEntity
+            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(error);
+}
 
 
 
