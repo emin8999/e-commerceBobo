@@ -68,6 +68,7 @@ public class StoreEntity {
     @Enumerated(EnumType.STRING)
     @CollectionTable(name="store_entity_roles",schema="myservice_schema",joinColumns =@JoinColumn(name = "store_entity_id"))
     @Column(name="role")
+    @Builder.Default
     private Set<Roles> roles = new HashSet<>();
 
 }

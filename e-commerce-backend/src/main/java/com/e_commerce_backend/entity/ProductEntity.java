@@ -58,6 +58,7 @@ public class ProductEntity {
     @JoinColumn(name = "store_id", nullable = false)
     private StoreEntity store;
 
+    @Builder.Default
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductImageEntity> images = new ArrayList<>();
 
