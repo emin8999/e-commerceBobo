@@ -17,6 +17,7 @@ public interface StoreMapper {
     @Mapping(target = "banner", ignore = true)
     @Mapping(target = "storeName",source = "storeName")
     @Mapping(target = "description",source = "description")
+    @Mapping(target = "confirmPassword",ignore = true)
     StoreEntity mapToStoreEntity(StoreRegisterRequest storeRegisterRequest);
 
 
