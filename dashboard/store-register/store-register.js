@@ -111,10 +111,10 @@ function buildFormData() {
   data.append("ownerName", inputs.ownerName.value.trim());
   data.append("email", inputs.email.value.trim());
   data.append("password", inputs.password.value.trim());
-   data.append(
-     "confirmPassword",
-     document.getElementById("confirmPassword").value.trim()
-   ); // 🔹 подтверждение
+  data.append(
+    "confirmPassword",
+    document.getElementById("confirmPassword").value.trim()
+  ); //🔹 подтверждение
   data.append("phone", inputs.phone.value.trim());
   data.append("description", inputs.description.value.trim());
   data.append("category", inputs.category.value.trim());
