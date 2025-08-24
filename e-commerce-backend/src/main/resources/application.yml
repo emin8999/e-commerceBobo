@@ -11,7 +11,7 @@ server:
 
 jwt:
   secret: MzJieXRlc2xvbmdzZWNyZXRrZXltb3JldGhhbmMzMmJ5dGVz
-  duration: 3600000000
+  duration: 43200000
 
 file:
   upload-dir: images

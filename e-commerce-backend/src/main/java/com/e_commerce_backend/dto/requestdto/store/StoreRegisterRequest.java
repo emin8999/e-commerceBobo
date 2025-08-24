@@ -16,7 +16,7 @@ public class StoreRegisterRequest {
     private String storeName;
 
     @NotBlank(message = "Owner name is required")
-    @Size(min = 6, max = 100, message = "Name must be at least 6 characters")
+    @Size(min = 1, max = 100, message = "Name must be at least 6 characters")
     private String ownerName;
 
     @Email(message = "Email should be valid")
@@ -24,10 +24,10 @@ public class StoreRegisterRequest {
     @Size(min = 3, max = 150, message = "Email must be at least 3 characters")
     private String email;
 
-    @Size(min = 10, max = 64, message = "Password must be at least 10 characters")
+    @Size(min = 5, max = 64, message = "Password must be at least 5 characters")
     private String password;
 
-    @Size(min = 10, max = 64, message = "Confirm password must be at least 10 characters")
+    @Size(min = 5, max = 64, message = "Confirm password must be at least 5 characters")
     private String confirmPassword;
 
     @Pattern(regexp = "\\+?[0-9]{7,15}", message = "Phone number is invalid")
@@ -42,7 +42,7 @@ public class StoreRegisterRequest {
     private String description;
 
     @NotBlank(message = "Category is required")
-    @Size(min = 3, max = 50, message = "Name must be at least 3 characters")
+    @Size(min = 1, max = 50, message = "Name must be at least 3 characters")
     private String category;
 
     @NotBlank(message = "Location is required")
