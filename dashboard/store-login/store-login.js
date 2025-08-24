@@ -6,88 +6,61 @@ const eyeOpen = document.getElementById("eyeOpen");
 const eyeClosed = document.getElementById("eyeClosed");
 const errorMsg = document.getElementById("errorMsg");
 
+// Переключение видимости пароля
 togglePassword.addEventListener("mousedown", (e) => {
   e.preventDefault();
-
   const isVisible = passwordInput.type === "text";
   passwordInput.type = isVisible ? "password" : "text";
-
   eyeOpen.style.display = isVisible ? "block" : "none";
   eyeClosed.style.display = isVisible ? "none" : "block";
 });
 
-// form.addEventListener("submit", async (e) => {
-//   e.preventDefault();
+// Проверка, есть ли уже токен при загрузке страницы
+const savedToken = localStorage.getItem("storeJwt");
+if (savedToken) {
+  // Если токен есть, сразу перекидываем на панель
+  window.location.href = "/dashboard/dash-store-panel.html";
+}
 
-//   const email = emailInput.value.trim();
-//   const password = passwordInput.value.trim();
-//   errorMsg.textContent = "";
+// Обработка отправки формы
+form.addEventListener("submit", async function (e) {
+  e.preventDefault();
 
-//   try {
-//     const response = await fetch("http://localhost:8080/home/store/login", {
-//       method: "POST",
-//       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify({ email, password }),
-//     });
+  const email = emailInput.value.trim();
+  const password = passwordInput.value.trim();
+  errorMsg.textContent = "";
 
-//     if (response.ok) {
-//       const result = await response.json();
+  if (!email || !password) {
+    errorMsg.textContent = "Please fill in all fields.";
+    return;
+  }
 
-//       localStorage.setItem("jwtToken", result.token);
+  try {
+    const response = await fetch(
+      "http://116.203.51.133:8080/home/store/login",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      }
+    );
 
-//       window.location.href = "store-products.html";
-//     } else {
-//       const errorData = await response.json();
-//       errorMsg.textContent = errorData.message || "Invalid email or password";
-//     }
-//   } catch (error) {
-//     console.error("Login failed:", error);
-//     errorMsg.textContent = "Server error. Please try again later.";
-//   }
-// });
-document
-  .getElementById("storeLoginForm")
-  .addEventListener("submit", async function (e) {
-    e.preventDefault();
-
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value.trim();
-    const errorMsg = document.getElementById("errorMsg");
-
-    errorMsg.textContent = "";
-
-    if (!email || !password) {
-      errorMsg.textContent = "Please fill in all fields.";
+    if (!response.ok) {
+      errorMsg.textContent = `Server error: ${response.status} ${response.statusText}`;
       return;
     }
 
-    try {
-      const response = await fetch(
-        "http://116.203.51.133:8080/home/store/login",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
-        }
-      );
+    const data = await response.json();
+    console.log("Server response:", data);
 
-      if (!response.ok) {
-        errorMsg.textContent = `Server error: ${response.status} ${response.statusText}`;
-        return;
-      }
-
-      const data = await response.json();
-
-      console.log("Server response:", data);
-
-      if (data.success) {
-        alert("Login successful!");
-        window.location.href = "../dash-store-panel.html";
-      } else {
-        errorMsg.textContent = data.message || "Login failed.";
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      errorMsg.textContent = "An error occurred. Please try again.";
+    if (data.token) {
+      localStorage.setItem("storeJwt", data.token);
+      window.location.href = "/dashboard/dash-store-panel.html";
+    } else {
+      errorMsg.textContent = data.message || "Login failed.";
     }
-  });
+  } catch (error) {
+    console.error("Error:", error);
+    errorMsg.textContent = "An error occurred. Please try again.";
+  }
+});
