@@ -46,23 +46,25 @@ registerBtn.disabled = true;
 function buildFormData() {
   const data = new FormData();
 
-  data.append("storeName", String(inputs.storeName.value.trim()));
-  data.append("ownerName", String(inputs.ownerName.value.trim()));
-  data.append("email", String(inputs.email.value.trim()));
-  data.append("password", String(inputs.password.value.trim()));
-  data.append("confirmPassword", String(inputs.confirmPassword.value.trim()));
-  data.append("phone", String(inputs.phone.value.trim()));
-  data.append("description", String(inputs.description.value.trim()));
-  data.append("category", String(inputs.category.value.trim()));
-  data.append("location", String(inputs.location.value.trim()));
+  data.append("storeName", inputs.storeName.value.trim());
+  data.append("ownerName", inputs.ownerName.value.trim());
+  data.append("email", inputs.email.value.trim());
+  data.append("password", inputs.password.value.trim());
+  data.append("confirmPassword", inputs.confirmPassword.value.trim());
+  data.append("phone", inputs.phone.value.trim());
+  data.append("description", inputs.description.value.trim());
+  data.append("category", inputs.category.value.trim());
+  data.append("location", inputs.location.value.trim());
 
   if (inputs.logo.files[0]) {
-    data.append("logo", inputs.logo.files[0].name);
+    data.append("logo", inputs.logo.files[0]);
   }
   if (inputs.banner.files[0]) {
-    data.append("banner", inputs.banner.files[0].name);
+    data.append("banner", inputs.banner.files[0]);
   }
+
   data.append("agreedToTerms", document.getElementById("terms").checked);
+
   data.forEach((value, key) => {
     console.log(key, value, typeof value);
   });
