@@ -62,6 +62,8 @@ function buildFormData() {
   if (inputs.banner.files[0]) {
     data.append("banner", inputs.banner.files[0].name);
   }
+  const termsCheckbox = document.getElementById("terms");
+  data.append("termsAccepted", termsCheckbox.checked ? "true" : "false");
 
   data.forEach((value, key) => {
     console.log(key, value);
