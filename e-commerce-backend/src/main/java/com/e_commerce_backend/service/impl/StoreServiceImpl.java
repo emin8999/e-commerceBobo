@@ -1,6 +1,5 @@
 package com.e_commerce_backend.service.impl;
 
-import com.cloudinary.provisioning.Account;
 import com.e_commerce_backend.cloudinary.CloudinaryService;
 import com.e_commerce_backend.dto.requestdto.store.StoreRegisterRequest;
 import com.e_commerce_backend.dto.requestdto.user.LoginRequestDto;
