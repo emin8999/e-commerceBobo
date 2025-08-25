@@ -1,11 +1,48 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   const form = document.getElementById("editStoreForm");
   const preview = document.getElementById("previewContainer");
 
-  // Получаем данные магазина из localStorage или создаем пустой объект
-  const storeData = JSON.parse(localStorage.getItem("currentStore")) || {};
+  // ===== ПРОВЕРКА ТОКЕНА =====
+  const token = localStorage.getItem("storeJwt"); // ключ с большой буквы
+  if (!token) {
+    // Если токена нет → редирект на логин
+    window.location.href = "store-login.html";
+    return;
+  }
 
-  // Заполняем форму из localStorage
+  // Получаем данные магазина из localStorage или создаем пустой объект
+  let storeData = JSON.parse(localStorage.getItem("currentStore")) || {};
+
+  // ===== Загрузка данных с сервера (GET) =====
+  async function loadFromServer() {
+    try {
+      const res = await fetch("http://116.203.51.133:8080/home/store/info", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (res.status === 401 || res.status === 403) {
+        // Токен недействителен → удаляем и редирект
+        localStorage.removeItem("storeJwt");
+        window.location.href = "store-login.html";
+        return;
+      }
+
+      if (!res.ok) throw new Error("Failed to fetch store data");
+
+      const data = await res.json();
+      storeData = data;
+      localStorage.setItem("currentStore", JSON.stringify(storeData));
+      loadInitialData();
+    } catch (err) {
+      console.warn(
+        "Не удалось загрузить данные с сервера, используем локальные",
+        err
+      );
+      loadInitialData();
+    }
+  }
+
+  // ===== Заполняем форму =====
   function loadInitialData() {
     document.getElementById("storeName").value = storeData.name || "";
     document.getElementById("storeDescription").value =
@@ -14,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
     updatePreview();
   }
 
-  // Обновляем превью магазина
+  // ===== Обновляем превью =====
   function updatePreview() {
     preview.innerHTML = `
       <h2>${storeData.name || "Store Name"}</h2>
@@ -22,101 +59,88 @@ document.addEventListener("DOMContentLoaded", () => {
       <p><strong>Contact:</strong> ${storeData.contact || "N/A"}</p>
       ${
         storeData.logo
-          ? `<img src="${storeData.logo}" alt="Logo" style="max-width:100px;" />`
+          ? `<img src="${storeData.logo}" alt="Logo" style="max-width:100px;">`
           : ""
       }
       ${
         storeData.banner
-          ? `<img src="${storeData.banner}" alt="Banner" style="max-width:100%;" />`
+          ? `<img src="${storeData.banner}" alt="Banner" style="max-width:100%;">`
           : ""
       }
     `;
   }
 
-  // Конвертация файла в Base64 для локального превью
-  function toBase64(file, callback) {
-    const reader = new FileReader();
-    reader.onload = () => callback(reader.result);
-    reader.readAsDataURL(file);
+  // ===== Конвертация файлов в Base64 =====
+  function toBase64(file) {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.readAsDataURL(file);
+    });
   }
 
-  // Функция отправки данных на сервер
-  async function sendToBackend(formData) {
+  // ===== Отправка данных на сервер (PUT) =====
+  async function sendToBackend() {
     try {
-      const response = await fetch(
-        "https://your-backend-url.com/api/update-store",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      const payload = {
+        name: storeData.name,
+        description: storeData.description,
+        contact: storeData.contact,
+        logo: storeData.logo || null,
+        banner: storeData.banner || null,
+      };
 
-      if (!response.ok) {
-        throw new Error(`Server error: ${response.status}`);
+      const res = await fetch("http://116.203.51.133:8080/home/store/info", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.status === 401 || res.status === 403) {
+        localStorage.removeItem("storeJwt");
+        window.location.href = "store-login.html";
+        return;
       }
 
-      const result = await response.json();
-      console.log("Server response:", result);
-      alert("Store updated on server successfully!");
-    } catch (error) {
-      console.error("Error sending store data:", error);
-      alert("Failed to update store on server.");
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`Ошибка сервера ${res.status}: ${text}`);
+      }
+
+      const data = await res.json();
+      console.log("Ответ сервера:", data);
+      alert("✅ Магазин обновлён на сервере!");
+    } catch (err) {
+      console.error("Ошибка при отправке на сервер:", err);
+      alert("❌ Не удалось обновить магазин на сервере.");
     }
   }
 
-  // Обработчик отправки формы
-  form.addEventListener("submit", (e) => {
+  // ===== Обработка формы =====
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const name = document.getElementById("storeName").value;
-    const description = document.getElementById("storeDescription").value;
-    const contact = document.getElementById("storeContact").value;
+    storeData.name = document.getElementById("storeName").value;
+    storeData.description = document.getElementById("storeDescription").value;
+    storeData.contact = document.getElementById("storeContact").value;
+
     const logoFile = document.getElementById("storeLogo").files[0];
     const bannerFile = document.getElementById("storeBanner").files[0];
 
-    storeData.name = name;
-    storeData.description = description;
-    storeData.contact = contact;
+    if (logoFile) storeData.logo = await toBase64(logoFile);
+    if (bannerFile) storeData.banner = await toBase64(bannerFile);
 
-    const saveAndRender = () => {
-      // Сохраняем данные в localStorage
-      localStorage.setItem("currentStore", JSON.stringify(storeData));
-      updatePreview();
-      alert("Store updated locally!");
+    // Сохраняем локально
+    localStorage.setItem("currentStore", JSON.stringify(storeData));
+    updatePreview();
 
-      // Создаем FormData для отправки на сервер
-      const formData = new FormData();
-      formData.append("name", name);
-      formData.append("description", description);
-      formData.append("contact", contact);
-      if (logoFile) formData.append("logo", logoFile);
-      if (bannerFile) formData.append("banner", bannerFile);
-
-      sendToBackend(formData);
-    };
-
-    // Обновляем превью с изображениями через Base64
-    if (logoFile) {
-      toBase64(logoFile, (base64) => {
-        storeData.logo = base64;
-        if (bannerFile) {
-          toBase64(bannerFile, (banner64) => {
-            storeData.banner = banner64;
-            saveAndRender();
-          });
-        } else {
-          saveAndRender();
-        }
-      });
-    } else if (bannerFile) {
-      toBase64(bannerFile, (banner64) => {
-        storeData.banner = banner64;
-        saveAndRender();
-      });
-    } else {
-      saveAndRender();
-    }
+    // Отправляем на сервер
+    sendToBackend();
   });
 
-  loadInitialData();
+  // ===== Инициализация =====
+  await loadFromServer();
 });

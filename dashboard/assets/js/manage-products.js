@@ -84,29 +84,13 @@ const defaultProducts = [
   },
 ];
 
-// ===== ПРОБА ЗАГРУЗКИ ДАННЫХ С БЭКЕНДА =====
-async function loadProducts() {
-  try {
-    const res = await fetch("http://116.203.51.133:8080/home/product/public");
-    if (!res.ok) throw new Error("Ошибка сети");
-    const data = await res.json();
-
-    if (Array.isArray(data) && data.length > 0) {
-      products = data;
-      localStorage.setItem("products", JSON.stringify(products));
-    } else {
-      console.warn("Бэкенд вернул пустой массив — используем дефолтные данные");
-      products = defaultProducts;
-      localStorage.setItem("products", JSON.stringify(products));
-    }
-  } catch (err) {
-    console.error("Ошибка при загрузке данных с бэкенда:", err);
-    products = defaultProducts;
-    localStorage.setItem("products", JSON.stringify(products));
-  }
-  renderProducts();
+// ===== ПРОВЕРКА ТОКЕНА =====
+const token = localStorage.getItem("storeJwt"); // ключ storeJwt
+if (!token) {
+  window.location.href = "store-login.html";
 }
 
+// ===== ИНИЦИАЛИЗАЦИЯ =====
 const tableBody = document.querySelector("#productTable tbody");
 const modal = document.getElementById("editModal");
 const closeBtn = document.querySelector(".closeBtn");
@@ -114,6 +98,36 @@ const cancelBtn = document.getElementById("cancelEdit");
 const deleteBtn = document.getElementById("deleteProduct");
 const form = document.getElementById("editForm");
 
+// ===== ЗАГРУЗКА ПРОДУКТОВ =====
+async function loadProducts() {
+  try {
+    const res = await fetch(
+      "http://116.203.51.133:8080/home/product/my-store",
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    if (!res.ok) throw new Error("Ошибка сети");
+
+    const data = await res.json();
+    if (Array.isArray(data) && data.length > 0) {
+      products = data;
+      localStorage.setItem("products", JSON.stringify(products));
+    } else {
+      console.warn(
+        "Бэкенд вернул пустой массив — используем локальные продукты"
+      );
+      products =
+        JSON.parse(localStorage.getItem("products")) || defaultProducts;
+    }
+  } catch (err) {
+    console.error("Ошибка при загрузке с бэкенда:", err);
+    products = JSON.parse(localStorage.getItem("products")) || defaultProducts;
+  }
+  renderProducts();
+}
+
+// ===== РЕНДЕР ТАБЛИЦЫ =====
 function renderProducts(filter = {}) {
   tableBody.innerHTML = "";
 
@@ -144,7 +158,7 @@ function renderProducts(filter = {}) {
       <td><button class="editBtn">Edit</button></td>
       <td>
         <div class="discount-wrapper">
-          <input type="number" min="0" max="100" placeholder="" class="discountInput" />
+          <input type="number" min="0" max="100" class="discountInput" />
           <span class="percent-sign">%</span>
           <button class="saveDiscountBtn">Save</button>
         </div>
@@ -165,18 +179,16 @@ function renderProducts(filter = {}) {
     saveButton.addEventListener("click", () => {
       const discountValue = parseFloat(discountInput.value) || 0;
       product.discount = discountValue;
-
       newPriceCell.textContent = `$${(
         product.price *
         (1 - discountValue / 100)
       ).toFixed(2)}`;
-
       localStorage.setItem("products", JSON.stringify(products));
-      discountInput.value = discountValue;
     });
   });
 }
 
+// ===== РЕДАКТИРОВАНИЕ =====
 function editProduct(productId) {
   const product = products.find((p) => p.id === productId);
   if (!product) return;
@@ -195,6 +207,7 @@ function editProduct(productId) {
   modal.classList.add("show");
 }
 
+// ===== СОХРАНЕНИЕ И УДАЛЕНИЕ =====
 form.onsubmit = (e) => {
   e.preventDefault();
   const index = products.findIndex((p) => p.id === editingProductId);
@@ -233,6 +246,7 @@ deleteBtn.onclick = () => {
   renderProducts();
 };
 
+// ===== ФИЛЬТР =====
 document.getElementById("applyFilter").onclick = () => {
   const name = document.getElementById("filterName").value;
   const category = document.getElementById("filterCategory").value;
@@ -240,4 +254,5 @@ document.getElementById("applyFilter").onclick = () => {
   renderProducts({ name, category, status });
 };
 
+// ===== ИНИЦИАЛИЗАЦИЯ СТРАНИЦЫ =====
 window.onload = () => loadProducts();

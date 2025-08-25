@@ -1,23 +1,4 @@
-// =======================
-// Add Product — Full Script (API-ready)
-// =======================
-
-// PROD / DEV переключатель:
 const API_BASE = "http://116.203.51.133:8080";
-// Для локальной разработки:
-// const API_BASE = "http://localhost:8080";
-
-// Требуемые элементы в HTML (id):
-// form#addProductForm
-// input#productName
-// textarea#productDescription
-// input#productPrice (type="number")
-// input#productCategory
-// input#productStore (readonly желательно)
-// input#productColors (строка вида "red, blue, black")
-// input#productImages (type="file" multiple)
-// div#sizeQuantitiesWrapper (внутри хотя бы 1 .size-quantity-wrapper + кнопка .add-size-btn)
-// span|div#addProductMessage (для вывода сообщений)
 
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("addProductForm");
@@ -26,10 +7,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const storeNameInput = document.getElementById("productStore");
   const submitBtn = form ? form.querySelector('[type="submit"]') : null;
 
-  // ---------- Утилиты ----------
   function setMsg(text, ok = false) {
     if (!message) return;
-    message.textContent = text || "";
+    message.textContent = text;
     message.style.color = ok ? "green" : "crimson";
   }
 
@@ -38,16 +18,37 @@ document.addEventListener("DOMContentLoaded", () => {
     return el ? el.value : "";
   }
 
-  // Безопасное декодирование JWT (base64url)
   function decodeJwtPayload(token) {
-    const part = token.split(".")[1];
-    if (!part) throw new Error("Invalid JWT format");
-    const base64 = part.replace(/-/g, "+").replace(/_/g, "/");
-    const padded = base64 + "===".slice((base64.length + 3) % 4);
-    const json = atob(padded);
-    return JSON.parse(json);
+    try {
+      const part = token.split(".")[1];
+      const base64 = part.replace(/-/g, "+").replace(/_/g, "/");
+      const padded = base64 + "===".slice((base64.length + 3) % 4);
+      return JSON.parse(atob(padded));
+    } catch {
+      return null;
+    }
   }
 
+  // ---------- CHECK TOKEN ----------
+  const storeJwt = localStorage.getItem("storeJwt"); // ключ storeJwt
+  if (!storeJwt) {
+    // токена нет → редирект на login
+    window.location.href = "store-login.html";
+    return;
+  }
+
+  const decodedToken = decodeJwtPayload(storeJwt);
+  if (!decodedToken) {
+    localStorage.removeItem("storeJwt");
+    window.location.href = "store-login.html";
+    return;
+  }
+
+  const storeName =
+    decodedToken.storeName || decodedToken.sub || "Unknown Store";
+  if (storeNameInput) storeNameInput.value = storeName;
+
+  // ---------- SIZE BLOCKS ----------
   const sizeOptions = `
     <option value="">Size</option>
     <option value="TWO_XS">2XS</option>
@@ -93,9 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const sizeBlock = document.createElement("div");
     sizeBlock.classList.add("size-quantity-wrapper");
     sizeBlock.innerHTML = `
-      <select name="productSizes" class="size-input">
-        ${sizeOptions}
-      </select>
+      <select name="productSizes" class="size-input">${sizeOptions}</select>
       <input type="number" name="quantities" class="quantity-input" placeholder="Quantity" />
       <button type="button" class="remove-button">X</button>
     `;
@@ -108,9 +107,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!wrapper) return;
     wrapper.innerHTML = `
       <div class="size-quantity-wrapper">
-        <select name="productSizes" class="size-input">
-          ${sizeOptions}
-        </select>
+        <select name="productSizes" class="size-input">${sizeOptions}</select>
         <input type="number" name="quantities" class="quantity-input" placeholder="Quantity" />
         <button type="button" class="remove-button" style="display:none;">X</button>
       </div>
@@ -122,29 +119,6 @@ document.addEventListener("DOMContentLoaded", () => {
     updateRemoveButtons();
   }
 
-  // ---------- JWT -> Store Name ----------
-  try {
-    const jwtToken = localStorage.getItem("jwtToken");
-    if (storeNameInput) {
-      if (jwtToken) {
-        try {
-          const decodedToken = decodeJwtPayload(jwtToken);
-          const storeName =
-            decodedToken.storeName || decodedToken.sub || "Unknown Store";
-          storeNameInput.value = storeName;
-        } catch (err) {
-          console.error("Invalid token:", err);
-          storeNameInput.value = "Invalid token";
-        }
-      } else {
-        storeNameInput.value = "No token found";
-      }
-    }
-  } catch (e) {
-    console.error("JWT read error:", e);
-  }
-
-  // ---------- Инициализация блоков размеров ----------
   if (wrapper) {
     const addBtn = wrapper.querySelector(".add-size-btn");
     if (addBtn) addBtn.addEventListener("click", addSizeBlock);
@@ -152,132 +126,114 @@ document.addEventListener("DOMContentLoaded", () => {
     updateRemoveButtons();
   }
 
-  // ---------- Сабмит формы ----------
-  if (form) {
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      setMsg("");
+  // ---------- FORM SUBMIT ----------
+  if (!form) return console.error("Form #addProductForm not found in DOM");
 
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    setMsg("");
+
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.dataset.orig = submitBtn.textContent || submitBtn.value || "";
+      if ("textContent" in submitBtn) submitBtn.textContent = "Saving...";
+      if ("value" in submitBtn && submitBtn.type === "submit")
+        submitBtn.value = "Saving...";
+    }
+
+    try {
+      const token = localStorage.getItem("storeJwt");
+      if (!token) {
+        localStorage.removeItem("storeJwt");
+        window.location.href = "store-login.html";
+        return;
+      }
+
+      const name = val("productName").trim();
+      if (!name) throw new Error("Укажите название товара.");
+
+      const priceNum = Number(val("productPrice"));
+      if (!Number.isFinite(priceNum) || priceNum < 0)
+        throw new Error("Цена должна быть числом ≥ 0.");
+
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("description", val("productDescription"));
+      formData.append("price", priceNum);
+      formData.append("category", val("productCategory"));
+      formData.append("store", storeNameInput ? storeNameInput.value : "");
+
+      const sizeWrappers = wrapper.querySelectorAll(".size-quantity-wrapper");
+      const sizeQuantities = [];
+      sizeWrappers.forEach((blk) => {
+        const size = blk.querySelector(".size-input")?.value || "";
+        const qStr = blk.querySelector(".quantity-input")?.value || "";
+        const quantity = Number(qStr);
+        if (size && Number.isFinite(quantity) && quantity > 0)
+          sizeQuantities.push({ size, quantity });
+      });
+      if (sizeQuantities.length === 0)
+        throw new Error("Укажите хотя бы один размер с количеством > 0.");
+      formData.append("sizeQuantities", JSON.stringify(sizeQuantities));
+
+      const colorsRaw = val("productColors") || "";
+      const colors = colorsRaw
+        .split(",")
+        .map((c) => c.trim())
+        .filter((c) => c.length > 0);
+      formData.append("colors", JSON.stringify(colors));
+
+      const imgInput = document.getElementById("productImages");
+      if (imgInput && imgInput.files.length > 0) {
+        for (let i = 0; i < imgInput.files.length; i++)
+          formData.append("images", imgInput.files[i]);
+      }
+
+      const res = await fetch(`${API_BASE}/home/product`, {
+        method: "POST",
+        headers: { Authorization: "Bearer " + token },
+        body: formData,
+      });
+
+      if (res.status === 401 || res.status === 403) {
+        localStorage.removeItem("storeJwt");
+        window.location.href = "store-login.html";
+        return;
+      }
+
+      let payload;
+      const ct = res.headers.get("content-type") || "";
+      payload = ct.includes("application/json")
+        ? await res.json()
+        : await res.text();
+
+      if (!res.ok) {
+        const errText =
+          typeof payload === "string"
+            ? payload
+            : (payload && (payload.message || JSON.stringify(payload))) ||
+              "Unknown error";
+        throw new Error(errText);
+      }
+
+      setMsg("Product added successfully!", true);
+      form.reset();
+      resetSizeBlocks();
+    } catch (err) {
+      console.error(err);
+      setMsg(err?.message || "Error adding product.", false);
+    } finally {
       if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.dataset.orig = submitBtn.textContent || submitBtn.value || "";
-        if ("textContent" in submitBtn) submitBtn.textContent = "Saving...";
-        if ("value" in submitBtn && submitBtn.type === "submit")
-          submitBtn.value = "Saving...";
+        submitBtn.disabled = false;
+        if ("textContent" in submitBtn && submitBtn.dataset.orig)
+          submitBtn.textContent = submitBtn.dataset.orig;
+        if (
+          "value" in submitBtn &&
+          submitBtn.type === "submit" &&
+          submitBtn.dataset.orig
+        )
+          submitBtn.value = submitBtn.dataset.orig;
       }
-
-      try {
-        const jwtToken = localStorage.getItem("jwtToken") || "";
-        if (!jwtToken) {
-          setMsg("Нет токена авторизации. Выполните вход.", false);
-          return;
-        }
-
-        // Базовая валидация
-        const name = val("productName").trim();
-        if (!name) {
-          setMsg("Укажите название товара.", false);
-          return;
-        }
-        const priceNum = Number(val("productPrice"));
-        if (!Number.isFinite(priceNum) || priceNum < 0) {
-          setMsg("Цена должна быть числом ≥ 0.", false);
-          return;
-        }
-
-        const formData = new FormData();
-        formData.append("name", name);
-        formData.append("description", val("productDescription"));
-        formData.append("price", priceNum);
-        formData.append("category", val("productCategory"));
-        formData.append("store", storeNameInput ? storeNameInput.value : "");
-
-        // Размеры и количества
-        const sizeWrappers = wrapper
-          ? wrapper.querySelectorAll(".size-quantity-wrapper")
-          : [];
-        const sizeQuantities = [];
-        sizeWrappers.forEach((blk) => {
-          const size = blk.querySelector(".size-input")?.value || "";
-          const qStr = blk.querySelector(".quantity-input")?.value || "";
-          const quantity = Number(qStr);
-          if (size && Number.isFinite(quantity) && quantity > 0) {
-            sizeQuantities.push({ size, quantity });
-          }
-        });
-        if (sizeQuantities.length === 0) {
-          setMsg("Укажите хотя бы один размер с количеством > 0.", false);
-          return;
-        }
-        formData.append("sizeQuantities", JSON.stringify(sizeQuantities));
-
-        // Цвета
-        const colorsRaw = val("productColors") || "";
-        const colors = colorsRaw
-          .split(",")
-          .map((c) => c.trim())
-          .filter((c) => c.length > 0);
-        formData.append("colors", JSON.stringify(colors));
-
-        // Изображения
-        const imgInput = document.getElementById("productImages");
-        if (imgInput && imgInput.files && imgInput.files.length > 0) {
-          for (let i = 0; i < imgInput.files.length; i++) {
-            formData.append("images", imgInput.files[i]);
-          }
-        }
-
-        // Запрос на API
-        const url = `${API_BASE}/home/product`;
-        const res = await fetch(url, {
-          method: "POST",
-          headers: {
-            Authorization: "Bearer " + jwtToken, // ВАЖНО: не выставляем Content-Type вручную
-          },
-          body: formData,
-        });
-
-        const contentType = res.headers.get("content-type") || "";
-        let payload = null;
-        try {
-          payload = contentType.includes("application/json")
-            ? await res.json()
-            : await res.text();
-        } catch (_) {
-          payload = null;
-        }
-
-        if (!res.ok) {
-          const errText =
-            typeof payload === "string"
-              ? payload
-              : (payload && (payload.message || JSON.stringify(payload))) ||
-                "Unknown error";
-          throw new Error(`API Error ${res.status}: ${errText}`);
-        }
-
-        // Успех
-        setMsg("Product added successfully!", true);
-        form.reset();
-        resetSizeBlocks();
-      } catch (error) {
-        console.error(error);
-        setMsg(error?.message || "Error adding product.", false);
-      } finally {
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          if ("textContent" in submitBtn && submitBtn.dataset.orig)
-            submitBtn.textContent = submitBtn.dataset.orig;
-          if (
-            "value" in submitBtn &&
-            submitBtn.type === "submit" &&
-            submitBtn.dataset.orig
-          )
-            submitBtn.value = submitBtn.dataset.orig;
-        }
-      }
-    });
-  } else {
-    console.error("Form #addProductForm not found in DOM");
-  }
+    }
+  });
 });

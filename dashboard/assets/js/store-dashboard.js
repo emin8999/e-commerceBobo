@@ -11,18 +11,33 @@ document.addEventListener("DOMContentLoaded", () => {
     productsByStore: (id) =>
       `${API_BASE}/admin/products?storeId=${encodeURIComponent(id)}`,
   };
-  // Если используешь JWT:
-  // const AUTH = localStorage.getItem("token") || "";
+
+  // --- JWT ---
+  const AUTH = localStorage.getItem("storeJwt"); // ключ с большой буквы
+
+  // если токена нет → сразу на логин
+  if (!AUTH) {
+    window.location.href = "store-login.html";
+    return;
+  }
 
   /* ============== HELPERS ============== */
   async function apiJSON(url) {
     const res = await fetch(url, {
       headers: {
         "Content-Type": "application/json",
-        // ...(AUTH ? { Authorization: `Bearer ${AUTH}` } : {}),
+        ...(AUTH ? { Authorization: `Bearer ${AUTH}` } : {}),
       },
     });
-    if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+    if (!res.ok) {
+      // если токен недействителен → кидаем на логин
+      if (res.status === 401 || res.status === 403) {
+        localStorage.removeItem("storeJwt");
+        window.location.href = "store-login.html";
+        return;
+      }
+      throw new Error(`${res.status} ${res.statusText}`);
+    }
     return res.json();
   }
 
@@ -35,7 +50,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function computeAnalyticsFromRaw({ orders, products }) {
-    // Фильтруем по storeId
     const storeOrders = (orders || []).filter(
       (o) =>
         Array.isArray(o.products) &&
@@ -45,7 +59,6 @@ document.addEventListener("DOMContentLoaded", () => {
       (p) => String(p.storeId) === String(storeId)
     );
 
-    // Revenue / orders / AOV
     const totalRevenue = storeOrders.reduce(
       (sum, o) => sum + Number(o.total || 0),
       0
@@ -53,7 +66,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const totalOrders = storeOrders.length;
     const avgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
 
-    // Popular product
     const counts = {};
     storeOrders.forEach((o) => {
       o.products.forEach((p) => {
@@ -65,7 +77,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const popularProduct =
       Object.entries(counts).sort((a, b) => b[1] - a[1])[0]?.[0] || "—";
 
-    // Unsold products
     const soldIds = new Set();
     storeOrders.forEach((o) => {
       o.products.forEach((p) => {
@@ -76,7 +87,6 @@ document.addEventListener("DOMContentLoaded", () => {
       (p) => !soldIds.has(String(p.id))
     );
 
-    // Daily sales aggregate
     const dailyMap = {};
     storeOrders.forEach((o) => {
       const label = new Date(o.date).toLocaleDateString();
@@ -125,7 +135,6 @@ document.addEventListener("DOMContentLoaded", () => {
       unsoldList.appendChild(li);
     });
 
-    // Chart.js
     const labels = (dailySales || []).map((d) => d.date);
     const values = (dailySales || []).map((d) => Number(d.total || 0));
     new Chart(document.getElementById("salesChart"), {
@@ -142,21 +151,16 @@ document.addEventListener("DOMContentLoaded", () => {
           },
         ],
       },
-      options: {
-        responsive: true,
-        scales: { y: { beginAtZero: true } },
-      },
+      options: { responsive: true, scales: { y: { beginAtZero: true } } },
     });
   }
 
   /* ============== LOAD (backend → fallback) ============== */
   (async function init() {
     try {
-      // Вариант A: готовая аналитика на сервере
       const a = await apiJSON(ENDPOINTS.analytics(storeId));
       renderAnalytics(a);
     } catch {
-      // Вариант B: собираем из заказов и товаров
       try {
         const [orders, products] = await Promise.all([
           apiJSON(ENDPOINTS.ordersByStore(storeId)),
@@ -165,7 +169,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const a = computeAnalyticsFromRaw({ orders, products });
         renderAnalytics(a);
       } catch {
-        // Fallback: полностью локальные данные
         const localOrders = getLocal("orders");
         const localProducts = getLocal("products");
         const a = computeAnalyticsFromRaw({

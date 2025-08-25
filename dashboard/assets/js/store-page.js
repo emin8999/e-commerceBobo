@@ -4,9 +4,10 @@ async function initStoreProfile() {
   const API_BASE = "http://116.203.51.133:8080";
   const INFO_URL = `${API_BASE}/home/store/info`;
 
-  const token = localStorage.getItem("jwtToken");
+  // Токен
+  const token = localStorage.getItem("storeJwt");
   if (!token) {
-    renderMessage("Please log in first.");
+    window.location.href = "store-login.html";
     return;
   }
 
@@ -19,12 +20,15 @@ async function initStoreProfile() {
     });
 
     renderStore(store, API_BASE);
+
+    // Если магазин возвращает товары
+    if (store.products && Array.isArray(store.products)) {
+      renderProducts(store.products, API_BASE);
+    }
   } catch (err) {
-    // если токен протух/нет прав — вычищаем токен и показываем понятное сообщение
-    if (err.status === 401 || err.status === 403) {
-      localStorage.removeItem("jwtToken");
-      renderMessage("Session expired. Please log in again.");
-      // опционально: window.location.href = "login.html";
+    if ([400, 401, 403].includes(err.status)) {
+      localStorage.removeItem("storeJwt");
+      window.location.href = "store-login.html";
       return;
     }
     console.error("Store load error:", err);
@@ -32,7 +36,7 @@ async function initStoreProfile() {
   }
 }
 
-/* ---------------- helpers ---------------- */
+/* ---------------- HELPERS ---------------- */
 
 async function fetchJSON(url, options = {}) {
   const res = await fetch(url, options);
@@ -53,13 +57,13 @@ function renderMessage(text) {
 function toAbsUrl(maybeUrl, base) {
   if (!maybeUrl) return "";
   try {
-    // если уже абсолютный — вернётся как есть
     return new URL(maybeUrl, base).href;
   } catch {
     return "";
   }
 }
 
+/* ---------------- RENDER STORE ---------------- */
 function renderStore(store, base) {
   const nameEl = document.getElementById("storeName");
   const catEl = document.getElementById("storeCategory");
@@ -68,31 +72,63 @@ function renderStore(store, base) {
   const bannerEl = document.getElementById("storeBanner");
   const contactEl = document.getElementById("storeContact");
 
-  nameEl.textContent = store?.name || "";
-  catEl.textContent = store?.category || "";
-  // в исходнике стоял location в description — сохраняю совместимость
-  descEl.textContent = store?.location || store?.description || "";
+  if (nameEl) nameEl.textContent = store?.name || "";
+  if (catEl) catEl.textContent = store?.category || "";
+  if (descEl) descEl.textContent = store?.location || store?.description || "";
 
   const logoUrl = toAbsUrl(store?.logo, base);
   const bannerUrl = toAbsUrl(store?.banner, base);
 
-  // дефолтные изображения на случай пустых/битых ссылок
-  logoEl.src =
-    logoUrl ||
-    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><rect width='100%' height='100%' fill='%23eee'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23999' font-family='Arial' font-size='14'>No Logo</text></svg>";
-  logoEl.alt = store?.name ? `${store.name} logo` : "Store logo";
+  if (logoEl) {
+    logoEl.src =
+      logoUrl ||
+      "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><rect width='100%' height='100%' fill='%23eee'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23999' font-family='Arial' font-size='14'>No Logo</text></svg>";
+    logoEl.alt = store?.name ? `${store.name} logo` : "Store logo";
+  }
 
-  bannerEl.style.backgroundImage = bannerUrl
-    ? `url('${bannerUrl}')`
-    : "linear-gradient(135deg, #e6f2ff 0%, #f5f7fa 100%)";
+  if (bannerEl)
+    bannerEl.style.backgroundImage = bannerUrl
+      ? `url('${bannerUrl}')`
+      : "linear-gradient(135deg, #e6f2ff 0%, #f5f7fa 100%)";
 
-  if (store?.phone) {
-    contactEl.innerHTML = `📞 Contact: ${escapeHtml(store.phone)}`;
-  } else {
-    contactEl.textContent = "";
+  if (contactEl) {
+    contactEl.innerHTML = store?.phone
+      ? `📞 Contact: ${escapeHtml(store.phone)}`
+      : "";
   }
 }
 
+/* ---------------- RENDER PRODUCTS ---------------- */
+function renderProducts(products, base) {
+  const grid = document.getElementById("storeProducts");
+  if (!grid) return;
+
+  grid.innerHTML = ""; // очистить placeholder
+
+  products.forEach((product) => {
+    const card = document.createElement("div");
+    card.className = "product-card";
+
+    const img = document.createElement("img");
+    img.src = toAbsUrl(product.image, base) || "";
+    img.alt = product.name || "Product";
+    img.className = "product-image";
+
+    const name = document.createElement("h3");
+    name.textContent = product.name || "";
+    name.className = "product-name";
+
+    const price = document.createElement("p");
+    price.textContent =
+      product.price != null ? `$${product.price.toFixed(2)}` : "";
+    price.className = "product-price";
+
+    card.append(img, name, price);
+    grid.appendChild(card);
+  });
+}
+
+/* ---------------- ESCAPE HTML ---------------- */
 function escapeHtml(str) {
   return String(str)
     .replaceAll("&", "&amp;")

@@ -11,9 +11,11 @@ function toAbs(url) {
     return "";
   }
 }
+
 function saveCache(products) {
   localStorage.setItem(LS_KEY, JSON.stringify(products || []));
 }
+
 function loadCache() {
   try {
     return JSON.parse(localStorage.getItem(LS_KEY) || "[]");
@@ -21,6 +23,7 @@ function loadCache() {
     return [];
   }
 }
+
 function renderMessage(msg) {
   const productsList = document.getElementById("productsList");
   productsList.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:16px;">${msg}</td></tr>`;
@@ -28,9 +31,10 @@ function renderMessage(msg) {
 
 // ====== FETCH PRODUCTS (с JWT и fallback) ======
 async function fetchProducts() {
-  const token = localStorage.getItem("jwtToken");
+  const token = localStorage.getItem("storeJwt"); // ключ с большой буквы
   if (!token) {
-    renderMessage("Please log in first.");
+    // если токена нет → сразу на логин
+    window.location.href = "store-login.html";
     return loadCache();
   }
 
@@ -41,18 +45,9 @@ async function fetchProducts() {
     });
 
     if (res.status === 401 || res.status === 403) {
-      const isLocal =
-        window.location.hostname === "127.0.0.1" ||
-        window.location.hostname === "localhost";
-
-      if (!isLocal) {
-        localStorage.removeItem("jwtToken");
-        renderMessage("Session expired. Please log in again.");
-      } else {
-        console.warn(
-          "401/403 received, but running locally. Using cached products."
-        );
-      }
+      // токен недействителен → чистим и редирект
+      localStorage.removeItem("storeJwt");
+      window.location.href = "store-login.html";
       return loadCache();
     }
 
