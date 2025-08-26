@@ -76,7 +76,9 @@ function renderStore(store, base) {
 
   if (nameEl) nameEl.textContent = store?.name || "";
   if (catEl) catEl.textContent = store?.category || "";
-  if (descEl) descEl.textContent = store?.location || store?.description || "";
+  if (descEl) descEl.textContent = store?.description || "";
+  const locationEl = document.getElementById("locationText");
+  if (locationEl) locationEl.textContent = store?.location || "";
 
   const logoUrl = toAbsUrl(store?.logo, base);
   const bannerUrl = toAbsUrl(store?.banner, base);
@@ -93,10 +95,8 @@ function renderStore(store, base) {
       ? `url('${bannerUrl}')`
       : "linear-gradient(135deg, #e6f2ff 0%, #f5f7fa 100%)";
 
-  if (contactEl) {
-    contactEl.innerHTML = store?.phone
-      ? `📞 Contact: ${escapeHtml(store.phone)}`
-      : "";
+  if (phoneEl) {
+    phoneEl.textContent = store?.phone ? `📞 ${store.phone}` : "";
   }
 }
 
