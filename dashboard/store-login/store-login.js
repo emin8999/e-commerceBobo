@@ -19,7 +19,7 @@ togglePassword.addEventListener("mousedown", (e) => {
 const savedToken = localStorage.getItem("storeJwt");
 if (savedToken) {
   // Если токен есть, сразу перекидываем на панель
-  window.location.href = "/dashboard/dash-store-panel.html";
+  window.location.href = "./dashboard/store-page.html";
 }
 
 // Обработка отправки формы
