@@ -65,12 +65,14 @@ function toAbsUrl(maybeUrl, base) {
 
 /* ---------------- RENDER STORE ---------------- */
 function renderStore(store, base) {
+  const ownerEl = document.getElementById("ownerName");
   const nameEl = document.getElementById("storeName");
-  const catEl = document.getElementById("storeCategory");
-  const descEl = document.getElementById("storeDescription");
-  const logoEl = document.getElementById("storeLogo");
-  const bannerEl = document.getElementById("storeBanner");
-  const contactEl = document.getElementById("storeContact");
+
+  const catEl = document.getElementById("category");
+  const descEl = document.getElementById("description");
+  const logoEl = document.getElementById("logo");
+  const bannerEl = document.getElementById("banner");
+  const phoneEl = document.getElementById("phone");
 
   if (nameEl) nameEl.textContent = store?.name || "";
   if (catEl) catEl.textContent = store?.category || "";
