@@ -18,6 +18,21 @@ async function initStoreProfile() {
         "Content-Type": "application/json",
       },
     });
+    const normalized = {
+      name: store.name ?? store.storeName ?? "",
+      category: store.category ?? store.storeCategory ?? "",
+      description: store.description ?? store.desc ?? "",
+      location: store.location ?? store.address ?? "",
+      logo: store.logo ?? store.logoUrl ?? "",
+      banner: store.banner ?? store.bannerUrl ?? "",
+      phone: store.phone ?? store.contactPhone ?? "",
+      products: Array.isArray(store.products)
+        ? store.products
+        : store.items || [],
+    };
+    renderStore(normalized, API_BASE);
+    if (normalized.products.length)
+      renderProducts(normalized.products, API_BASE);
 
     renderStore(store, API_BASE);
 
@@ -77,7 +92,7 @@ function renderStore(store, base) {
   if (nameEl) nameEl.textContent = store?.name || "";
   if (catEl) catEl.textContent = store?.category || "";
   if (descEl) descEl.textContent = store?.description || "";
-  const locationEl = document.getElementById("locationText");
+  const locationEl = document.getElementById("location");
   if (locationEl) locationEl.textContent = store?.location || "";
 
   const logoUrl = toAbsUrl(store?.logo, base);
