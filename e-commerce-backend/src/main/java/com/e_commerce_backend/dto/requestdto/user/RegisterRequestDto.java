@@ -43,7 +43,6 @@ public class RegisterRequestDto {
     private String confirmPassword;
 
     @Size(max = 500, message = "Address cannot exceed 500 characters")
-    @Valid
     private List<AddressRequestDto> addresses;
 
     private Gender gender;

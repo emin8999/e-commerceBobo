@@ -16,8 +16,7 @@ databaseChangeLog:
               - column:
                   name: addresses
                   type: VARCHAR(500)
-                  constraints:
-                    nullable: false
+                
               - column:
                   name: user_id
                   type: BIGINT
