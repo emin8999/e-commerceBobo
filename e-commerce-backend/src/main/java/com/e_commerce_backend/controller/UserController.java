@@ -1,10 +1,15 @@
 package com.e_commerce_backend.controller;
 
+import com.e_commerce_backend.dto.requestdto.user.AddressRequestDto;
 import com.e_commerce_backend.dto.requestdto.user.UpdateUserRequestDto;
+import com.e_commerce_backend.dto.responseDto.user.AddressResponseDto;
 import com.e_commerce_backend.dto.responseDto.user.UserResponseDto;
 import com.e_commerce_backend.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -36,15 +41,35 @@ public class UserController {
         return ResponseEntity.ok(orders);
     }
 
-    @GetMapping("/addresses")
-    public ResponseEntity<Object> getUserAddresses() {
-        Object addresses = userService.getCurrentUserAddresses();
+      @GetMapping("/addresses")
+    public ResponseEntity<List<AddressResponseDto>> getUserAddresses(
+            @RequestHeader("Authorization") String token) {
+        List<AddressResponseDto> addresses = userService.getUserAddresses(token);
         return ResponseEntity.ok(addresses);
     }
 
-    @PostMapping("/addresses")
-    public ResponseEntity<Object> addUserAddress(@RequestBody Object address) {
-        Object newAddress = userService.addUserAddress(address);
+    
+       @PostMapping("/addresses")
+        public ResponseEntity<AddressResponseDto> addAddress(
+        @RequestHeader("Authorization") String token,
+        @RequestBody AddressRequestDto addressRequest) {
+        AddressResponseDto newAddress = userService.addUserAddress(token, addressRequest);
         return ResponseEntity.ok(newAddress);
-    }
 }
+
+    
+}
+
+     
+
+   // @PutMapping("/addresses")
+  //  public ResponseEntity<AddressResponseDto> updateAddress(
+   //         @RequestHeader("Authorization") String token,
+    //        @RequestBody AddressRequestDto addressRequest) {
+   //     AddressResponseDto updatedAddress = userService.updateUserAddress(token, addressRequest);
+   //     return ResponseEntity.ok(updatedAddress);
+   // }
+
+
+
+

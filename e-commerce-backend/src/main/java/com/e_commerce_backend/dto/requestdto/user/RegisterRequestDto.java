@@ -1,9 +1,14 @@
 package com.e_commerce_backend.dto.requestdto.user;
 
+import java.util.List;
+
 import com.e_commerce_backend.enums.Gender;
+
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
@@ -22,6 +27,9 @@ public class RegisterRequestDto {
     @Size(min = 2, max = 50, message = "Surname must be between 2 and 50 characters")
     private String surname;
 
+    @Pattern(regexp = "\\+?[0-9]{7,15}", message = "Phone number is invalid")
+    private String phone;
+
     @Email(message = "Email should be valid")
     @NotBlank(message = "Email is required")
     @Size(min = 6, message = "Email must be at least 6 characters")
@@ -32,18 +40,13 @@ public class RegisterRequestDto {
     private String password;
 
     @NotBlank(message = "Password confirmation is required")
-    private String passwordConfirm;
+    private String confirmPassword;
 
     @Size(max = 500, message = "Address cannot exceed 500 characters")
-    private String address;
+    @Valid
+    private List<AddressRequestDto> addresses;
 
     private Gender gender;
-
-    @NotNull(message = "Consent for marketing must be given")
-    private Boolean consentMarketing;
-
-    @NotNull(message = "Consent for messages delivered must be given")
-    private Boolean consentMessagesDelivered;
 
     @NotNull(message = "Consent for membership agreement must be given")
     private Boolean consentMembershipAgreement;

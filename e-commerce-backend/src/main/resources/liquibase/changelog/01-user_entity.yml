@@ -22,6 +22,13 @@ databaseChangeLog:
                     unique: true
 
               - column:
+                  name: phone
+                  type: VARCHAR(15)
+                  constraints:
+                    nullable: false
+                    unique: true   
+
+              - column:
                   name: password
                   type: VARCHAR(64)
                   constraints:
@@ -30,18 +37,6 @@ databaseChangeLog:
               - column:
                   name: gender
                   type: VARCHAR(20)
-
-              - column:
-                  name: consent_marketing
-                  type: BOOLEAN
-                  constraints:
-                    nullable: false
-
-              - column:
-                  name: consent_messages_delivered
-                  type: BOOLEAN
-                  constraints:
-                    nullable: false
 
               - column:
                   name: consent_membership_agreement

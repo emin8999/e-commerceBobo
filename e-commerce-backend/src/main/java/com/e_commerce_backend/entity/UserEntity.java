@@ -8,6 +8,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -32,19 +34,17 @@ public class UserEntity {
     private String name;
 
     @Column(nullable = false)
+    private String phone;
+
+    @Column(nullable = false)
     private String surname;
 
-    @Column(length = 500)
-    private String address;
+    @OneToMany(mappedBy ="userEntity",cascade = CascadeType.ALL , orphanRemoval = true)
+    @Builder.Default
+    private List<AddressEntity> addresses = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
-
-    @Column(nullable = false)
-    private boolean consentMarketing;
-
-    @Column(nullable = false)
-    private boolean consentMessagesDelivered;
 
     @Column(nullable = false)
     private boolean consentMembershipAgreement;

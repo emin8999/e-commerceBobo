@@ -1,17 +1,22 @@
 package com.e_commerce_backend.service.impl;
 
+import com.e_commerce_backend.dto.requestdto.user.AddressRequestDto;
 import com.e_commerce_backend.dto.requestdto.user.LoginRequestDto;
 import com.e_commerce_backend.dto.requestdto.user.RegisterRequestDto;
 import com.e_commerce_backend.dto.requestdto.user.UpdateUserRequestDto;
+import com.e_commerce_backend.dto.responseDto.user.AddressResponseDto;
 import com.e_commerce_backend.dto.responseDto.user.LoginResponseDto;
 import com.e_commerce_backend.dto.responseDto.user.RegisterResponseDto;
 import com.e_commerce_backend.dto.responseDto.user.UserResponseDto;
+import com.e_commerce_backend.entity.AddressEntity;
 import com.e_commerce_backend.entity.UserEntity;
 import com.e_commerce_backend.enums.Roles;
 import com.e_commerce_backend.exception.EmailAlreadyExistsException;
 import com.e_commerce_backend.exception.PasswordMismatchException;
 import com.e_commerce_backend.exception.UserNotFoundException;
+import com.e_commerce_backend.mapper.AddressMapper;
 import com.e_commerce_backend.mapper.UserMapper;
+import com.e_commerce_backend.repository.AddressRepository;
 import com.e_commerce_backend.repository.UserRepository;
 import com.e_commerce_backend.security.jwt.JwtService;
 import com.e_commerce_backend.security.user.UserPrincipal;
@@ -40,6 +45,8 @@ public class UserServiceImpl implements UserService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final TokenBlacklistService tokenBlacklistService;
+    private final AddressRepository addressRepository;
+    private final AddressMapper addressMapper;
 
     @Override
     public RegisterResponseDto register(RegisterRequestDto registerRequestDto) {
@@ -47,7 +54,7 @@ public class UserServiceImpl implements UserService {
             throw new EmailAlreadyExistsException("email exist");
         }
 
-        if (!registerRequestDto.getPassword().equals(registerRequestDto.getPasswordConfirm())) {
+        if (!registerRequestDto.getPassword().equals(registerRequestDto.getConfirmPassword())) {
             throw new PasswordMismatchException();
         }
 
@@ -129,13 +136,17 @@ public class UserServiceImpl implements UserService {
 
 
 
-    @Override
-    public UserResponseDto updateCurrentUser(UpdateUserRequestDto userUpdateDto) {
-        UserEntity currentUser = getCurrentUserEntity();
-        userMapper.updateUserFromDto(userUpdateDto, currentUser);
-        UserEntity updatedUser = userRepository.save(currentUser);
-        return userMapper.mapToUserResponseDto(updatedUser);
-    }
+     @Override
+     public AddressResponseDto updateUserAddress(String token, AddressRequestDto addressRequest) {
+    UserEntity user = getUserFromToken(token);
+    AddressEntity address = user.getAddresses().stream()
+            .findFirst()
+            .orElseThrow(() -> new RuntimeException("User has no addresses"));
+    
+    addressMapper.updateAddressFromDto(addressRequest, address);
+    AddressEntity updatedAddress = addressRepository.save(address);
+    return addressMapper.addressEntityToAddressResponseDto(updatedAddress);
+}
 
     @Override
     public void deleteUser(Long id) {
@@ -149,22 +160,30 @@ public class UserServiceImpl implements UserService {
         orders.put("orders", List.of());
         return orders;
     }
-
-    @Override
-    public Object getCurrentUserAddresses() {
-        Map<String, Object> addresses = new HashMap<>();
-        addresses.put("message", "Addresses functionality will be implemented later");
-        addresses.put("addresses", List.of());
-        return addresses;
+    
+          private UserEntity getUserFromToken(String token) {
+        String email = jwtService.extractUserName(token.replace("Bearer ", ""));
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    @Override
-    public Object addUserAddress(Object address) {
-        Map<String, Object> response = new HashMap<>();
-        response.put("message", "Address functionality will be implemented later");
-        response.put("address", address);
-        return response;
-    }
+   @Override
+public List<AddressResponseDto> getUserAddresses(String token) {
+    UserEntity user = getUserFromToken(token);
+    List<AddressEntity> addresses = addressRepository.findAllByUserEntity(user);
+    return addressMapper.addressEntityListToAddressResponseDtoList(addresses);
+}
+
+  @Override
+      public AddressResponseDto addUserAddress(String token, AddressRequestDto addressRequest) {
+    UserEntity user = getUserFromToken(token);
+    AddressEntity newAddress = new AddressEntity();
+    newAddress.setAddresses(addressRequest.getAddresses()); 
+    newAddress.setUserEntity(user);
+    AddressEntity savedAddress = addressRepository.save(newAddress);
+    return addressMapper.addressEntityToAddressResponseDto(savedAddress);
+}
+
 
     @Override
     public Object getSystemStats() {
@@ -179,4 +198,21 @@ public class UserServiceImpl implements UserService {
         tokenBlacklistService.blacklistToken(token);
         SecurityContextHolder.clearContext();
     }
+
+    @Override
+    public UserResponseDto updateCurrentUser(UpdateUserRequestDto userResponseDto) {
+        throw new UnsupportedOperationException("Unimplemented method 'updateCurrentUser'");
+    }
+
+    @Override
+    public List<AddressEntity> getAllUserAddresses(String token) {
+        throw new UnsupportedOperationException("Unimplemented method 'getAllUserAddresses'");
+    }
+
+    @Override
+    public AddressResponseDto updateUserAddress(String token, Long addressId, AddressRequestDto addressRequest) {
+        throw new UnsupportedOperationException("Unimplemented method 'updateUserAddress'");
+    }
+
+    
 }

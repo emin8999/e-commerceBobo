@@ -59,7 +59,7 @@ public class ProductEntity {
     private StoreEntity store;
 
     @Builder.Default
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = false)
     private List<ProductImageEntity> images = new ArrayList<>();
 
     @Builder.Default

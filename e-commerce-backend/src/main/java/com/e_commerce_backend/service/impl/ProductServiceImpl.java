@@ -77,7 +77,7 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.mapToProductResponseDto(finalProduct);
     }
 
-    @Override
+@Override
     @Transactional
     public List<ProductResponseDto> getAllProductsOfCurrentStore() throws AccessDeniedException, java.nio.file.AccessDeniedException {
         StoreEntity store = storeSecurityUtil.getCurrentStore();
