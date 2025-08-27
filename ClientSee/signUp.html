@@ -24,7 +24,7 @@
           <span class="bold-text">Azerbaijan</span>
         </div>
         <div class="search-bar">
-          <input type="text" placeholder="Search BOBO" />
+          <input type="text" placeholder="Search BOBO" id="boboSearch" />
           <button class="search-button">🔍</button>
         </div>
         <div id="boboSearchDropdown" class="bobo-search-dropdown"></div>
@@ -138,18 +138,30 @@
             <input type="password" id="password" name="password" required />
             <span id="togglePassword" class="eye fa-solid fa-eye"></span>
           </div>
-
-          <p class="note">
+          <p id="passwordNote" class="note">
             Password must be at least <strong>10 characters</strong>, including
             <strong>1 uppercase, 1 lowercase, 1 number</strong>.
           </p>
+          <p id="passwordValidation" style="margin: 0; font-size: 0.9em"></p>
+
+          <label for="passwordConfirm">Confirm Password</label>
+          <div class="password-wrapper">
+            <input
+              type="password"
+              id="passwordConfirm"
+              name="passwordConfirm"
+              required
+            />
+            <span id="togglePasswordConfirm" class="eye fa-solid fa-eye"></span>
+          </div>
+          <p id="passwordMatch" style="margin: 0; font-size: 0.9em"></p>
 
           <label for="gender">Gender (optional)</label>
           <select id="gender" name="gender" class="gender-select">
             <option value="">Select gender</option>
-            <option value="female">FEMALE</option>
-            <option value="male">MALE</option>
-            <option value="other">OTHER</option>
+            <option value="FEMALE">FEMALE</option>
+            <option value="MALE">MALE</option>
+            <option value="OTHER">OTHER</option>
           </select>
 
           <label class="checkbox">
@@ -163,8 +175,9 @@
             By subscribing, I agree to the
             <a href="#">Membership Agreement</a>.
           </p>
+
           <div class="social-buttons">
-            <button type="button" class="google" onclick="signInWithGoogle()">
+            <button type="button" class="google" id="googleSignIn">
               Sign up with Google
             </button>
           </div>
@@ -230,6 +243,6 @@
     <script src="./assets/js/signUp.js"></script>
     <script src="./assets/js/header.js"></script>
     <script src="./assets/js/navBar.js"></script>
-    <script src="./assets/js/modal.js"></script>
+    <!-- <script src="./assets/js/modal.js"></script> -->
   </body>
 </html>

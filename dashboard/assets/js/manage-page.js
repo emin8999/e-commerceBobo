@@ -3,15 +3,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   const preview = document.getElementById("previewContainer");
 
   // ===== ПРОВЕРКА ТОКЕНА =====
-  const token = localStorage.getItem("storeJwt"); // ключ с большой буквы
+  const token = localStorage.getItem("storeJwt");
   if (!token) {
-    // Если токена нет → редирект на логин
     window.location.href = "store-login.html";
     return;
   }
 
-  // Получаем данные магазина из localStorage или создаем пустой объект
-  let storeData = JSON.parse(localStorage.getItem("currentStore")) || {};
+  // Данные магазина (только в памяти, без локалки)
+  let storeData = {};
 
   // ===== Загрузка данных с сервера (GET) =====
   async function loadFromServer() {
@@ -21,7 +20,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
 
       if (res.status === 401 || res.status === 403) {
-        // Токен недействителен → удаляем и редирект
         localStorage.removeItem("storeJwt");
         window.location.href = "store-login.html";
         return;
@@ -30,15 +28,27 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (!res.ok) throw new Error("Failed to fetch store data");
 
       const data = await res.json();
-      storeData = data;
-      localStorage.setItem("currentStore", JSON.stringify(storeData));
+
+      // Подстраховка: приведение ключей к ожидаемым
+      storeData = {
+        name: data.name || data.storeName || "",
+        description: data.description || data.storeDescription || "",
+        contact: data.contact || data.phone || "",
+        logo: data.logo || null,
+        banner: data.banner || null,
+      };
+
       loadInitialData();
     } catch (err) {
-      console.warn(
-        "Не удалось загрузить данные с сервера, используем локальные",
-        err
-      );
-      loadInitialData();
+      console.warn("Не удалось загрузить данные с сервера:", err);
+      storeData = {
+        name: "",
+        description: "",
+        contact: "",
+        logo: null,
+        banner: null,
+      };
+      loadInitialData(); // Заполним хотя бы пустыми полями
     }
   }
 
@@ -133,11 +143,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (logoFile) storeData.logo = await toBase64(logoFile);
     if (bannerFile) storeData.banner = await toBase64(bannerFile);
 
-    // Сохраняем локально
-    localStorage.setItem("currentStore", JSON.stringify(storeData));
     updatePreview();
-
-    // Отправляем на сервер
     sendToBackend();
   });
 

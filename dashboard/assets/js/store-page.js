@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", async function initStorePage() {
   // ------------------- Тестовый GET-запрос -------------------
   async function testFetch(token) {
     try {
-      const url = `${API_BASE}/home/store/products?storeId=26`;
+      const url = `${API_BASE}/home/store/products`;
       const res = await fetch(url, {
         method: "GET",
         headers: {
@@ -49,14 +49,6 @@ document.addEventListener("DOMContentLoaded", async function initStorePage() {
       storeId,
     });
 
-    // Если ничего не пришло → дефолтные данные
-    if (!store.storeName) {
-      store = getDefaultStore(API_BASE);
-    }
-    if (!store.products?.length) {
-      store.products = getDefaultProducts(API_BASE);
-    }
-
     // 3) Рендер
     renderStore(store);
     renderProducts(store.products);
@@ -67,12 +59,6 @@ document.addEventListener("DOMContentLoaded", async function initStorePage() {
       return;
     }
     console.error("StorePage error:", err);
-
-    // При фейле тоже отобразим дефолтные данные
-    const store = getDefaultStore(API_BASE);
-    store.products = getDefaultProducts(API_BASE);
-    renderStore(store);
-    renderProducts(store.products);
   }
 });
 
@@ -175,70 +161,6 @@ function normalizeProduct(p, base) {
   };
 }
 
-/* ------------------- DEFAULT DATA ------------------- */
-function getDefaultStore(base) {
-  return {
-    id: "default-store",
-    storeName: "Demo Shop",
-    ownerName: "John Doe",
-    email: "demo@shop.com",
-    phone: "+1234567890",
-    logo: "https://images.unsplash.com/photo-1606813902759-0a8ec1c1caaa?auto=format&fit=crop&w=200&h=200&q=80",
-    banner:
-      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=1200&h=220&q=80",
-    description:
-      "This is a demo store description. Here you can find default items.",
-    category: "General Goods",
-    location: "Demo City, Wonderland",
-    products: [],
-  };
-}
-
-function getDefaultProducts(base) {
-  return [
-    {
-      id: "p1",
-      name: "Wireless Headphones",
-      image:
-        "https://images.unsplash.com/photo-1580894908361-967195033b30?auto=format&fit=crop&w=800&q=80",
-      price: 59.99,
-      description: "Comfortable wireless headphones with noise cancellation.",
-    },
-    {
-      id: "p2",
-      name: "Smartwatch",
-      image:
-        "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80",
-      price: 129.99,
-      description: "Track your fitness and notifications on the go.",
-    },
-    {
-      id: "p3",
-      name: "Coffee Mug",
-      image:
-        "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=800&q=80",
-      price: 14.99,
-      description: "Ceramic coffee mug for your perfect morning routine.",
-    },
-    {
-      id: "p4",
-      name: "Running Shoes",
-      image:
-        "https://images.unsplash.com/photo-1600185365483-26d7a6b1c1de?auto=format&fit=crop&w=800&q=80",
-      price: 89.99,
-      description: "Lightweight running shoes built for comfort and speed.",
-    },
-    {
-      id: "p5",
-      name: "Backpack",
-      image:
-        "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=800&q=80",
-      price: 49.99,
-      description: "Durable and stylish backpack for everyday use.",
-    },
-  ];
-}
-
 /* ------------------- RENDER ------------------- */
 function renderFallback(text) {
   const root = document.getElementById("storeRoot") || document.body;
@@ -248,21 +170,29 @@ function renderFallback(text) {
 }
 
 function renderStore(store) {
-  const ownerEl = document.getElementById("ownerName");
   const nameEl = document.getElementById("storeName");
-  const catEl = document.getElementById("category");
-  const descEl = document.getElementById("description");
-  const phoneEl = document.getElementById("phone");
-  const locationEl = document.getElementById("location");
-  const logoEl = document.getElementById("logo");
-  const bannerEl = document.getElementById("banner");
+  const catEl = document.getElementById("storeCategory");
+  const descEl = document.getElementById("storeDescription");
+  const contactEl = document.getElementById("storeContact");
+  const logoEl = document.getElementById("storeLogo");
+  const bannerEl = document.getElementById("storeBanner");
 
-  if (ownerEl) ownerEl.textContent = store.ownerName || "";
   if (nameEl) nameEl.textContent = store.storeName || "";
   if (catEl) catEl.textContent = store.category || "";
   if (descEl) descEl.textContent = store.description || "";
-  if (locationEl) locationEl.textContent = store.location || "";
-  if (phoneEl) phoneEl.textContent = store.phone ? `📞 ${store.phone}` : "";
+
+  if (contactEl) {
+    contactEl.innerHTML = "";
+    if (store.phone) {
+      contactEl.innerHTML += `<p>📞 ${store.phone}</p>`;
+    }
+    if (store.email) {
+      contactEl.innerHTML += `<p>✉️ ${store.email}</p>`;
+    }
+    if (store.location) {
+      contactEl.innerHTML += `<p>📍 ${store.location}</p>`;
+    }
+  }
 
   if (logoEl) {
     logoEl.src =
@@ -277,7 +207,6 @@ function renderStore(store) {
       : "linear-gradient(135deg,#e6f2ff 0%,#f5f7fa 100%)";
   }
 }
-
 function renderProducts(products) {
   const grid = document.getElementById("storeProducts");
   if (!grid) return;

@@ -1,4 +1,4 @@
-const API_BASE = "http://116.203.51.133:8080";
+const API_BASE_MODAL = "http://116.203.51.133:8080";
 
 const menuBtn = document.getElementById("menuBtn");
 const menuModal = document.getElementById("menuModal");
@@ -21,14 +21,14 @@ function unique(arr) {
 async function loadCategories() {
   try {
     // 1) пробуем прямой эндпоинт
-    const cats = await fetchJSON(`${API_BASE}/categories`);
+    const cats = await fetchJSON(`${API_BASE_MODAL}/categories`);
     if (!Array.isArray(cats)) throw new Error("bad categories payload");
     localStorage.setItem("categories", JSON.stringify(cats));
     return cats;
   } catch {
     try {
       // 2) если нет /categories — берём из /products
-      const products = await fetchJSON(`${API_BASE}/products`);
+      const products = await fetchJSON(`${API_BASE_MODAL}/products`);
       const cats = unique(
         (Array.isArray(products) ? products : []).map(
           (p) => p?.category && String(p.category).trim()
@@ -46,7 +46,7 @@ async function loadCategories() {
 
 async function loadStores() {
   try {
-    const stores = await fetchJSON(`${API_BASE}/stores`);
+    const stores = await fetchJSON(`${API_BASE_MODAL}/stores`);
     if (!Array.isArray(stores)) throw new Error("bad stores payload");
     localStorage.setItem("stores", JSON.stringify(stores));
     return stores;

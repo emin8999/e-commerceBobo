@@ -30,9 +30,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ---------- CHECK TOKEN ----------
-  const storeJwt = localStorage.getItem("storeJwt"); // ключ storeJwt
+  const storeJwt = localStorage.getItem("storeJwt");
   if (!storeJwt) {
-    // токена нет → редирект на login
     window.location.href = "store-login.html";
     return;
   }
@@ -163,18 +162,22 @@ document.addEventListener("DOMContentLoaded", () => {
       formData.append("category", val("productCategory"));
       formData.append("store", storeNameInput ? storeNameInput.value : "");
 
+      // --- sizeQuantities как отдельные поля ---
       const sizeWrappers = wrapper.querySelectorAll(".size-quantity-wrapper");
-      const sizeQuantities = [];
-      sizeWrappers.forEach((blk) => {
+      let countSizes = 0;
+      sizeWrappers.forEach((blk, index) => {
         const size = blk.querySelector(".size-input")?.value || "";
         const qStr = blk.querySelector(".quantity-input")?.value || "";
         const quantity = Number(qStr);
-        if (size && Number.isFinite(quantity) && quantity > 0)
-          sizeQuantities.push({ size, quantity });
+        if (size && Number.isFinite(quantity) && quantity > 0) {
+          formData.append(`sizeQuantities[${countSizes}].size`, size);
+          formData.append(`sizeQuantities[${countSizes}].quantity`, quantity);
+          countSizes++;
+        }
       });
-      if (sizeQuantities.length === 0)
+
+      if (countSizes === 0)
         throw new Error("Укажите хотя бы один размер с количеством > 0.");
-      formData.append("sizeQuantities", JSON.stringify(sizeQuantities));
 
       const colorsRaw = val("productColors") || "";
       const colors = colorsRaw
@@ -184,11 +187,13 @@ document.addEventListener("DOMContentLoaded", () => {
       formData.append("colors", JSON.stringify(colors));
 
       const imgInput = document.getElementById("productImages");
-      if (imgInput && imgInput.files.length > 0) {
-        for (let i = 0; i < imgInput.files.length; i++)
-          formData.append("images", imgInput.files[i]);
+      if (!imgInput || imgInput.files.length === 0) {
+        throw new Error("Загрузите хотя бы одно изображение товара.");
       }
 
+      for (let i = 0; i < imgInput.files.length; i++) {
+        formData.append("imageUrls", imgInput.files[i]);
+      }
       const res = await fetch(`${API_BASE}/home/product`, {
         method: "POST",
         headers: { Authorization: "Bearer " + token },
