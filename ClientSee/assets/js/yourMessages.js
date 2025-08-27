@@ -89,21 +89,21 @@ recipientSelect.addEventListener("change", (e) => {
   renderMessages();
 });
 
-async function setCountryName() {
-  try {
-    const res = await fetch("https://ipapi.co/json/");
-    const data = await res.json();
-    if (data && data.country_name) {
-      document.getElementById("countryName").textContent = data.country_name;
-    } else {
-      document.getElementById("countryName").textContent = "Unknown";
-    }
-  } catch (err) {
-    console.error("Ошибка определения страны:", err);
-    document.getElementById("countryName").textContent = "Unknown";
-  }
-}
+// async function setCountryName() {
+//   try {
+//     const res = await fetch("https://ipapi.co/json/");
+//     const data = await res.json();
+//     if (data && data.country_name) {
+//       document.getElementById("countryName").textContent = data.country_name;
+//     } else {
+//       document.getElementById("countryName").textContent = "Unknown";
+//     }
+//   } catch (err) {
+//     console.error("Ошибка определения страны:", err);
+//     document.getElementById("countryName").textContent = "Unknown";
+//   }
+// }
 
 renderConversationList();
 renderMessages();
-setCountryName();
+// setCountryName();
