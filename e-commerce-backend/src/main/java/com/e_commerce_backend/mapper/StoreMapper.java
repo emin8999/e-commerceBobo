@@ -13,8 +13,8 @@ public interface StoreMapper {
     @Mapping(target = "productEntities", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "logo", ignore = true)
-    @Mapping(target = "banner", ignore = true)
+    @Mapping(target = "logo", expression = "java(storeRegisterRequest.getLogo().getOriginalFilename())")
+    @Mapping(target = "banner",expression = "java(storeRegisterRequest.getLogo().getOriginalFilename())")
     @Mapping(target = "storeName",source = "storeName")
     @Mapping(target = "description",source = "description")
     StoreEntity mapToStoreEntity(StoreRegisterRequest storeRegisterRequest);

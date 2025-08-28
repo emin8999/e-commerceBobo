@@ -1,8 +1,8 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/myservicedb
-    username: myservice
-    password: AEmin_899_@!
+    username: postgres
+    password: Yunis_3876
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -13,7 +13,7 @@ spring:
     show-sql: true
     open-in-view: false
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     
 
   liquibase:
