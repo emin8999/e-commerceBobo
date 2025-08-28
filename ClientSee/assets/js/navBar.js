@@ -1,10 +1,10 @@
 /* ================== CONFIG ================== */
-const API_BASE = "http://116.203.51.133:8080";
+const API_BASE_NAV_BAR = "http://116.203.51.133:8080";
 const ENDPOINTS = {
-  session: `${API_BASE}/auth/session`,
+  session: `${API_BASE_NAV_BAR}/auth/session`,
   translations: (lang) =>
-    `${API_BASE}/i18n/translations?lang=${encodeURIComponent(lang)}`,
-  saveLang: `${API_BASE}/i18n/preference`,
+    `${API_BASE_NAV_BAR}/i18n/translations?lang=${encodeURIComponent(lang)}`,
+  saveLang: `${API_BASE_NAV_BAR}/i18n/preference`,
 };
 const FALLBACK_LANG = "EN";
 

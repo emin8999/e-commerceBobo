@@ -6,7 +6,7 @@ const eyeOpen = document.getElementById("eyeOpen");
 const eyeClosed = document.getElementById("eyeClosed");
 const errorMsg = document.getElementById("errorMsg");
 
-// Переключение видимости пароля
+// ─── Переключение видимости пароля ───
 togglePassword.addEventListener("mousedown", (e) => {
   e.preventDefault();
   const isVisible = passwordInput.type === "text";
@@ -15,14 +15,13 @@ togglePassword.addEventListener("mousedown", (e) => {
   eyeClosed.style.display = isVisible ? "none" : "block";
 });
 
-// Проверка, есть ли уже токен при загрузке страницы
+// ─── Проверка токена при загрузке ───
 const savedToken = localStorage.getItem("storeJwt");
 if (savedToken) {
-  // Если токен есть, сразу перекидываем на панель
-  window.location.href = "./dashboard/store-page.html";
+  window.location.href = "store-page.html";
 }
 
-// Обработка отправки формы
+// ─── Обработка отправки формы ───
 form.addEventListener("submit", async function (e) {
   e.preventDefault();
 
@@ -35,23 +34,40 @@ form.addEventListener("submit", async function (e) {
     return;
   }
 
+  const bodyData = { email, password };
+  console.log("Sending request body:", bodyData);
+
   try {
     const response = await fetch(
       "http://116.203.51.133:8080/home/store/login",
       {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(bodyData),
       }
     );
+
+    const rawText = await response.text();
+    console.log("Raw response:", rawText);
 
     if (!response.ok) {
       errorMsg.textContent = `Server error: ${response.status} ${response.statusText}`;
       return;
     }
 
-    const data = await response.json();
-    console.log("Server response:", data);
+    let data;
+    try {
+      data = JSON.parse(rawText);
+    } catch (err) {
+      console.error("JSON parse error:", err);
+      errorMsg.textContent = "Invalid server response format.";
+      return;
+    }
+
+    console.log("Parsed response:", data);
 
     if (data.token) {
       localStorage.setItem("storeJwt", data.token);

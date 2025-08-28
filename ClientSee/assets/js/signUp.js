@@ -13,13 +13,13 @@ document.addEventListener("DOMContentLoaded", () => {
     "togglePasswordConfirm"
   );
 
-  // ===== Проверка пароля на сложность =====
+  // Проверка требований к паролю
   function validatePassword(password) {
     const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{10,}$/;
     return pattern.test(password);
   }
 
-  // ===== Проверка совпадения паролей =====
+  // Проверка совпадения паролей
   function checkPasswordMatch() {
     if (!passwordConfirmInput.value) {
       passwordMatch.textContent = "";
@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   passwordConfirmInput.addEventListener("input", checkPasswordMatch);
 
-  // ===== Иконки глаза =====
+  // Переключение видимости пароля
   function toggleVisibility(input, toggle) {
     toggle.addEventListener("click", () => {
       const isVisible = input.type === "text";
@@ -60,9 +60,15 @@ document.addEventListener("DOMContentLoaded", () => {
   toggleVisibility(passwordInput, togglePassword);
   toggleVisibility(passwordConfirmInput, togglePasswordConfirm);
 
-  // ===== Отправка формы в виде массива =====
+  // Отправка формы
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
+
+    const addressValue = form.address.value.trim();
+    if (!addressValue) {
+      alert("Введите адрес");
+      return;
+    }
 
     if (!validatePassword(passwordInput.value)) {
       alert("Пароль не соответствует требованиям.");
@@ -74,30 +80,37 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Формируем массив данных
-    const formArray = [
-      { field: "name", value: form.name.value.trim() },
-      { field: "surname", value: form.surname.value.trim() },
-      { field: "phone", value: form.phone.value.trim() },
-      { field: "addresses", value: form.address.value.trim() },
-      { field: "email", value: form.email.value.trim() },
-      { field: "password", value: passwordInput.value },
-      { field: "confirmPassword", value: passwordConfirmInput.value },
-      { field: "gender", value: form.gender.value },
-      { field: "consentMembershipAgreement", value: form.consent.checked },
-    ];
+    // Преобразуем gender к допустимому enum
+    let genderValue = form.gender.value.trim().toUpperCase();
+    if (!["MALE", "FEMALE", "OTHER"].includes(genderValue)) {
+      genderValue = null; // если поле необязательное
+    }
 
-    // ===== Вывод в консоль =====
-    console.log("Отправляемые данные (массив):", formArray);
+    // Формируем объект для отправки
+    const formData = {
+      name: form.name.value.trim(),
+      surname: form.surname.value.trim(),
+      phone: form.phone.value.trim(),
+      email: form.email.value.trim(),
+      password: passwordInput.value,
+      confirmPassword: passwordConfirmInput.value,
+      gender: genderValue,
+      consentMembershipAgreement: form.consent.checked,
+      addresses: [
+        {
+          addresses: addressValue,
+          // если есть другие поля в AddressRequestDto, добавьте их здесь
+        },
+      ],
+    };
 
-    const jsonToSend = JSON.stringify(formArray);
-    console.log("JSON для отправки на бэк:", jsonToSend);
+    console.log("Отправляемые данные (объект):", formData);
 
     try {
       const response = await fetch(`${API_BASE}/home/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: jsonToSend,
+        body: JSON.stringify(formData),
       });
 
       const text = await response.text();
