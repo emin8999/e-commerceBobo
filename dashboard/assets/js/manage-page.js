@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
-  // Данные магазина (только в памяти, без локалки)
+  // Данные магазина
   let storeData = {};
 
   // ===== Загрузка данных с сервера (GET) =====
@@ -25,22 +25,21 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
       }
 
-      if (!res.ok) throw new Error("Failed to fetch store data");
+      if (!res.ok) throw new Error("Не удалось получить данные магазина");
 
       const data = await res.json();
 
-      // Подстраховка: приведение ключей к ожидаемым
       storeData = {
-        name: data.name || data.storeName || "",
-        description: data.description || data.storeDescription || "",
-        contact: data.contact || data.phone || "",
+        name: data.storeName || "",
+        description: data.description || "",
+        contact: data.phone || "",
         logo: data.logo || null,
         banner: data.banner || null,
       };
 
       loadInitialData();
     } catch (err) {
-      console.warn("Не удалось загрузить данные с сервера:", err);
+      console.warn("Ошибка при загрузке с сервера:", err);
       storeData = {
         name: "",
         description: "",
@@ -48,7 +47,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         logo: null,
         banner: null,
       };
-      loadInitialData(); // Заполним хотя бы пустыми полями
+      loadInitialData();
     }
   }
 
@@ -89,40 +88,45 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // ===== Отправка данных на сервер (PUT) =====
+  // ===== Отправка данных на сервер (PUT /update) =====
   async function sendToBackend() {
     try {
-      const payload = {
-        name: storeData.name,
-        description: storeData.description,
-        contact: storeData.contact,
-        logo: storeData.logo || null,
-        banner: storeData.banner || null,
-      };
+      const formData = new FormData();
+      formData.append("storeName", storeData.name);
+      formData.append("description", storeData.description);
+      formData.append("phone", storeData.contact);
 
-      const res = await fetch("http://116.203.51.133:8080/home/store/info", {
+      const logoFile = document.getElementById("storeLogo").files[0];
+      const bannerFile = document.getElementById("storeBanner").files[0];
+
+      if (logoFile) formData.append("logo", logoFile);
+      if (bannerFile) formData.append("banner", bannerFile);
+
+      const res = await fetch("http://116.203.51.133:8080/home/store/update", {
         method: "PUT",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
+          // Content-Type НЕ ставим, fetch сам установит multipart/form-data
         },
-        body: JSON.stringify(payload),
+        body: formData,
       });
-
-      if (res.status === 401 || res.status === 403) {
-        localStorage.removeItem("storeJwt");
-        window.location.href = "store-login.html";
-        return;
-      }
 
       if (!res.ok) {
         const text = await res.text();
         throw new Error(`Ошибка сервера ${res.status}: ${text}`);
       }
 
-      const data = await res.json();
-      console.log("Ответ сервера:", data);
-      alert("✅ Магазин обновлён на сервере!");
+      const updatedData = await res.json();
+      storeData = {
+        name: updatedData.storeName || storeData.name,
+        description: updatedData.description || storeData.description,
+        contact: updatedData.phone || storeData.contact,
+        logo: updatedData.logo || storeData.logo,
+        banner: updatedData.banner || storeData.banner,
+      };
+
+      loadInitialData();
+      alert("✅ Магазин успешно обновлён!");
     } catch (err) {
       console.error("Ошибка при отправке на сервер:", err);
       alert("❌ Не удалось обновить магазин на сервере.");
@@ -143,8 +147,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (logoFile) storeData.logo = await toBase64(logoFile);
     if (bannerFile) storeData.banner = await toBase64(bannerFile);
 
-    updatePreview();
-    sendToBackend();
+    await sendToBackend();
   });
 
   // ===== Инициализация =====

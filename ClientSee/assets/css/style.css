@@ -564,7 +564,7 @@ a {
   margin: 10px 0;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 740px) {
   .burger-btn {
     display: block;
   }

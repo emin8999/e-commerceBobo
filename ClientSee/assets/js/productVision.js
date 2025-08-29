@@ -9,15 +9,16 @@ const TOKEN = localStorage.getItem("token") || ""; // если использу�
 function qs(id) {
   return document.getElementById(id);
 }
+
 function getQueryParam(name) {
   const url = new URL(window.location.href);
   return url.searchParams.get(name);
 }
+
 function firstImageOf(p) {
-  return Array.isArray(p.images) && p.images.length
-    ? p.images[0]
-    : p.image || "";
+  return Array.isArray(p.imageUrls) && p.imageUrls.length ? p.imageUrls[0] : "";
 }
+
 async function fetchJSON(url, options = {}) {
   const res = await fetch(url, {
     headers: {
@@ -35,18 +36,16 @@ async function fetchJSON(url, options = {}) {
 
 /* ================== DATA LOAD (backend → fallback) ================== */
 async function loadProduct() {
-  // 1) пытаемся взять id из URL: productVision.html?id=123
   const idFromUrl = getQueryParam("id");
   if (idFromUrl) {
     try {
       const p = await fetchJSON(PRODUCT_ENDPOINT(idFromUrl));
-      localStorage.setItem("selectedProduct", JSON.stringify(p)); // кеш для возвратов/офлайна
+      localStorage.setItem("selectedProduct", JSON.stringify(p));
       return p;
     } catch (e) {
       console.warn("Product by id failed, fallback to localStorage:", e);
     }
   }
-  // 2) fallback: localStorage.selectedProduct
   try {
     return JSON.parse(localStorage.getItem("selectedProduct") || "{}");
   } catch {
@@ -56,53 +55,55 @@ async function loadProduct() {
 
 /* ================== RENDER ================== */
 function renderProduct(p) {
-  // если данных нет вовсе — показать stub
+  // stub для пустого продукта
   if (!p || (!p.id && !p.name)) {
     qs("title").textContent = "Unknown";
     qs("store").textContent = "Store: Unknown";
     qs("price").textContent = "₼0";
     qs("description").textContent = "";
-    qs("color").textContent = "Color: —";
+    qs("colors").textContent = "Colors: —";
     qs("size").textContent = "Size: —";
     qs("category").textContent = "Category: —";
     return;
   }
 
-  // изображения
+  // main image и миниатюры
   const mainImage = qs("main-image");
   const thumbnails = qs("thumbnails");
-  if (thumbnails) thumbnails.innerHTML = "";
+
+  if (thumbnails) {
+    // очищаем контейнер полностью
+    thumbnails.innerHTML = "";
+  }
 
   const mainSrc = firstImageOf(p);
   if (mainImage && mainSrc) mainImage.src = mainSrc;
 
-  (Array.isArray(p.images) ? p.images : p.image ? [p.image] : []).forEach(
-    (src) => {
-      if (!thumbnails) return;
-      const thumb = document.createElement("img");
-      thumb.src = src;
-      thumb.onclick = () => {
-        if (mainImage) mainImage.src = src;
-      };
-      thumbnails.appendChild(thumb);
-    }
-  );
+  // добавляем миниатюры
+  (Array.isArray(p.imageUrls) ? p.imageUrls : []).forEach((src) => {
+    if (!thumbnails) return;
+    const thumb = document.createElement("img");
+    thumb.src = src;
+    thumb.onclick = () => {
+      if (mainImage) mainImage.src = src;
+    };
+    thumbnails.appendChild(thumb);
+  });
 
   // текстовые поля
   qs("title").textContent = p.name || "Unknown";
   qs("store").textContent = "Store: " + (p.store || p.shop || "Unknown");
   qs("price").textContent = "₼" + (p.price ?? "0");
   qs("description").textContent = p.description || "";
-  qs("color").textContent = "Color: " + (p.color || "—");
-  qs("size").textContent = "Size: " + (p.size || "—");
+  qs("colors").textContent = "Colors: " + (p.colors || "—");
+  qs("size").textContent = "Size: " + (p.sizeQuantities || "—");
   qs("category").textContent = "Category: " + (p.category || "—");
 
-  // повесим обработчик addToCart на кнопку, если она есть
+  // обработчик addToCart
   const addBtn = document.getElementById("addToCartBtn");
   if (addBtn) {
     addBtn.onclick = () => addToCart(p);
   } else {
-    // оставим глобальную функцию как у тебя, но с backend-запросом
     window.addToCart = () => addToCart(p);
   }
 }
@@ -130,10 +131,10 @@ function addToCartLocal(product, quantity = 1) {
       ...(product.id ? { id: product.id } : {}),
       name: product.name,
       price: product.price,
-      images: product.images,
-      image: product.image,
+      images: product.imageUrls,
+      image: firstImageOf(product),
       store: product.store || product.shop,
-      color: product.color,
+      colors: product.colors,
       size: product.size,
       quantity: Number(quantity),
     });

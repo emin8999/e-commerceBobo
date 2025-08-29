@@ -41,8 +41,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         const text = await response.text(); // читаем тело в любом случае
-        console.log("Response status:", response.status);
-        console.log("Raw response:", text);
 
         let userData = null;
         try {

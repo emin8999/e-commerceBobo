@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", async function initStorePage() {
     return;
   }
 
-  // ------------------- Тестовый GET-запрос -------------------
   async function testFetch(token) {
     try {
       const url = `${API_BASE}/home/store/products`;
@@ -25,12 +24,9 @@ document.addEventListener("DOMContentLoaded", async function initStorePage() {
     }
   }
 
-  // Запускаем тест
   await testFetch(token);
 
-  // ------------------- Основной код -------------------
   try {
-    // 1) Профиль магазина
     const profileRaw = await fetchJSON(`${API_BASE}/home/store/info`, {
       method: "GET",
       headers: {
@@ -41,7 +37,6 @@ document.addEventListener("DOMContentLoaded", async function initStorePage() {
 
     let store = normalizeStore(profileRaw, API_BASE);
 
-    // 2) Товары магазина
     const storeId = store.id;
     store.products = await fetchProductsForStore({
       apiBase: API_BASE,
@@ -49,7 +44,6 @@ document.addEventListener("DOMContentLoaded", async function initStorePage() {
       storeId,
     });
 
-    // 3) Рендер
     renderStore(store);
     renderProducts(store.products);
   } catch (err) {
@@ -62,7 +56,6 @@ document.addEventListener("DOMContentLoaded", async function initStorePage() {
   }
 });
 
-/* ------------------- FETCH HELPERS ------------------- */
 async function fetchJSON(url, options = {}) {
   const res = await fetch(url, options);
   if (!res.ok) {
@@ -112,7 +105,6 @@ async function fetchProductsForStore({ apiBase, token, storeId }) {
   return [];
 }
 
-/* ------------------- NORMALIZATION ------------------- */
 function toAbsUrl(maybe, base) {
   if (!maybe) return "";
   if (typeof maybe === "string" && maybe.startsWith("data:image")) return maybe;
@@ -141,12 +133,17 @@ function normalizeStore(raw, base) {
 
 function normalizeProduct(p, base) {
   const name = p?.name ?? p?.title ?? p?.productName ?? "";
-  const imageCandidate =
-    p?.image ??
-    p?.imageUrl ??
-    (Array.isArray(p?.images) ? p.images[0] : "") ??
-    p?.photo ??
-    "";
+
+  // Все возможные поля с картинками
+  const images = [
+    p?.image,
+    p?.imageUrl,
+    ...(Array.isArray(p?.images) ? p.images : []),
+    ...(Array.isArray(p?.imageUrls) ? p.imageUrls : []),
+    p?.photo,
+  ];
+
+  const imageCandidate = images.find((img) => img); // первое непустое значение
   const image = toAbsUrl(imageCandidate, base);
 
   const numericPrice = Number(p?.price ?? p?.amount ?? p?.cost ?? p?.priceUsd);
@@ -159,14 +156,6 @@ function normalizeProduct(p, base) {
     price,
     description: p?.description ?? "",
   };
-}
-
-/* ------------------- RENDER ------------------- */
-function renderFallback(text) {
-  const root = document.getElementById("storeRoot") || document.body;
-  root.innerHTML = `<p style="text-align:center;color:#666;margin:2rem 0;font-family:sans-serif">${escapeHtml(
-    text
-  )}</p>`;
 }
 
 function renderStore(store) {
@@ -183,40 +172,29 @@ function renderStore(store) {
 
   if (contactEl) {
     contactEl.innerHTML = "";
-    if (store.phone) {
-      contactEl.innerHTML += `<p>📞 ${store.phone}</p>`;
-    }
-    if (store.email) {
-      contactEl.innerHTML += `<p>✉️ ${store.email}</p>`;
-    }
-    if (store.location) {
-      contactEl.innerHTML += `<p>📍 ${store.location}</p>`;
-    }
+    if (store.phone) contactEl.innerHTML += `<p>📞 ${store.phone}</p>`;
+    if (store.email) contactEl.innerHTML += `<p>✉️ ${store.email}</p>`;
+    if (store.location) contactEl.innerHTML += `<p>📍 ${store.location}</p>`;
   }
 
   if (logoEl) {
-    logoEl.src =
-      store.logo ||
-      "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><rect width='100%' height='100%' fill='%23eee'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23999' font-family='Arial' font-size='14'>No Logo</text></svg>";
-    logoEl.alt = store.storeName ? `${store.storeName} logo` : "Store logo";
+    logoEl.src = store.logo || "";
+    logoEl.alt = store.storeName ? `${store.storeName} logo` : "";
   }
 
   if (bannerEl) {
     bannerEl.style.backgroundImage = store.banner
       ? `url('${store.banner}')`
-      : "linear-gradient(135deg,#e6f2ff 0%,#f5f7fa 100%)";
+      : "";
   }
 }
+
 function renderProducts(products) {
   const grid = document.getElementById("storeProducts");
   if (!grid) return;
   grid.innerHTML = "";
 
-  if (!Array.isArray(products) || products.length === 0) {
-    grid.innerHTML =
-      "<p style='color:#666;font-family:sans-serif'>No products yet</p>";
-    return;
-  }
+  if (!Array.isArray(products) || products.length === 0) return;
 
   products.forEach((product) => {
     const card = document.createElement("div");
@@ -224,10 +202,8 @@ function renderProducts(products) {
 
     const img = document.createElement("img");
     img.className = "product-image";
-    img.src =
-      product.image ||
-      "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='200'><rect width='100%' height='100%' fill='%23f0f0f0'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23999' font-family='Arial' font-size='14'>No Image</text></svg>";
-    img.alt = product.name || "Product";
+    img.src = product.image || "";
+    img.alt = product.name || "";
 
     const name = document.createElement("h3");
     name.className = "product-name";
@@ -246,7 +222,6 @@ function renderProducts(products) {
   });
 }
 
-/* ------------------- UTILS ------------------- */
 function escapeHtml(str) {
   return String(str)
     .replaceAll("&", "&amp;")

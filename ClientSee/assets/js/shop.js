@@ -30,7 +30,14 @@ function renderProducts(products) {
       <h3>${product.name}</h3>
       <p>Store: ${product.storeName}</p>
       <p>Price: ₼${product.price}</p>
-      <p>Color: ${product.color}</p>
+    <p>Color: ${(() => {
+      try {
+        const colors = JSON.parse(product.colors);
+        return Array.isArray(colors) ? colors.join(", ") : colors;
+      } catch {
+        return product.colors;
+      }
+    })()}</p>
       <p>Status: ${product.status}</p>
     `;
 

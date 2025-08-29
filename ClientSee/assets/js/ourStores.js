@@ -22,8 +22,12 @@ function getLocalProducts() {
   }
 }
 
-function firstImageOf(p) {
-  return Array.isArray(p.images) ? p.images[0] : p.image || "";
+function firstImageOf(product) {
+  if (Array.isArray(product.images) && product.images.length > 0)
+    return product.images[0];
+  if (Array.isArray(product.imageUrls) && product.imageUrls.length > 0)
+    return product.imageUrls[0];
+  return product.image || "";
 }
 
 /* ----------------- render ----------------- */
@@ -39,7 +43,7 @@ function renderStores(products) {
   // группируем по магазину
   const grouped = {};
   products.forEach((p) => {
-    const storeName = p.store || p.shop || "Unknown Store";
+    const storeName = p.storeName || p.store || p.shop || "Unknown Store";
     if (!grouped[storeName]) grouped[storeName] = [];
     grouped[storeName].push(p);
   });
@@ -75,14 +79,15 @@ function renderStores(products) {
         <img src="${firstImageOf(product)}" alt="${
         product.name || "Product"
       }" />
-        <p>${product.name || "Unnamed"}</p>
-        <strong>${product.price} ₼</strong>
+        <p>${product.name || product.title || "Unnamed"}</p>
+        <strong>${
+          product.price != null ? product.price + " ₼" : "Price N/A"
+        }</strong>
       `;
 
       // клик по товару — не открывать магазин
       productCard.addEventListener("click", (e) => {
         e.stopPropagation();
-        // сохраняем выбранный товар (можно заменить на переход по id)
         localStorage.setItem("selectedProduct", JSON.stringify(product));
         window.location.href = "productVision.html";
       });
@@ -124,5 +129,6 @@ function renderStores(products) {
     console.warn("Backend unavailable, using localStorage products.", e);
     products = getLocalProducts(); // fallback
   }
+  console.log("Loaded products:", products);
   renderStores(products);
 })();
