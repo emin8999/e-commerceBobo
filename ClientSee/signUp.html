@@ -24,7 +24,7 @@
           <span class="bold-text" id="countryName">Detecting…</span>
         </div>
         <div class="search-bar">
-          <input type="text" placeholder="Search BOBO" id="boboSearch" />
+          <input type="text" placeholder="Search BOBO" />
           <button class="search-button">🔍</button>
         </div>
         <div id="boboSearchDropdown" class="bobo-search-dropdown"></div>
@@ -36,6 +36,30 @@
           <div class="account">
             <a href="./signIn.html" class="small-text">Hello, sign in</a><br />
             <!-- <span class="bold-text">Account & Lists ▼</span> -->
+          </div>
+          <div id="logoutButton" class="logout-btn" role="button" tabindex="0">
+            <svg
+              class="logout-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M16 17l5-5-5-5M21 12H9"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M12 19a3 3 0 01-3 3H6a3 3 0 01-3-3V5a3 3 0 013-3h3a3 3 0 013 3"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
+            <span class="logout-text">Logout</span>
           </div>
           <div class="orders">
             <a href="returnAndOrders.html" class="small-text">Returns</a><br />
@@ -53,7 +77,7 @@
 
         <div class="sidebar" id="sidebar">
           <div class="sidebar-header">
-            <a class="sidebar-header-link" href="./account.html">
+            <a class="sidebar-header-link" id="accountLink" href="#">
               <img src="./assets/Img/User.png" alt="" />
             </a>
             <a class="sidebar-header-link" id="cartLink" href="./cart.html">
@@ -95,7 +119,35 @@
               <option class="navbar-language" value="RU">RU</option>
             </select>
           </div>
-          <!-- Add to the menu -->
+          <div
+            id="mobileLogoutButton"
+            class="mobile-logout-btn"
+            role="button"
+            tabindex="0"
+          >
+            <svg
+              class="mobile-logout-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M16 17l5-5-5-5M21 12H9"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M12 19a3 3 0 01-3 3H6a3 3 0 01-3-3V5a3 3 0 013-3h3a3 3 0 013 3"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
+            <span class="mobile-logout-text">Logout</span>
+          </div>
         </div>
       </div>
 
@@ -169,18 +221,22 @@
             I accept the Membership Agreement.
           </label>
 
-          <button type="submit" class="submit-btn">SUBSCRIBE</button>
+          <button type="submit" class="submit-btn">Register</button>
 
           <p class="terms">
             By subscribing, I agree to the
             <a href="#">Membership Agreement</a>.
           </p>
+          <p class="terms">
+            Already have a account?
+            <a href="signIn.html">Sign in here</a>.
+          </p>
 
-          <div class="social-buttons">
+          <!-- <div class="social-buttons">
             <button type="button" class="google" id="googleSignIn">
               Sign up with Google
             </button>
-          </div>
+          </div> -->
         </form>
       </div>
     </main>
@@ -201,9 +257,7 @@
           <ul>
             <li><a href="./sellProducts.html">Sell products on BOBO</a></li>
             <li>
-                            <a href="/dashboard/store-login.html">Open your shop on BOBO</a>
-
-                >Open your shop on BOBO</a
+              <a href="/dashboard/store-login.html">Open your shop on BOBO</a>
               >
             </li>
             <!-- <li><a href="#">Sell apps on BOBO</a></li> -->
@@ -221,9 +275,9 @@
         <div class="column">
           <h3>Let Us Help You</h3>
           <ul>
-            <li><a href="account.html">Your Account</a></li>
+            <li><a href="#" id="accountMenuLink">Your Account</a></li>
             <li><a href="#">Your Orders</a></li>
-            <li><a href="#">Login For Sellers</a></li>
+            <!-- <li><a href="#">Login For Sellers</a></li> -->
           </ul>
         </div>
       </div>

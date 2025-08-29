@@ -99,6 +99,34 @@ a {
 .logout-btn:hover {
   background: linear-gradient(135deg, #ff8a00, #ff6a00);
 }
+.mobile-logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 16px auto;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #f44336; /* красный фон */
+  color: #fff; /* белый текст и иконка */
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  width: fit-content;
+}
+
+.mobile-logout-btn:hover {
+  background-color: #d32f2f; /* темнее при ховере */
+}
+
+.mobile-logout-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.mobile-logout-text {
+  font-size: 15px;
+}
 
 .logout-icon {
   width: 20px;

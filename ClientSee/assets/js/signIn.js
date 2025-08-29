@@ -11,6 +11,10 @@ if (togglePassword && passwordInput) {
   });
 }
 
+if (localStorage.getItem("jwtToken")) {
+  window.location.href = "account.html";
+}
+
 document
   .getElementById("loginForm")
   .addEventListener("submit", async function (e) {
@@ -43,12 +47,13 @@ document
       }
 
       const data = await response.json();
-
       const token = data.token;
+
       if (token) {
         localStorage.setItem("jwtToken", token);
 
-        alert("Login successful! JWT token saved.");
+        // Сразу редиректим после успешного входа
+        window.location.href = "account.html";
       } else {
         alert("No token received");
       }

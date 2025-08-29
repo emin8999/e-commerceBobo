@@ -4,6 +4,115 @@ const PUBLIC_PRODUCTS_URL = `${header_API_BASE}/home/product/public`;
 const inputEl = document.getElementById("boboSearch");
 const dropdownEl = document.getElementById("boboSearchDropdown");
 
+document.addEventListener("DOMContentLoaded", () => {
+  const logoutButton = document.getElementById("logoutButton"); // десктоп
+  const mobileLogoutButton = document.getElementById("mobileLogoutButton"); // мобильная
+  const userGreeting = document.getElementById("userGreeting"); // ссылка Hello, sign in
+
+  // Проверка токена и отображение logout кнопок
+  function checkToken() {
+    const token = localStorage.getItem("jwtToken");
+
+    if (logoutButton) {
+      logoutButton.style.display = token ? "flex" : "none";
+    }
+
+    if (mobileLogoutButton) {
+      mobileLogoutButton.style.display = token ? "flex" : "none";
+    }
+  }
+
+  // Сразу проверяем при загрузке
+  checkToken();
+
+  // --- Логика смены Hello, sign in на имя пользователя ---
+  async function updateUserGreeting() {
+    const token = localStorage.getItem("jwtToken");
+    if (!userGreeting) return;
+
+    if (token) {
+      try {
+        const response = await fetch(`${header_API_BASE}/home/user/profile`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        const text = await response.text(); // читаем тело в любом случае
+        console.log("Response status:", response.status);
+        console.log("Raw response:", text);
+
+        let userData = null;
+        try {
+          userData = JSON.parse(text); // пытаемся распарсить JSON
+        } catch (err) {
+          console.warn("Не удалось распарсить JSON:", err);
+        }
+
+        // Если JSON есть и есть поле name/username — используем
+        const name =
+          (userData && (userData.name || userData.username)) || "User";
+
+        userGreeting.textContent = `Hello, ${name}`;
+        userGreeting.removeAttribute("href");
+      } catch (err) {
+        console.error("Ошибка сети или сервера:", err);
+        userGreeting.textContent = "Hello, User"; // fallback
+        userGreeting.removeAttribute("href");
+      }
+    } else {
+      userGreeting.textContent = "Hello, sign in";
+      userGreeting.setAttribute("href", "./signIn.html");
+    }
+  }
+
+  updateUserGreeting();
+
+  // Логика выхода (общая для обеих кнопок)
+  function handleLogout() {
+    localStorage.removeItem("jwtToken"); // удаляем токен
+    checkToken(); // обновляем кнопки
+    updateUserGreeting(); // обновляем приветствие
+    window.location.href = "signIn.html"; // редирект на страницу входа
+  }
+
+  if (logoutButton) {
+    logoutButton.addEventListener("click", handleLogout);
+  }
+
+  if (mobileLogoutButton) {
+    mobileLogoutButton.addEventListener("click", handleLogout);
+  }
+
+  const accountLink = document.getElementById("accountLink");
+  if (accountLink) {
+    accountLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      const token = localStorage.getItem("jwtToken");
+      if (token) {
+        window.location.href = "./account.html";
+      } else {
+        window.location.href = "./signIn.html";
+      }
+    });
+  }
+
+  const accountMenuLink = document.getElementById("accountMenuLink");
+  if (accountMenuLink) {
+    accountMenuLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      const token = localStorage.getItem("jwtToken");
+      if (token) {
+        window.location.href = "account.html";
+      } else {
+        window.location.href = "signIn.html";
+      }
+    });
+  }
+});
+
 function openProduct(product) {
   localStorage.setItem("selectedProduct", JSON.stringify(product));
   window.location.href = "productVision.html";
