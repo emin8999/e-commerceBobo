@@ -21,8 +21,6 @@ public class UserResponseDto {
     private String surname;
     private List<AddressResponseDto> addresses;
     private Gender gender;
-    private boolean consentMarketing;
-    private boolean consentMessagesDelivered;
     private boolean consentMembershipAgreement;
     private Set<Roles> roles;
     private LocalDateTime createdAt;

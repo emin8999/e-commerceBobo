@@ -22,7 +22,7 @@ import java.nio.file.AccessDeniedException;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
 
 @Service
 @RequiredArgsConstructor
@@ -35,12 +35,13 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public ProductResponseDto addProduct(ProductRequestDto productRequestDto) throws AccessDeniedException, java.nio.file.AccessDeniedException {
+    public ProductResponseDto addProduct(ProductRequestDto productRequestDto)
+            throws AccessDeniedException, java.nio.file.AccessDeniedException {
         StoreEntity store = storeSecurityUtil.getCurrentStore();
         ProductEntity product = productMapper.mapToProductEntity(productRequestDto);
         product.setStore(store);
 
-        List<ProductSizeQuantity> sizeQuantityEntities = productRequestDto.getSizeQuantities() 
+        List<ProductSizeQuantity> sizeQuantityEntities = productRequestDto.getSizeQuantities()
                 .stream()
                 .map(dto -> {
                     ProductSizeQuantity entity = new ProductSizeQuantity();
@@ -58,8 +59,7 @@ public class ProductServiceImpl implements ProductService {
         List<String> imagePaths = productUtility.saveProductImages(
                 productRequestDto.getImageUrls(),
                 store.getId(),
-                productToSave.getId()
-        );
+                productToSave.getId());
 
         List<ProductImageEntity> productImages = imagePaths.stream()
                 .map(path -> {
@@ -75,13 +75,12 @@ public class ProductServiceImpl implements ProductService {
         ProductEntity finalProduct = productRepository.save(productToSave);
 
         return productMapper.mapToProductResponseDto(finalProduct);
-            }
+    }
 
-
- 
     @Override
     @Transactional(readOnly = true)
-    public List<ProductResponseDto> getAllProductsOfCurrentStore() throws AccessDeniedException, java.nio.file.AccessDeniedException {
+    public List<ProductResponseDto> getAllProductsOfCurrentStore()
+            throws AccessDeniedException, java.nio.file.AccessDeniedException {
         StoreEntity store = storeSecurityUtil.getCurrentStore();
         List<ProductEntity> products = productRepository.findByStoreId(store.getId());
 
@@ -149,10 +148,9 @@ public class ProductServiceImpl implements ProductService {
 
         if (product.getImages() != null && !product.getImages().isEmpty()) {
             dto.setImageUrls(
-                product.getImages().stream()
-                       .map(ProductImageEntity::getImageUrl)
-                       .toList()
-            );
+                    product.getImages().stream()
+                            .map(ProductImageEntity::getImageUrl)
+                            .toList());
         } else {
             dto.setImageUrls(Collections.emptyList());
         }

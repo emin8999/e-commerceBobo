@@ -1,6 +1,7 @@
 package com.e_commerce_backend.controller;
 
 import com.e_commerce_backend.dto.requestdto.store.StoreRegisterRequest;
+import com.e_commerce_backend.dto.requestdto.store.StoreUpdateRequestDto;
 import com.e_commerce_backend.dto.requestdto.user.LoginRequestDto;
 import com.e_commerce_backend.dto.responseDto.order.OrderResponseDto;
 import com.e_commerce_backend.dto.responseDto.product.ProductResponseDto;
@@ -17,6 +18,7 @@ import org.apache.hc.core5.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.nio.file.AccessDeniedException;
@@ -46,7 +48,8 @@ public class StoreController {
 
     @GetMapping("/info")
     @PreAuthorize("authentication.name == authentication.name")
-    public ResponseEntity<StoreResponseDto> getStoreInfo() throws AccessDeniedException, java.nio.file.AccessDeniedException {
+    public ResponseEntity<StoreResponseDto> getStoreInfo()
+            throws AccessDeniedException, java.nio.file.AccessDeniedException {
         StoreResponseDto dto = storeService.getCurrentStoreInfo();
         return ResponseEntity.ok(dto);
     }
@@ -65,21 +68,24 @@ public class StoreController {
 
     @GetMapping("/orders")
     @PreAuthorize("hasRole('STORE')")
-    public ResponseEntity<List<OrderResponseDto>> getStoreOrders() throws AccessDeniedException, java.nio.file.AccessDeniedException {
+    public ResponseEntity<List<OrderResponseDto>> getStoreOrders()
+            throws AccessDeniedException, java.nio.file.AccessDeniedException {
         List<OrderResponseDto> orders = orderService.getStoreOrders();
         return ResponseEntity.ok(orders);
     }
 
     @GetMapping("/products")
     @PreAuthorize("hasRole('STORE')")
-    public ResponseEntity<List<ProductResponseDto>> getStoreProducts() throws AccessDeniedException, java.nio.file.AccessDeniedException {
+    public ResponseEntity<List<ProductResponseDto>> getStoreProducts()
+            throws AccessDeniedException, java.nio.file.AccessDeniedException {
         List<ProductResponseDto> products = productService.getAllProductsOfCurrentStore();
         return ResponseEntity.ok(products);
     }
 
     @GetMapping("/statistics")
     @PreAuthorize("hasRole('STORE')")
-    public ResponseEntity<StoreStatisticsDto> getStoreStatistics() throws AccessDeniedException, java.nio.file.AccessDeniedException {
+    public ResponseEntity<StoreStatisticsDto> getStoreStatistics()
+            throws AccessDeniedException, java.nio.file.AccessDeniedException {
         Long orderCount = orderService.getStoreOrderCount();
         BigDecimal earnings = orderService.getStoreEarnings();
         List<ProductResponseDto> products = productService.getAllProductsOfCurrentStore();
@@ -91,5 +97,30 @@ public class StoreController {
                 .build();
 
         return ResponseEntity.ok(statistics);
+    }
+
+    @PutMapping(value = "/update")
+    public ResponseEntity<StoreResponseDto> updateStore(
+            @RequestHeader("Authorization") String token,
+            @RequestParam String storeName,
+            @RequestParam String description,
+            @RequestParam String phone,
+            @RequestPart(required = false) MultipartFile banner,
+            @RequestPart(required = false) MultipartFile logo) {
+
+        StoreUpdateRequestDto dto = StoreUpdateRequestDto.builder()
+                .storeName(storeName)
+                .description(description)
+                .phone(phone)
+                .build();
+
+        StoreResponseDto updatedStore = storeService.updateStore(token, dto, banner, logo);
+        return ResponseEntity.ok(updatedStore);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<StoreResponseDto>> getAllStores() {
+        List<StoreResponseDto> stores = storeService.getAllStores();
+        return ResponseEntity.ok(stores);
     }
 }

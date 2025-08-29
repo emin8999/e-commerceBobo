@@ -2,6 +2,7 @@ package com.e_commerce_backend.service.impl;
 
 import com.e_commerce_backend.cloudinary.CloudinaryService;
 import com.e_commerce_backend.dto.requestdto.store.StoreRegisterRequest;
+import com.e_commerce_backend.dto.requestdto.store.StoreUpdateRequestDto;
 import com.e_commerce_backend.dto.requestdto.user.LoginRequestDto;
 import com.e_commerce_backend.dto.responseDto.store.StoreResponseDto;
 import com.e_commerce_backend.dto.responseDto.user.LoginResponseDto;
@@ -23,6 +24,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.AccessDeniedException;
 import java.util.List;
@@ -57,11 +60,9 @@ public class StoreServiceImpl implements StoreService {
             throw new IllegalArgumentException("You must agree to terms");
         }
 
-
         StoreEntity store = storeMapper.mapToStoreEntity(request);
         store.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
         store.setRoles(Set.of(Roles.STORE));
-
 
         store = storeRepository.save(store);
 
@@ -71,7 +72,6 @@ public class StoreServiceImpl implements StoreService {
             String logoUrl = cloudinaryService.uploadFile(request.getLogo(), storeFolder + "/logo", "logo");
             store.setLogo(logoUrl);
         }
-
 
         if (request.getBanner() != null && !request.getBanner().isEmpty()) {
             String bannerUrl = cloudinaryService.uploadFile(request.getBanner(), storeFolder + "/banner", "banner");
@@ -85,8 +85,7 @@ public class StoreServiceImpl implements StoreService {
     public LoginResponseDto login(LoginRequestDto loginRequestDto) {
         try {
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail(), loginRequestDto.getPassword())
-            );
+                    new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail(), loginRequestDto.getPassword()));
 
             StoreEntity store = storeRepository.findStoreEntitiesByEmail(loginRequestDto.getEmail())
                     .orElseThrow(() -> new RuntimeException("Store not found"));
@@ -99,6 +98,50 @@ public class StoreServiceImpl implements StoreService {
         } catch (Exception e) {
             throw new RuntimeException("Authentication failed: " + e.getMessage());
         }
+    }
+
+    @Override
+    @Transactional
+    public StoreResponseDto updateStore(String token,
+            StoreUpdateRequestDto dto,
+            MultipartFile banner,
+            MultipartFile logo) {
+        String emailFromToken = jwtService.extractUserName(token.replace("Bearer ", ""));
+        StoreEntity store = storeRepository.findStoreEntitiesByEmail(emailFromToken)
+                .orElseThrow(() -> new RuntimeException("Store tapılmadı"));
+
+        if (dto.getStoreName() != null && !dto.getStoreName().isBlank()) {
+            store.setStoreName(dto.getStoreName());
+        }
+        if (dto.getDescription() != null && !dto.getDescription().isBlank()) {
+            store.setDescription(dto.getDescription());
+        }
+        if (dto.getPhone() != null && !dto.getPhone().isBlank()) {
+            store.setPhone(dto.getPhone());
+        }
+
+        if (banner != null && !banner.isEmpty()) {
+            String bannerUrl = cloudinaryService.uploadFile(banner, "banners", "store_" + store.getId() + "_banner");
+            store.setBanner(bannerUrl);
+        }
+
+        if (logo != null && !logo.isEmpty()) {
+            String logoUrl = cloudinaryService.uploadFile(logo, "logos", "store_" + store.getId() + "_logo");
+            store.setLogo(logoUrl);
+        }
+
+        StoreEntity savedStore = storeRepository.save(store);
+        return convertToResponse(savedStore);
+    }
+
+    private StoreResponseDto convertToResponse(StoreEntity store) {
+        StoreResponseDto response = new StoreResponseDto();
+        response.setStoreName(store.getStoreName());
+        response.setDescription(store.getDescription());
+        response.setPhone(store.getPhone());
+        response.setBanner(store.getBanner());
+        response.setLogo(store.getLogo());
+        return response;
     }
 
     @Override
