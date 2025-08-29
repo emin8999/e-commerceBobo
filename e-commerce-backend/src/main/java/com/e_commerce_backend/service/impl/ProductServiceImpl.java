@@ -14,7 +14,7 @@ import com.e_commerce_backend.repository.ProductRepository;
 import com.e_commerce_backend.security.util.StoreSecurityUtil;
 import com.e_commerce_backend.service.ProductService;
 import com.e_commerce_backend.util.ProductUtility;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +40,7 @@ public class ProductServiceImpl implements ProductService {
         ProductEntity product = productMapper.mapToProductEntity(productRequestDto);
         product.setStore(store);
 
-        List<ProductSizeQuantity> sizeQuantityEntities = productRequestDto.getSizeQuantities()
+        List<ProductSizeQuantity> sizeQuantityEntities = productRequestDto.getSizeQuantities() 
                 .stream()
                 .map(dto -> {
                     ProductSizeQuantity entity = new ProductSizeQuantity();
@@ -75,36 +75,32 @@ public class ProductServiceImpl implements ProductService {
         ProductEntity finalProduct = productRepository.save(productToSave);
 
         return productMapper.mapToProductResponseDto(finalProduct);
-    }
+            }
 
-@Override
-    @Transactional
+
+ 
+    @Override
+    @Transactional(readOnly = true)
     public List<ProductResponseDto> getAllProductsOfCurrentStore() throws AccessDeniedException, java.nio.file.AccessDeniedException {
         StoreEntity store = storeSecurityUtil.getCurrentStore();
         List<ProductEntity> products = productRepository.findByStoreId(store.getId());
 
-        Stream<ProductEntity> stream = products.stream().peek(product -> {
-            if (product.getImages() != null && !product.getImages().isEmpty()) {
-                product.setImages(List.of(product.getImages().get(0)));
-            } else {
-                product.setImages(Collections.emptyList());
-            }
-        });
-
-        return stream
-                .map(productMapper::mapToProductResponseDto)
+        return products.stream()
+                .map(this::mapProductWithImages)
                 .collect(Collectors.toList());
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ProductResponseDto> getAllActiveProducts() {
         List<ProductEntity> products = productRepository.findByStatus(ProductStatus.ACTIVE);
         return products.stream()
-                .map(productMapper::mapToProductResponseDto)
+                .map(this::mapProductWithImages)
                 .collect(Collectors.toList());
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ProductResponseDto getActiveProductById(Long id) {
         ProductEntity product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("Product not found"));
@@ -113,35 +109,54 @@ public class ProductServiceImpl implements ProductService {
             throw new ProductUnavailableException("Product is not available");
         }
 
-        return productMapper.mapToProductResponseDto(product);
+        return mapProductWithImages(product);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ProductResponseDto> getActiveProductsByCategory(String category) {
         List<ProductEntity> products = productRepository.findByCategoryAndStatus(category, ProductStatus.ACTIVE);
         return products.stream()
-                .map(productMapper::mapToProductResponseDto)
+                .map(this::mapProductWithImages)
                 .collect(Collectors.toList());
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ProductResponseDto> getActiveProductsByStore(Long storeId) {
         List<ProductEntity> products = productRepository.findByStoreIdAndStatus(storeId, ProductStatus.ACTIVE);
         return products.stream()
-                .map(productMapper::mapToProductResponseDto)
+                .map(this::mapProductWithImages)
                 .collect(Collectors.toList());
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ProductResponseDto> getAllProducts() {
         List<ProductEntity> products = productRepository.findAll();
         return products.stream()
-                .map(productMapper::mapToProductResponseDto)
+                .map(this::mapProductWithImages)
                 .collect(Collectors.toList());
     }
 
     @Override
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
+    }
+
+    private ProductResponseDto mapProductWithImages(ProductEntity product) {
+        ProductResponseDto dto = productMapper.mapToProductResponseDto(product);
+
+        if (product.getImages() != null && !product.getImages().isEmpty()) {
+            dto.setImageUrls(
+                product.getImages().stream()
+                       .map(ProductImageEntity::getImageUrl)
+                       .toList()
+            );
+        } else {
+            dto.setImageUrls(Collections.emptyList());
+        }
+
+        return dto;
     }
 }
